@@ -1,6 +1,13 @@
 Distrubuzioni per creare grafici ragionevoli
 la creazione dei dati avviene nelle funzioni read...
 
+gestione degli asset di Qt
+per immagini statiche che saranno sempre quelle
+gestione con percorso per immagini che possono cambiare nel tempo
+
+stretch per coprire tutto lo spazio in eccesso
+
+
 Errori più comuni:
 warning durante la compilazione facilmente evitabili
 ridimensionamento della GUI non gestito
