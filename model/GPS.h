@@ -1,3 +1,6 @@
+#ifndef GPS_H
+#define GPS_H
+
 #include "AbstractSensor.h"
 
 class GPS : public AbstractSensor {
@@ -20,3 +23,5 @@ class GPS : public AbstractSensor {
         return longitude;
     }
 };
+
+#endif
