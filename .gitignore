@@ -1,8 +1,8 @@
-# Executables
+*.o
 *.exe
 *.out
 *.app
 
-
 Makefile
+Makefile.*
 .qmake.stash
