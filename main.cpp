@@ -2,20 +2,22 @@
 #include <QFile>
 #include <QLabel>
 
+#include "view/MainWindow.h"
+#include "model/DroneManager.h"
+
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     // app.setWindowIcon(QIcon(":assets/icon.svg"));
 
+    DroneManager droneManager;
+
     // QFile style(":/assets/style.qss");
     // style.open(QFile::ReadOnly);
     // app.setStyleSheet(QLatin1String(style.readAll()));
+    View::MainWindow window(droneManager);
+    window.resize(1024, 576);
+    window.show();
 
-    // View::MainWindow window();
-    // window.resize(1024, 576);
-    // window.show();
-
-    QLabel hello(" Hello world !");
-    hello.show();
 
     return app.exec();
 }

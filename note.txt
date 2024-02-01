@@ -25,3 +25,10 @@ utilizzo di classi con soli campi statici per nascondere funzioni e stato global
 mancato feedback visivo
 errori relativi ai percorsi del file per risorse esterne
 classi di una gerarchia definite nello stesso file
+
+
+Gli utenti finalidell’applicazione devono essere in grado di definire nuovi sensori,
+ modificare e cancellare quelli esistenti
+
+consentire la creazione, la ricerca, la modifica e la cancellazione dei
+sensori
