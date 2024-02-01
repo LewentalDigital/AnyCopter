@@ -3,4 +3,7 @@ class AbstractSensor {
    public:
     virtual ~AbstractSensor() = default;
     virtual void read() = 0;
+    class Reading {
+
+    };
 };
