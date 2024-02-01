@@ -8,6 +8,9 @@ class MainWindow : public QMainWindow {
 
    public:
     MainWindow();
+
+   public slots:
+    void close();
 };
 
 #endif

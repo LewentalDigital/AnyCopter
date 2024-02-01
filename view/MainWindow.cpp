@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 
 #include <QAction>
+#include <QApplication>
 #include <QMenu>
 #include <QMenuBar>
 
@@ -18,12 +19,10 @@ MainWindow::MainWindow() {
     save->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
 
     QAction* save_as = new QAction(
-        QIcon(QPixmap((":/assets/icons/save_as.svg"))),
         "Save As");
     save_as->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_S));
-    
+
     QAction* close = new QAction(
-        QIcon(QPixmap((":/assets/icons/close.svg"))),
         "Close");
     close->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
 
@@ -36,4 +35,10 @@ MainWindow::MainWindow() {
     file->addSeparator();
     file->addAction(close);
     QMenu* view = menuBar()->addMenu("&View");
+
+    connect(close, &QAction::triggered, this, &MainWindow::close);
+}
+
+void MainWindow::close() {
+    QApplication::quit();
 }
