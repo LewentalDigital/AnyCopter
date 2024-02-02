@@ -3,6 +3,8 @@
 *.out
 *.app
 
+release/*.*
+
 Makefile
 Makefile.*
 .qmake.stash

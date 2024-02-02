@@ -1,5 +1,6 @@
 #ifndef DRONE_H
 #define DRONE_H
+
 #include <string>
 #include <vector>
 
@@ -21,8 +22,9 @@ class Drone {
 
    public:
     static const int sensorSockets;
-    Drone(std::string name);
+    Drone(std::string);
     virtual ~Drone() = default;
+    std::string getName() const;
     // void mountSensor(const AbstractSensor& sensor) {
     //     if (externalSensors.size() < sensorSockets) {
     //         externalSensors.push_back(sensor);

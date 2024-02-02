@@ -1,9 +1,14 @@
 #include "MainWindow.h"
 
+#include <QWidget>
 #include <QAction>
 #include <QApplication>
 #include <QMenu>
 #include <QMenuBar>
+#include <QVBoxLayout>
+
+#include "DroneWidget.h"
+// #include "../model/Drone.h"
 
 MainWindow::MainWindow() {
     QAction* create = new QAction(
@@ -34,9 +39,26 @@ MainWindow::MainWindow() {
     file->addAction(save_as);
     file->addSeparator();
     file->addAction(close);
-    QMenu* view = menuBar()->addMenu("&View");
+    // QMenu* view = menuBar()->addMenu("&View");
 
     connect(close, &QAction::triggered, this, &MainWindow::close);
+
+
+    QWidget* centralWidget = new QWidget(this);
+    QVBoxLayout *layout = new QVBoxLayout(centralWidget);
+
+    layout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+
+    layout->addWidget(new DroneWidget(new Drone("Drone 1")));
+    layout->addWidget(new DroneWidget(new Drone("Drone 2")));
+    layout->addWidget(new DroneWidget(new Drone("Drone 3")));
+
+    // layout->addWidget(new DroneWidget());
+    // layout->addWidget(new DroneWidget());
+    // layout->addWidget(new DroneWidget());
+
+    centralWidget->setLayout(layout);
+    setCentralWidget(centralWidget);
 }
 
 void MainWindow::close() {
