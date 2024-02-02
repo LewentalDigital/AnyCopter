@@ -2,7 +2,10 @@
 *.exe
 *.out
 *.app
+*.dll
 
+*.Debug
+*.Release
 release/*.*
 
 Makefile
