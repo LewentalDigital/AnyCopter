@@ -5,9 +5,12 @@
 
 class BatteryChargeSensor : public AbstractSensor {
    private:
+    double charge;
+
    public:
-    void read() override {
-    }
+    BatteryChargeSensor();
+    void read() override;
+    double getCharge() const;
 };
 
 #endif

@@ -5,6 +5,7 @@
 
 class AbstractSensor {
    protected:
+    double min, max;
     double random() {
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -15,8 +16,6 @@ class AbstractSensor {
    public:
     virtual ~AbstractSensor() = default;
     virtual void read() = 0;
-    class Reading {
-    };
 };
 
 #endif

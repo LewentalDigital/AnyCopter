@@ -1,8 +1,6 @@
 #ifndef THERMOMETER_H
 #define THERMOMETER_H
 
-#include <random>
-
 #include "AbstractSensor.h"
 
 class Thermometer : public AbstractSensor {
@@ -10,9 +8,10 @@ class Thermometer : public AbstractSensor {
     double temperature;
 
    public:
-    Thermometer() : temperature(0) {}
+    Thermometer();
 
     void read() override {
+        temperature = 20.0;
     }
 
     double getTemperature() const {

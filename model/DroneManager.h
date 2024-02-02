@@ -7,12 +7,10 @@
 
 class DroneManager {
    private:
-    std::vector<Drone&> drones;
+    std::vector<Drone*> drones;
 
    public:
-    DrooneManager() {}
-    void deployDrone(Drone& drone) {
-        drones.push_back(drone);
-    }
+    DroneManager();
+    void deployDrone(Drone* );
 };
 #endif

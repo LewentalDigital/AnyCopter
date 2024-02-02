@@ -12,6 +12,7 @@ class DroneWidget : public QWidget {
     QLabel* image;
     QLabel* name;
     QLabel* batteryLevel;
+    QLabel* numSensors;
 
    public:
     DroneWidget(Drone*, QWidget* = nullptr);

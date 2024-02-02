@@ -8,6 +8,7 @@
 #include "Altimeter.h"
 #include "BatteryChargeSensor.h"
 #include "GPS.h"
+#include "Hygrometer.h"
 #include "Thermometer.h"
 
 class Drone {
@@ -18,36 +19,16 @@ class Drone {
     GPS gps;
     Altimeter altimeter;
 
-    // std::vector<AbstractSensor&> externalSensors;
+    std::vector<AbstractSensor*> externalSensors;
 
    public:
-    static const int sensorSockets;
+    static const int sensorSockets;  // sarebbe da chiamare numSocets?
     Drone(std::string);
     virtual ~Drone() = default;
     std::string getName() const;
-    // void mountSensor(const AbstractSensor& sensor) {
-    //     if (externalSensors.size() < sensorSockets) {
-    //         externalSensors.push_back(sensor);
-    //     } else
-    //         throw std::runtime_error("No more sensor sockets available");
-    // }
-    // void unmountSensor(std::vector<AbstractSensor&>::iterator it) {
-    //     externalSensors.erase(it);
-    // }
-    // double getCurrentCpuTemperature() const {
-    //     return tempCpu.getTemperature();
-    // }
-    // double getCurrentBatteryCharge() const {
-    //     return battery.getCharge();
-    // }
-    // double getCurrentLatitude() const {
-    //     return gps.getLat();
-    // }
-    // double getCurrentLongitude() const {
-    //     return gps.getLon();
-    // }
-    // double getCurrentAltitude() const {
-    //     return altimeter.getAltitude();
-    // }
+    void mountSensor(AbstractSensor*);
+    void unmountSensor(std::vector<AbstractSensor*>::iterator);
+    double getBatteryLevel();
+    int getNumEquippedSensors() const;
 };
 #endif
