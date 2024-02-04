@@ -67,14 +67,6 @@ MainWindow::MainWindow(DroneManager* dm) {
     // scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     layout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
-    layout->addWidget(new DroneWidget(new Drone("Drone 1")));
-    layout->addWidget(new DroneWidget(new Drone("Drone 2")));
-    layout->addWidget(new DroneWidget(new Drone("Drone 3")));
-    layout->addWidget(new DroneWidget(new Drone("Drone 4")));
-    layout->addWidget(new DroneWidget(new Drone("Drone 5")));
-    layout->addWidget(new DroneWidget(new Drone("Drone 6")));
-    layout->addWidget(new DroneWidget(new Drone("Drone 7")));
-    layout->addWidget(new DroneWidget(new Drone("Drone 8")));
     layout->addWidget(new DroneView(new Drone("Drone 8")));
 
     //QSTACKEDLAYOUT

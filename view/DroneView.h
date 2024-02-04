@@ -18,9 +18,9 @@ class DroneView : public QWidget {
     QLabel* image;
     QLabel* name;
     QLabel* batteryLevel;
-    // QLabel* cpuTemperature;
-    // QLabel* position;
-    // QLabel* altitude;
+    QLabel* cpuTemperature;
+    QLabel* location;
+    QLabel* altitude;
 
     // Chart per posizione e altezza
     // grafici per sensori
