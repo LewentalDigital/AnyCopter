@@ -13,11 +13,11 @@ namespace View {
 DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     //____________________
     //|<     titleBar    |
-    //||-----|   Info1   |
+    //|_______   Info1   |
     //|| IMG |   Info2   |
-    //||_____|   Info3   |
+    //||_____|   InfoN   |
     //| Sensor1  Sensor2 |
-    //| Sensor3  Sensor4 |
+    //| Sensor3  SensorN |
     //|__________________|
     QVBoxLayout* main = new QVBoxLayout(this);
 
@@ -31,6 +31,8 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     titleBar->addStretch();
     titleBar->addWidget(name);
     titleBar->addStretch();
+
+    connect(back, &QPushButton::clicked, this, &DroneView::back);
 
     // Contenuto del panello
     QScrollArea* scrollArea = new QScrollArea();
@@ -75,6 +77,10 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
 
     main->addWidget(titleBarContainer);
     main->addWidget(scrollArea);
+}
+
+void DroneView::back() {
+    delete this;
 }
 
 }  // namespace View

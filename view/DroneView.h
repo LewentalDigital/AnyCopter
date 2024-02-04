@@ -24,9 +24,12 @@ class DroneView : public QWidget {
 
     // Chart per posizione e altezza
     // grafici per sensori
-
+    
    public:
     DroneView(Drone*, QWidget* = nullptr);
+
+   public slots:
+    void back();
 };
 
 }  // namespace View

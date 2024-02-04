@@ -10,6 +10,7 @@
 
 #include "../model/Drone.h"
 #include "DroneList.h"
+#include "DroneView.h"
 
 namespace View {
 
@@ -58,14 +59,23 @@ MainWindow::MainWindow(DroneManager* dm) {
 
     connect(close, &QAction::triggered, this, &MainWindow::close);
 
-    // QSTACKEDLAYOUT
-
     DroneList* droneList = new DroneList(dm, this);
-    setCentralWidget(droneList);
+    connect(droneList, &DroneList::manageDrone, this, &MainWindow::manageDrone);
+
+    stackedWidget = new QStackedWidget(this);
+    stackedWidget->addWidget(droneList);
+
+    setCentralWidget(stackedWidget);
 }
 
 void MainWindow::close() {
     QApplication::quit();
+}
+
+void MainWindow::manageDrone(Drone* drone) {
+    DroneView* dv = new DroneView(drone);
+    stackedWidget->addWidget(dv);
+    // stackedWidget->setCurrentIndex(1);
 }
 
 }  // namespace View

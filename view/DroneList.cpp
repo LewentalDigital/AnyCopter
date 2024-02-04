@@ -1,10 +1,11 @@
 #include "DroneList.h"
 
-#include <QScrollArea>
 #include <QBoxLayout>
+#include <QScrollArea>
+#include <vector>
 
 #include "../model/Drone.h"
-#include "DroneListItem.h"
+#include "../model/DroneManager.h"
 
 namespace View {
 
@@ -16,13 +17,12 @@ DroneList::DroneList(DroneManager* dm, QWidget* parent) : QWidget(parent) {
     QVBoxLayout* layout = new QVBoxLayout(centralWidget);
     layout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
-
-    layout->addWidget(new DroneListItem(new Drone("Drone 8")));
-    layout->addWidget(new DroneListItem(new Drone("Drone 8")));
-    layout->addWidget(new DroneListItem(new Drone("Drone 8")));
-    layout->addWidget(new DroneListItem(new Drone("Drone 8")));
-    layout->addWidget(new DroneListItem(new Drone("Drone 8")));
-    layout->addWidget(new DroneListItem(new Drone("Drone 8")));
+    const std::vector<Drone*>& drones = dm->getDrones();
+    for (std::vector<Drone*>::const_iterator it = drones.begin(); it != drones.end(); it++) {
+        droneItems.push_back(new DroneListItem(*it));
+        connect(droneItems[droneItems.size() - 1], &DroneListItem::manageDrone, this, &DroneList::manageDrone);
+        layout->addWidget(droneItems[droneItems.size() - 1]);
+    }
 
     centralWidget->setLayout(layout);
     scrollArea->setWidget(centralWidget);

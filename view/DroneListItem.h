@@ -18,6 +18,9 @@ class DroneListItem : public QWidget {
 
    public:
     DroneListItem(Drone*, QWidget* = nullptr);
+
+   signals:
+    void manageDrone(Drone*);
 };
 
 }  // namespace View
