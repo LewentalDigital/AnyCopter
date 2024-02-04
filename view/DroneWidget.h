@@ -3,8 +3,10 @@
 
 #include <QLabel>
 #include <QWidget>
+
 #include "../model/Drone.h"
 
+namespace View {
 class DroneWidget : public QWidget {
     Q_OBJECT
    private:
@@ -18,4 +20,5 @@ class DroneWidget : public QWidget {
     DroneWidget(Drone*, QWidget* = nullptr);
 };
 
+}  // namespace View
 #endif

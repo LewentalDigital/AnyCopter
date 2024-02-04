@@ -1,15 +1,18 @@
 #include "MainWindow.h"
 
-#include <QWidget>
-#include <QApplication>
-#include <QMenuBar>
-#include <QMenu>
 #include <QAction>
-#include <QVBoxLayout>
+#include <QApplication>
+#include <QMenu>
+#include <QMenuBar>
 #include <QScrollArea>
+#include <QVBoxLayout>
+#include <QWidget>
 
 #include "../model/Drone.h"
 #include "DroneWidget.h"
+#include "DroneView.h"
+
+namespace View {
 
 MainWindow::MainWindow(DroneManager* dm) {
     QAction* create = new QAction(
@@ -32,6 +35,15 @@ MainWindow::MainWindow(DroneManager* dm) {
         "Close");
     close->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
 
+    QAction* refresh = new QAction(
+        "Refresh");
+    refresh->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_R));
+    // refresh->setShortcut(QKeyEvent(Qt::Key_F5));
+
+    QAction* deploy = new QAction(
+        "Deploy new drone");
+    deploy->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_D));
+
     // Sets menu bar
     QMenu* file = menuBar()->addMenu("&File");
     file->addAction(create);
@@ -40,7 +52,10 @@ MainWindow::MainWindow(DroneManager* dm) {
     file->addAction(save_as);
     file->addSeparator();
     file->addAction(close);
-    // QMenu* view = menuBar()->addMenu("&View");
+    QMenu* view = menuBar()->addMenu("&View");
+    view->addAction(refresh);
+    QMenu* droneMenu = menuBar()->addMenu("&Drones");
+    droneMenu->addAction(deploy);
 
     connect(close, &QAction::triggered, this, &MainWindow::close);
 
@@ -60,6 +75,9 @@ MainWindow::MainWindow(DroneManager* dm) {
     layout->addWidget(new DroneWidget(new Drone("Drone 6")));
     layout->addWidget(new DroneWidget(new Drone("Drone 7")));
     layout->addWidget(new DroneWidget(new Drone("Drone 8")));
+    layout->addWidget(new DroneView(new Drone("Drone 8")));
+
+    //QSTACKEDLAYOUT
 
     centralWidget->setLayout(layout);
     scrollArea->setWidget(centralWidget);
@@ -69,3 +87,5 @@ MainWindow::MainWindow(DroneManager* dm) {
 void MainWindow::close() {
     QApplication::quit();
 }
+
+}  // namespace View

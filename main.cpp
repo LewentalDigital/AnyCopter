@@ -14,10 +14,10 @@ int main(int argc, char *argv[]) {
 
     // DroneManager droneManager;
     // View::MainWindow window(droneManager);
-
+    
     DroneManager droneManager;
-    MainWindow window(&droneManager);
-    window.resize(1024, 576);
+    View::MainWindow window(&droneManager);
+    // window.resize(1024, 576);
     window.show();
 
 

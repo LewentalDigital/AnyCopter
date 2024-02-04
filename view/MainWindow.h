@@ -2,7 +2,10 @@
 #define VIEW_MAIN_WINDOW_H
 
 #include <QMainWindow>
+
 #include "../model/DroneManager.h"
+
+namespace View {
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -14,4 +17,5 @@ class MainWindow : public QMainWindow {
     void close();
 };
 
+}  // namespace View
 #endif
