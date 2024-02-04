@@ -1,5 +1,5 @@
-#ifndef VIEW_DRONEWIDGET_H
-#define VIEW_DRONEWIDGET_H
+#ifndef VIEW_DRONELISTITEM_H
+#define VIEW_DRONELISTITEM_H
 
 #include <QLabel>
 #include <QWidget>
@@ -7,7 +7,7 @@
 #include "../model/Drone.h"
 
 namespace View {
-class DroneWidget : public QWidget {
+class DroneListItem : public QWidget {
     Q_OBJECT
    private:
     Drone* drone;
@@ -17,7 +17,7 @@ class DroneWidget : public QWidget {
     QLabel* numSensors;
 
    public:
-    DroneWidget(Drone*, QWidget* = nullptr);
+    DroneListItem(Drone*, QWidget* = nullptr);
 };
 
 }  // namespace View

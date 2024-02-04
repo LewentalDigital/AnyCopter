@@ -49,11 +49,13 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     image = new QLabel();
     image->setPixmap(QPixmap(":assets/images/agriDrone.png").scaled(300, 300, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     droneInfo->addWidget(image);
-    //Informazioni testuali del drone disposte verticalmente
+    // Informazioni testuali del drone disposte verticalmente
     QWidget* droneInfoTextContainer = new QWidget();
     droneInfo->addWidget(droneInfoTextContainer);
     QVBoxLayout* droneInfoText = new QVBoxLayout(droneInfoTextContainer);
     droneInfoTextContainer->setLayout(droneInfoText);
+    QLabel* batteryLabel = new QLabel("Battery level:");
+    droneInfoText->addWidget(batteryLabel);
     QProgressBar* pBBattery = new QProgressBar();
     pBBattery->setValue(drone->getBatteryLevel());
     droneInfoText->addWidget(pBBattery);
@@ -68,8 +70,8 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     altitude = new QLabel("Altitude: " + QString::number(23) + "m");
     droneInfoText->addWidget(altitude);
 
-    batteryLevel = new QLabel(QString::number(drone->getBatteryLevel()) + "%");
-    layout->addWidget(batteryLevel);
+    QLabel* sensorsLabel = new QLabel("External sensors:");
+    layout->addWidget(sensorsLabel);
 
     main->addWidget(titleBarContainer);
     main->addWidget(scrollArea);

@@ -24,16 +24,19 @@ HEADERS += model/AbstractSensor.h \
            model/GPS.h \
            model/Hygrometer.h \
            model/Thermometer.h \
-           view/DroneWidget.h \
+           view/DroneList.h \
            view/DroneView.h \
+           view/DroneListItem.h \
            view/MainWindow.h
 SOURCES += main.cpp \
+           model/AbstractSensor.cpp \
            model/BatteryChargeSensor.cpp \
            model/Drone.cpp \
            model/DroneManager.cpp \
            model/Hygrometer.cpp \
            model/Thermometer.cpp \
-           view/DroneWidget.cpp \
+           view/DroneList.cpp \
            view/DroneView.cpp \
+           view/DroneListItem.cpp \
            view/MainWindow.cpp
 RESOURCES += resources.qrc

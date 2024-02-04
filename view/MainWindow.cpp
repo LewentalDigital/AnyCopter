@@ -9,8 +9,7 @@
 #include <QWidget>
 
 #include "../model/Drone.h"
-#include "DroneWidget.h"
-#include "DroneView.h"
+#include "DroneList.h"
 
 namespace View {
 
@@ -59,21 +58,10 @@ MainWindow::MainWindow(DroneManager* dm) {
 
     connect(close, &QAction::triggered, this, &MainWindow::close);
 
-    QScrollArea* scrollArea = new QScrollArea(this);
-    QWidget* centralWidget = new QWidget(scrollArea);
-    QVBoxLayout* layout = new QVBoxLayout(centralWidget);
+    // QSTACKEDLAYOUT
 
-    scrollArea->setWidgetResizable(true);
-    // scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    layout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-
-    layout->addWidget(new DroneView(new Drone("Drone 8")));
-
-    //QSTACKEDLAYOUT
-
-    centralWidget->setLayout(layout);
-    scrollArea->setWidget(centralWidget);
-    setCentralWidget(scrollArea);
+    DroneList* droneList = new DroneList(dm, this);
+    setCentralWidget(droneList);
 }
 
 void MainWindow::close() {

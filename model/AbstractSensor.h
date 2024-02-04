@@ -6,12 +6,7 @@
 class AbstractSensor {
    protected:
     double min, max;
-    double random() {
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::normal_distribution<double> dist(25);
-        return dist(gen);
-    }
+    double random(double mean, double variation);
 
    public:
     virtual ~AbstractSensor() = default;
