@@ -25,6 +25,7 @@ HEADERS += model/AbstractSensor.h \
            model/Hygrometer.h \
            model/Thermometer.h \
            view/DroneWidget.h \
+           view/DroneView.h \
            view/MainWindow.h
 SOURCES += main.cpp \
            model/BatteryChargeSensor.cpp \
@@ -33,5 +34,6 @@ SOURCES += main.cpp \
            model/Hygrometer.cpp \
            model/Thermometer.cpp \
            view/DroneWidget.cpp \
+           view/DroneView.cpp \
            view/MainWindow.cpp
 RESOURCES += resources.qrc

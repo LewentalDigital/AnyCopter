@@ -2,5 +2,6 @@
 <RCC version="1.0">
 <qresource>
     <file>assets/images/agriDrone.png</file>
+    <file>assets/icons/arrow-back.svg</file>
 </qresource>
 </RCC>
