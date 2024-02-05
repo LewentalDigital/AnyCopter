@@ -24,7 +24,7 @@ class Drone {
    public:
     static const int sensorSockets;  // sarebbe da chiamare numSocets?
     Drone(std::string);
-    virtual ~Drone() = default;
+    virtual ~Drone();
     std::string getName() const;
     void mountSensor(AbstractSensor*);
     void unmountSensor(std::vector<AbstractSensor*>::iterator);

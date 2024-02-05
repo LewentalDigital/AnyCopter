@@ -4,6 +4,13 @@ const int Drone::sensorSockets = 2;
 
 Drone::Drone(std::string n) : name(n) {
 }
+
+Drone::~Drone() {
+    for (auto it = externalSensors.begin(); it != externalSensors.end(); ++it) {
+        delete *it;
+    }
+}
+
 std::string Drone::getName() const {
     return name;
 }
