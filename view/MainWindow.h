@@ -18,7 +18,9 @@ class MainWindow : public QMainWindow {
 
    public slots:
     void close();
+    // void viewDroneList();
     void manageDrone(Drone*);
+    void deployNewDrone();
 };
 
 }  // namespace View

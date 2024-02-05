@@ -24,6 +24,7 @@ HEADERS += model/AbstractSensor.h \
            model/GPS.h \
            model/Hygrometer.h \
            model/Thermometer.h \
+           view/DroneDeployView.h \
            view/DroneList.h \
            view/DroneView.h \
            view/DroneListItem.h \
@@ -35,6 +36,7 @@ SOURCES += main.cpp \
            model/DroneManager.cpp \
            model/Hygrometer.cpp \
            model/Thermometer.cpp \
+           view/DroneDeployView.cpp \
            view/DroneList.cpp \
            view/DroneView.cpp \
            view/DroneListItem.cpp \

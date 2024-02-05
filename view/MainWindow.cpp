@@ -9,55 +9,62 @@
 #include <QWidget>
 
 #include "../model/Drone.h"
+#include "DroneDeployView.h"
 #include "DroneList.h"
 #include "DroneView.h"
 
 namespace View {
 
 MainWindow::MainWindow(DroneManager* dm) {
-    QAction* create = new QAction(
+    QAction* actionCreate = new QAction(
         "New");
-    create->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_N));
+    actionCreate->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_N));
 
-    QAction* open = new QAction(
+    QAction* actionOpen = new QAction(
         "Open");
-    open->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_O));
+    actionOpen->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_O));
 
-    QAction* save = new QAction(
+    QAction* actionSave = new QAction(
         "Save");
-    save->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
+    actionSave->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
 
-    QAction* save_as = new QAction(
+    QAction* actionSaveAs = new QAction(
         "Save As");
-    save_as->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_S));
+    actionSaveAs->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_S));
 
-    QAction* close = new QAction(
+    QAction* actionClose = new QAction(
         "Close");
-    close->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
+    actionClose->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
 
-    QAction* refresh = new QAction(
+    QAction* actionRefresh = new QAction(
         "Refresh");
-    refresh->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_R));
-    // refresh->setShortcut(QKeyEvent(Qt::Key_F5));
+    actionRefresh->setShortcuts(QList<QKeySequence>{QKeySequence(Qt::Key_F5), QKeySequence(Qt::CTRL | Qt::Key_R)});
 
-    QAction* deploy = new QAction(
+    QAction* actionDeploy = new QAction(
         "Deploy new drone");
-    deploy->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_D));
+    actionDeploy->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_D));
+
+    QAction* actionVewList = new QAction(
+        "List of drones");
+    actionVewList->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_L));
 
     // Sets menu bar
     QMenu* file = menuBar()->addMenu("&File");
-    file->addAction(create);
-    file->addAction(open);
-    file->addAction(save);
-    file->addAction(save_as);
+    file->addAction(actionCreate);
+    file->addAction(actionOpen);
+    file->addAction(actionSave);
+    file->addAction(actionSaveAs);
     file->addSeparator();
-    file->addAction(close);
+    file->addAction(actionClose);
     QMenu* view = menuBar()->addMenu("&View");
-    view->addAction(refresh);
+    view->addAction(actionRefresh);
+    view->addAction(actionVewList);
     QMenu* droneMenu = menuBar()->addMenu("&Drones");
-    droneMenu->addAction(deploy);
+    droneMenu->addAction(actionDeploy);
 
-    connect(close, &QAction::triggered, this, &MainWindow::close);
+    connect(actionDeploy, &QAction::triggered, this, &MainWindow::deployNewDrone);
+    connect(actionClose, &QAction::triggered, this, &MainWindow::close);
+    connect(actionRefresh, &QAction::triggered, this, &MainWindow::close);  // test
 
     DroneList* droneList = new DroneList(dm, this);
     connect(droneList, &DroneList::manageDrone, this, &MainWindow::manageDrone);
@@ -75,7 +82,13 @@ void MainWindow::close() {
 void MainWindow::manageDrone(Drone* drone) {
     DroneView* dv = new DroneView(drone);
     stackedWidget->addWidget(dv);
-    // stackedWidget->setCurrentIndex(1);
+    stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::deployNewDrone() {
+    DroneDeployView* ddv = new DroneDeployView();
+    stackedWidget->addWidget(ddv);
+    stackedWidget->setCurrentIndex(2);
 }
 
 }  // namespace View

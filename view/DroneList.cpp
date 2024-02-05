@@ -10,6 +10,8 @@
 namespace View {
 
 DroneList::DroneList(DroneManager* dm, QWidget* parent) : QWidget(parent) {
+    // mettere titleBar
+
     QBoxLayout* main = new QVBoxLayout(this);
     QScrollArea* scrollArea = new QScrollArea();
     scrollArea->setWidgetResizable(true);

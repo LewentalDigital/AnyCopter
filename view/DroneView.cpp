@@ -26,6 +26,7 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     QHBoxLayout* titleBar = new QHBoxLayout(titleBarContainer);
     titleBarContainer->setLayout(titleBar);
     QPushButton* back = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "");
+    back->setShortcut(QKeySequence::Back);
     name = new QLabel(QString::fromStdString(drone->getName()));
     titleBar->addWidget(back);
     titleBar->addStretch();
@@ -74,6 +75,7 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
 
     QLabel* sensorsLabel = new QLabel("External sensors:");
     layout->addWidget(sensorsLabel);
+    // droneSensors layout...
 
     main->addWidget(titleBarContainer);
     main->addWidget(scrollArea);
