@@ -6,7 +6,8 @@
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    // app.setWindowIcon(QIcon(":assets/icon.svg"));
+    app.setWindowIcon(QIcon(":assets/icons/icon.svg"));
+    app.setWindowIcon(QIcon(":assets/icons/candidate.png"));
 
     // QFile style(":/assets/style.qss");
     // style.open(QFile::ReadOnly);

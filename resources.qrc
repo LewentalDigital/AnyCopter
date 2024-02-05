@@ -3,5 +3,9 @@
 <qresource>
     <file>assets/images/agriDrone.png</file>
     <file>assets/icons/arrow-back.svg</file>
+    <file>assets/icons/close.svg</file>
+    <file>assets/icons/deploy.png</file>
+    <file>assets/icons/icon.svg</file>
+    <file>assets/icons/candidate.png</file>
 </qresource>
 </RCC>
