@@ -23,9 +23,10 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
 
     // Title bar del panello (forse da creare classe a parte)
     QWidget* titleBarContainer = new QWidget();
+    titleBarContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QHBoxLayout* titleBar = new QHBoxLayout(titleBarContainer);
     titleBarContainer->setLayout(titleBar);
-    QPushButton* back = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "");
+    QPushButton* back = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "Back");
     back->setShortcut(QKeySequence::Back);
     name = new QLabel(QString::fromStdString(drone->getName()));
     titleBar->addWidget(back);

@@ -6,12 +6,16 @@
 
 #include "../model/DroneManager.h"
 #include "../model/Drone.h"
+#include "DroneList.h"
 
 namespace View {
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
+    private:
+    DroneManager* droneManager;
     QStackedWidget* stackedWidget;
+    DroneList* droneList;
 
    public:
     MainWindow(DroneManager* = nullptr);
@@ -20,7 +24,8 @@ class MainWindow : public QMainWindow {
     void close();
     // void viewDroneList();
     void manageDrone(Drone*);
-    void deployNewDrone();
+    void openDeployDroneView();
+    void deployNewDrone(Drone*);
 };
 
 }  // namespace View

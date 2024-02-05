@@ -2,6 +2,7 @@
 #define VIEW_DRONEDEPLOYVIEW_H
 
 #include <QLabel>
+#include <QLineEdit>
 #include <QWidget>
 
 #include "../model/Drone.h"
@@ -12,16 +13,17 @@ class DroneDeployView : public QWidget {
     Q_OBJECT
    private:
     QLabel* image;
-    QLabel* batteryLevel;
-    QLabel* cpuTemperature;
-    QLabel* location;
-    QLabel* altitude;
+    QLineEdit* nameInput;
 
    public:
     DroneDeployView(QWidget* = nullptr);
 
+   signals:
+    void deploy(Drone*);
    public slots:
-    void back();
+    // void checkInput();
+    void handleDeploy();
+    void close();
 };
 
 }  // namespace View
