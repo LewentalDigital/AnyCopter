@@ -1,9 +1,10 @@
 #ifndef VIEW_DRONELIST_H
 #define VIEW_DRONELIST_H
 
+#include <QScrollArea>
+#include <QVBoxLayout>
 #include <QVector>
 #include <QWidget>
-#include <QVBoxLayout>
 
 #include "../model/Drone.h"
 #include "../model/DroneManager.h"
@@ -17,10 +18,12 @@ class DroneList : public QWidget {
     DroneManager* droneManager;
     QVector<DroneListItem*> droneItems;
 
+    QScrollArea* scrollArea;
     QVBoxLayout* content;
 
    public:
     DroneList(DroneManager*, QWidget* = nullptr);
+    ~DroneList();
 
    signals:
     void manageDrone(Drone*);

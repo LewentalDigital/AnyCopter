@@ -1,7 +1,6 @@
 #include "DroneList.h"
 
 #include <QBoxLayout>
-#include <QScrollArea>
 #include <vector>
 
 #include "../model/Drone.h"
@@ -13,7 +12,7 @@ DroneList::DroneList(DroneManager* dm, QWidget* parent) : QWidget(parent) {
     // mettere titleBar
 
     QBoxLayout* main = new QVBoxLayout(this);
-    QScrollArea* scrollArea = new QScrollArea();
+    scrollArea = new QScrollArea();
     scrollArea->setWidgetResizable(true);
     QWidget* centralWidget = new QWidget(scrollArea);
     content = new QVBoxLayout(centralWidget);
@@ -33,8 +32,15 @@ DroneList::DroneList(DroneManager* dm, QWidget* parent) : QWidget(parent) {
 
 void DroneList::addDrone(Drone* d) {
     droneItems.push_back(new DroneListItem(d));
-    connect(droneItems[droneItems.size() - 1], &DroneListItem::manageDrone, this, &DroneList::manageDrone);
-    content->addWidget(droneItems[droneItems.size() - 1]);
+    connect(droneItems.back(), &DroneListItem::manageDrone, this, &DroneList::manageDrone);
+    content->addWidget(droneItems.back());
+    // scrollArea->ensureWidgetVisible(droneItems.back()); // non funziona :(
+}
+
+DroneList::~DroneList() {
+    for (DroneListItem* item : droneItems) {
+        delete item;
+    }
 }
 
 }  // namespace View
