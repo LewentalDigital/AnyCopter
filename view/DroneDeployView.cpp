@@ -4,6 +4,7 @@
 #include <QIcon>
 #include <QPushButton>
 #include <QString>
+#include <QtCharts>
 #include <QVBoxLayout>
 
 namespace View {
@@ -68,9 +69,20 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
 
     connect(btnDeploy, &QPushButton::clicked, this, &DroneDeployView::handleDeploy);
 
+    QLineSeries* series = new QLineSeries();
+    series->append(0, 6);
+    series->append(2, 4);
+    auto chart = new QChart;
+    chart->legend()->hide();
+    chart->addSeries(series);
+    chart->createDefaultAxes();
+    chart->setTitle("Simple Line Chart");
+    auto chartView = new QChartView(chart);
+
     main->addWidget(titleBarContainer);
     main->addWidget(centralWidget);
     main->addWidget(btnDeploy);
+    main->addWidget(chartView);
 }
 void DroneDeployView::handleDeploy() {
     Drone* d = new Drone(nameInput->text().toStdString());
