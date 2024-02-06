@@ -2,9 +2,11 @@
 
 #include <QAction>
 #include <QApplication>
+#include <QDesktopServices>
 #include <QMenu>
 #include <QMenuBar>
 #include <QScrollArea>
+#include <QUrl>
 #include <QVBoxLayout>
 #include <QWidget>
 
@@ -15,50 +17,40 @@
 namespace View {
 
 MainWindow::MainWindow(DroneManager* dm) : droneManager(dm) {
-    QAction* actionCreate = new QAction(
-        "New");
+    QAction* actionCreate = new QAction("New");
     actionCreate->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_N));
 
-    QAction* actionOpen = new QAction(
-        "Open");
+    QAction* actionOpen = new QAction("Open");
     actionOpen->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_O));
 
-    QAction* actionSave = new QAction(
-        "Save");
+    QAction* actionSave = new QAction("Save");
     actionSave->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
 
-    QAction* actionSaveAs = new QAction(
-        "Save As");
+    QAction* actionSaveAs = new QAction("Save As");
     actionSaveAs->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_S));
 
-    QAction* actionClose = new QAction(
-        "Close");
-    actionClose->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
+    QAction* actionQuit = new QAction("Quit");
+    actionQuit->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
 
-    QAction* actionRefresh = new QAction(
-        "Refresh");
+    QAction* actionRefresh = new QAction("Refresh");
     actionRefresh->setShortcuts(QList<QKeySequence>{QKeySequence(Qt::Key_F5), QKeySequence(Qt::CTRL | Qt::Key_R)});
 
-    QAction* actionDeploy = new QAction(
-        "Deploy new drone");
+    QAction* actionDeploy = new QAction("Deploy new drone");
     actionDeploy->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_D));
 
-    QAction* actionVewList = new QAction(
-        "List of drones");
+    QAction* actionVewList = new QAction("List of drones");
     actionVewList->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_L));
 
-    QAction* actionGithub = new QAction(
-        "Go to LewentalDigital GitHub page");
-    //TODO
+    QAction* actionGithub = new QAction("Visit LewentalDigital GitHub page");
 
-    // Sets menu bar
+    // Set menu bar
     QMenu* menuFile = menuBar()->addMenu("&File");
     menuFile->addAction(actionCreate);
     menuFile->addAction(actionOpen);
     menuFile->addAction(actionSave);
     menuFile->addAction(actionSaveAs);
     menuFile->addSeparator();
-    menuFile->addAction(actionClose);
+    menuFile->addAction(actionQuit);
     QMenu* menuView = menuBar()->addMenu("&View");
     menuView->addAction(actionRefresh);
     menuView->addAction(actionVewList);
@@ -67,9 +59,10 @@ MainWindow::MainWindow(DroneManager* dm) : droneManager(dm) {
     QMenu* menuInfo = menuBar()->addMenu("&Info");
     menuInfo->addAction(actionGithub);
 
+    connect(actionRefresh, &QAction::triggered, this, &MainWindow::quit);  // test
+    connect(actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(actionDeploy, &QAction::triggered, this, &MainWindow::openDeployDroneView);
-    connect(actionClose, &QAction::triggered, this, &MainWindow::close);
-    connect(actionRefresh, &QAction::triggered, this, &MainWindow::close);  // test
+    connect(actionGithub, &QAction::triggered, this, &MainWindow::visitGithub);
 
     droneList = new DroneList(dm, this);
     connect(droneList, &DroneList::manageDrone, this, &MainWindow::manageDrone);
@@ -80,8 +73,12 @@ MainWindow::MainWindow(DroneManager* dm) : droneManager(dm) {
     setCentralWidget(stackedWidget);
 }
 
-void MainWindow::close() {
+void MainWindow::quit() {
     QApplication::quit();
+}
+
+void MainWindow::visitGithub() {
+    QDesktopServices::openUrl(QUrl("https://github.com/LewentalDigital/AnyCopter"));
 }
 
 void MainWindow::manageDrone(Drone* drone) {

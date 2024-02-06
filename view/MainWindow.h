@@ -4,15 +4,15 @@
 #include <QMainWindow>
 #include <QStackedWidget>
 
-#include "../model/DroneManager.h"
 #include "../model/Drone.h"
+#include "../model/DroneManager.h"
 #include "DroneList.h"
 
 namespace View {
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
-    private:
+   private:
     DroneManager* droneManager;
     QStackedWidget* stackedWidget;
     DroneList* droneList;
@@ -21,7 +21,8 @@ class MainWindow : public QMainWindow {
     MainWindow(DroneManager* = nullptr);
 
    public slots:
-    void close();
+    void quit();
+    void visitGithub();
     // void viewDroneList();
     void manageDrone(Drone*);
     void openDeployDroneView();
