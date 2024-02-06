@@ -53,9 +53,10 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
     nameInput = new QLineEdit(this);
     nameInput->setPlaceholderText("Insert name");
     nameInput->setMaxLength(32);
-
     nameLabel->setBuddy(nameInput);
+
     QLabel* integratedSensors = new QLabel(QString::fromStdString("Integrated sensors: Thermometer for CPU, Battery charge sensor, Altimeter, GPS"));
+    integratedSensors->setWordWrap(true);
 
     droneInsertText->addWidget(nameLabel);
     droneInsertText->addWidget(nameInput);
@@ -69,15 +70,23 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
 
     connect(btnDeploy, &QPushButton::clicked, this, &DroneDeployView::handleDeploy);
 
+    // QSplineSeries* series = new QSplineSeries();
     QLineSeries* series = new QLineSeries();
     series->append(0, 6);
-    series->append(2, 4);
+    series->append(1, 4);
+    series->append(2, 2);
+    series->append(3, 8);
+    series->append(4, 3);
+    series->append(5, 5);
     auto chart = new QChart;
     chart->legend()->hide();
     chart->addSeries(series);
     chart->createDefaultAxes();
     chart->setTitle("Simple Line Chart");
+    // chart->setAnimationOptions(QChart::SeriesAnimations);
+    // chart->setAnimationDuration(150);
     auto chartView = new QChartView(chart);
+    chartView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
     main->addWidget(titleBarContainer);
     main->addWidget(centralWidget);
