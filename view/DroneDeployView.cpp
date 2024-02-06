@@ -2,6 +2,7 @@
 
 #include <QHBoxLayout>
 #include <QIcon>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QString>
 #include <QVBoxLayout>
@@ -73,9 +74,13 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
     main->addWidget(btnDeploy);
 }
 void DroneDeployView::handleDeploy() {
-    Drone* d = new Drone(nameInput->text().toStdString());
-    emit deploy(d);
-    close();
+    if (nameInput->text().toStdString().empty()) {
+        QMessageBox::warning(this, "Input error", "Drone name cannot be empty!");
+    } else {
+        Drone* d = new Drone(nameInput->text().toStdString());
+        emit deploy(d);
+        close();
+    }
 }
 
 void DroneDeployView::close() {
