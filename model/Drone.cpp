@@ -1,6 +1,6 @@
 #include "Drone.h"
 
-const int Drone::sensorSockets = 2;
+const unsigned int Drone::sensorSockets = 2;
 
 Drone::Drone(std::string n) : name(n) {
 }
@@ -21,6 +21,7 @@ void Drone::mountSensor(AbstractSensor* sensor) {
     } else
         throw std::string("No more sensor sockets available");
 }
+
 void Drone::unmountSensor(std::vector<AbstractSensor*>::iterator it) {
     externalSensors.erase(it);
 }
@@ -32,4 +33,8 @@ double Drone::getBatteryLevel() {
 
 int Drone::getNumEquippedSensors() const {
     return externalSensors.size();
+}
+
+const std::vector<AbstractSensor*>& Drone::getMountedSensors() const {
+    return externalSensors;
 }

@@ -5,13 +5,12 @@
 
 class Hygrometer : public AbstractSensor {
    private:
+    int prevReadingTime;
     double humidity;
 
    public:
-    Hygrometer();
+    Hygrometer(int bufferSize = 24);
 
-    void read() override {
-        humidity = 0.5;
-    }
+    void read() override;
 };
 #endif

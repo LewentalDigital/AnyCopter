@@ -6,16 +6,13 @@
 class Thermometer : public AbstractSensor {
    private:
     double temperature;
+    int prevReadingTime;
 
    public:
-    Thermometer();
+    Thermometer(int bufferSize = 24);
 
-    void read() override {
-        temperature = 20.0;
-    }
+    void read() override;
 
-    double getTemperature() const {
-        return temperature;
-    }
+    double getTemperature() const;
 };
 #endif

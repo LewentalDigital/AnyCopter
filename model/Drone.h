@@ -22,7 +22,7 @@ class Drone {
     std::vector<AbstractSensor*> externalSensors;
 
    public:
-    static const int sensorSockets;  // sarebbe da chiamare numSocets?
+    static const unsigned int sensorSockets;  // sarebbe da chiamare numSocets?
     Drone(std::string);
     virtual ~Drone();
     std::string getName() const;
@@ -30,5 +30,6 @@ class Drone {
     void unmountSensor(std::vector<AbstractSensor*>::iterator);
     double getBatteryLevel();
     int getNumEquippedSensors() const;
+    const std::vector<AbstractSensor*>& getMountedSensors() const;
 };
 #endif

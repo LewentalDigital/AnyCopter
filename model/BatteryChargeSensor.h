@@ -8,7 +8,7 @@ class BatteryChargeSensor : public AbstractSensor {
     double charge;
 
    public:
-    BatteryChargeSensor();
+    BatteryChargeSensor(int bufferSize = 60);
     void read() override;
     double getCharge() const;
 };
