@@ -39,7 +39,7 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
     QHBoxLayout* droneInsert = new QHBoxLayout(droneInsertContainer);
     droneInsertContainer->setLayout(droneInsert);
     image = new QLabel();
-    image->setPixmap(QPixmap(":assets/images/agriDrone.png").scaled(300, 300, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    image->setPixmap(QPixmap(":assets/images/droneModels/3.png").scaled(300, 300, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     droneInsert->addWidget(image);
 
     // Input testuali del drone disposte verticalmente
@@ -73,6 +73,7 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
     main->addWidget(centralWidget);
     main->addWidget(btnDeploy);
 }
+
 void DroneDeployView::handleDeploy() {
     if (nameInput->text().toStdString().empty()) {
         QMessageBox::warning(this, "Input error", "Drone name cannot be empty!");
