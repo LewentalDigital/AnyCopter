@@ -5,6 +5,7 @@
 #include <QVector>
 #include <QWidget>
 
+#include "../model/AbstractSensor.h"
 #include "../model/Drone.h"
 
 namespace View {
@@ -24,11 +25,12 @@ class DroneView : public QWidget {
 
     // Chart per posizione e altezza
     // grafici per sensori
-    
+
    public:
     DroneView(Drone*, QWidget* = nullptr);
 
    public slots:
+    void mountSensor(AbstractSensor*);
     void back();
 };
 

@@ -7,12 +7,12 @@
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
     app.setWindowIcon(QIcon(":assets/icons/icon.svg"));
-    app.setWindowIcon(QIcon(":assets/icons/candidate.png"));
+    // app.setWindowIcon(QIcon(":assets/icons/candidate.png"));
 
     // QFile style(":/assets/style.qss");
     // style.open(QFile::ReadOnly);
     // app.setStyleSheet(QLatin1String(style.readAll()));
-
+    
     DroneManager droneManager;
 
     Drone *d1 = new Drone("Drone 1");
