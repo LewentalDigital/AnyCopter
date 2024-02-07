@@ -7,6 +7,8 @@
 #include <QScrollArea>
 #include <QString>
 #include <QVBoxLayout>
+#include <QtCharts>
+#include <QErrorMessage>
 
 namespace View {
 
@@ -74,12 +76,57 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     altitude = new QLabel("Altitude: " + QString::number(23) + "m");
     droneInfoText->addWidget(altitude);
 
-    QLabel* sensorsLabel = new QLabel("External sensors:");
+    QLabel* sensorsLabel = new QLabel("Mounted sensors:");
     layout->addWidget(sensorsLabel);
-    // droneSensors layout...
+
+    QWidget* droneSensorsContainer = new QWidget();
+    layout->addWidget(droneSensorsContainer);
+    QGridLayout* droneSensors = new QGridLayout();
+    droneSensorsContainer->setLayout(droneSensors);
+
+    int gridPosition = 0;
+    const std::vector<AbstractSensor*>& mountedSensors = drone->getMountedSensors();
+    for (auto it = mountedSensors.begin(); it != mountedSensors.end(); ++it) {
+        // QSplineSeries* series = new QSplineSeries();
+        QLineSeries* series = new QLineSeries();
+        series->append(0, 6);
+        series->append(1, 4);
+        series->append(2, 2);
+        series->append(3, 8);
+        series->append(4, 3);
+        series->append(5, 5);
+        auto chart = new QChart;
+        chart->legend()->hide();
+        chart->addSeries(series);
+        chart->createDefaultAxes();
+        chart->setTitle("Simple Line Chart");
+        chart->setMargins(QMargins(6, 6, 6, 6));
+        // chart->setAnimationOptions(QChart::SeriesAnimations);
+        // chart->setAnimationDuration(150);
+        auto chartView = new QChartView(chart);
+        chartView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+        droneSensors->addWidget(chartView, 0, gridPosition++ % 2);
+    }
+
+    for (unsigned int i = mountedSensors.size(); i < Drone::sensorSockets; ++i) {
+        // droneSensors->addWidget(empty, 0, 1);
+        QPushButton* btnMountSensor = new QPushButton("Mount thermometer");
+        droneSensors->addWidget(btnMountSensor, 0, gridPosition++ % 2);
+        connect(btnMountSensor, &QPushButton::clicked, std::bind(&DroneView::mountSensor, this, new Thermometer()));
+    }
 
     main->addWidget(titleBarContainer);
     main->addWidget(scrollArea);
+}
+
+void DroneView::mountSensor(AbstractSensor* sensor) {
+    try {
+        drone->mountSensor(sensor);
+    } catch (std::string e) {
+        QErrorMessage* error = new QErrorMessage(this);
+        error->showMessage(QString::fromStdString(e));
+        connect(error, &QErrorMessage::finished, error, &QErrorMessage::close);
+    }
 }
 
 void DroneView::back() {
