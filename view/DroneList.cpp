@@ -9,13 +9,27 @@
 namespace View {
 
 DroneList::DroneList(DroneManager* dm, QWidget* parent) : QWidget(parent) {
-    // mettere titleBar
-
     QBoxLayout* main = new QVBoxLayout(this);
+
+    // Panel title bar
+    QWidget* titleBarContainer = new QWidget();
+    titleBarContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    QHBoxLayout* titleBar = new QHBoxLayout(titleBarContainer);
+    titleBarContainer->setLayout(titleBar);
+    // QPushButton* back = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "Back");
+    // back->setShortcut(QKeySequence::Back);
+    QLabel* title = new QLabel("Drones");
+    // titleBar->addWidget(back);
+    titleBar->addStretch();
+    titleBar->addWidget(title);
+    titleBar->addStretch();
+
     scrollArea = new QScrollArea();
     scrollArea->setWidgetResizable(true);
-    QWidget* centralWidget = new QWidget(scrollArea);
-    content = new QVBoxLayout(centralWidget);
+    QWidget* contentContainer = new QWidget(scrollArea);
+    scrollArea->setWidget(contentContainer);
+    content = new QVBoxLayout(contentContainer);
+    contentContainer->setLayout(content);
     content->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
     const std::vector<Drone*>& drones = dm->getDrones();
@@ -25,8 +39,7 @@ DroneList::DroneList(DroneManager* dm, QWidget* parent) : QWidget(parent) {
         content->addWidget(droneItems[droneItems.size() - 1]);
     }
 
-    centralWidget->setLayout(content);
-    scrollArea->setWidget(centralWidget);
+    main->addWidget(titleBarContainer);
     main->addWidget(scrollArea);
 }
 

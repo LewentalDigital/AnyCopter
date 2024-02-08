@@ -1,7 +1,10 @@
 #ifndef VIEW_DRONEVIEW_H
 #define VIEW_DRONEVIEW_H
 
+#include <QGridLayout>
 #include <QLabel>
+#include <QProgressBar>
+#include <QPushButton>
 #include <QVector>
 #include <QWidget>
 
@@ -14,20 +17,25 @@ class DroneView : public QWidget {
     Q_OBJECT
    private:
     Drone* drone;
+    int gridRowPosition;
+    int gridColPosition;
+    // row = [0...int(number of sockets/2)], col = [0,1]
+    // 2 sensors in a row
+    // => grid->addWidget(widget, gridRowPosition/2, gridColPosition % 2);
 
     // oggetti solo per cose che cambiano
     QLabel* name;
-    QLabel* batteryLevel;
+    QProgressBar* pbBattery;
     QLabel* cpuTemperature;
-
-    // Chart per posizione e altezza
-    // grafici per sensori
+    QGridLayout* droneSensors;
+    QPushButton* btnRead;
 
    public:
     DroneView(Drone*, QWidget* = nullptr);
 
    public slots:
-    void mountSensor(AbstractSensor*);
+    void mountSensor(AbstractSensor*, int, int);
+    void readNewData();
     void back();
 };
 

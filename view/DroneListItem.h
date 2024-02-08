@@ -11,6 +11,7 @@ class DroneListItem : public QWidget {
     Q_OBJECT
    private:
     Drone* drone;
+    
     QLabel* image;
     QLabel* name;
     QLabel* batteryLevel;

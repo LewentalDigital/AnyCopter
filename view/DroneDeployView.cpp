@@ -11,11 +11,9 @@
 namespace View {
 
 DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
-    // DeployDroneView Forse????
-
     QVBoxLayout* main = new QVBoxLayout(this);
 
-    // Title bar del panello
+    // Panel title bar 
     QWidget* titleBarContainer = new QWidget();
     titleBarContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QHBoxLayout* titleBar = new QHBoxLayout(titleBarContainer);
@@ -30,13 +28,13 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
 
     connect(btnClose, &QPushButton::clicked, this, &DroneDeployView::close);
 
-    // Contenuto del panello
-    QWidget* centralWidget = new QWidget();
-    QVBoxLayout* layout = new QVBoxLayout(centralWidget);
-    centralWidget->setLayout(layout);
+    // Panel content
+    QWidget* contenContainer = new QWidget();
+    QVBoxLayout* content = new QVBoxLayout(contenContainer);
+    contenContainer->setLayout(content);
 
     QWidget* droneInsertContainer = new QWidget();
-    layout->addWidget(droneInsertContainer);
+    content->addWidget(droneInsertContainer);
     QHBoxLayout* droneInsert = new QHBoxLayout(droneInsertContainer);
     droneInsertContainer->setLayout(droneInsert);
     image = new QLabel();
@@ -64,7 +62,7 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
     droneInsertText->addWidget(integratedSensors);
 
     QLabel* sensorsLabel = new QLabel("External sensors:");
-    layout->addWidget(sensorsLabel);
+    content->addWidget(sensorsLabel);
 
     QPushButton* btnDeploy = new QPushButton(QIcon(QPixmap(":/assets/icons/deploy.svg")), "Deploy");
     btnDeploy->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return));
@@ -73,7 +71,7 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
 
 
     main->addWidget(titleBarContainer);
-    main->addWidget(centralWidget);
+    main->addWidget(contenContainer);
     main->addWidget(btnDeploy);
 }
 

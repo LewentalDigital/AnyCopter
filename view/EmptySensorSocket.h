@@ -24,6 +24,7 @@ class EmptySensorSocket : public QWidget {
     void mountSensor(AbstractSensor*);
    public slots:
     void handleMount();
+    void remove();
 };
 
 }  // namespace View

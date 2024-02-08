@@ -5,6 +5,7 @@
 #include <QIntValidator>
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QFormLayout>
 
 #include "../model/BatteryChargeSensor.h"
 #include "../model/CO2Sensor.h"
@@ -16,6 +17,7 @@ namespace View {
 EmptySensorSocket::EmptySensorSocket(QWidget* parent) : QWidget(parent) {
     QVBoxLayout* main = new QVBoxLayout(this);
 
+    // Title 
     QWidget* titleContainer = new QWidget();
     QHBoxLayout* title = new QHBoxLayout(titleContainer);
     titleContainer->setLayout(title);
@@ -26,25 +28,30 @@ EmptySensorSocket::EmptySensorSocket(QWidget* parent) : QWidget(parent) {
     title->addWidget(titleLabel);
     title->addStretch();
 
+    // Form to input data for the new sensor
+    QLabel* mountLabel = new QLabel("Mount new sensor:");
+    QWidget* formContainer = new QWidget();
+    QFormLayout* formLayout = new QFormLayout;
+    formContainer->setLayout(formLayout);
     sensorType = new QComboBox();
     sensorType->insertItem(0, QIcon(":assets/icons/thermometer.svg"), "Thermometer");
     sensorType->insertItem(1, QIcon(":assets/icons/water.svg"), "Hygrometer");
     sensorType->insertItem(2, QIcon(":assets/icons/leaf.svg"), "CO2 Sensor");
     sensorType->insertItem(3, QIcon(":assets/icons/battery-half.svg"), "Battery Charge Sensor");
-    btnMountSensor = new QPushButton("Mount Sensor");
-    QLabel* labelBuffer = new QLabel("Buffer size (not required):");
+    btnMountSensor = new QPushButton("Mount");
     bufferSizeInput = new QLineEdit();
-    labelBuffer->setBuddy(bufferSizeInput);
     QValidator* validator = new QIntValidator(1, 256);  // to prevent huge buffer sizes
     bufferSizeInput->setValidator(validator);
     bufferSizeInput->setPlaceholderText("Buffer size");
+    formLayout->addRow(mountLabel);
+    formLayout->addRow("&Sensor type:", sensorType);
+    formLayout->addRow("&Buffer size (optional):", bufferSizeInput);
+    formLayout->addRow(btnMountSensor);
 
     connect(btnMountSensor, &QPushButton::clicked, this, &EmptySensorSocket::handleMount);
 
     main->addWidget(titleContainer);
-    main->addWidget(sensorType);
-    main->addWidget(bufferSizeInput);
-    main->addWidget(btnMountSensor);
+    main->addWidget(formContainer);
 }
 
 void EmptySensorSocket::handleMount() {
@@ -71,6 +78,10 @@ void EmptySensorSocket::handleMount() {
         mountedSensor->setBufferSize(bufferSize);
     }
     emit mountSensor(mountedSensor);
+}
+
+void EmptySensorSocket::remove() {
+    delete this;
 }
 
 }  // namespace View
