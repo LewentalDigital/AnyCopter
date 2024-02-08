@@ -29,6 +29,7 @@ HEADERS += model/AbstractSensor.h \
            view/DroneList.h \
            view/DroneView.h \
            view/DroneListItem.h \
+           view/EmptySensorSocket.h \
            view/MainWindow.h
 SOURCES += main.cpp \
            model/AbstractSensor.cpp \
@@ -41,5 +42,6 @@ SOURCES += main.cpp \
            view/DroneList.cpp \
            view/DroneView.cpp \
            view/DroneListItem.cpp \
+           view/EmptySensorSocket.cpp \
            view/MainWindow.cpp
 RESOURCES += resources.qrc

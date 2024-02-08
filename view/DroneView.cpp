@@ -1,5 +1,7 @@
 #include "DroneView.h"
+#include "EmptySensorSocket.h"
 
+#include <QErrorMessage>
 #include <QHBoxLayout>
 #include <QIcon>
 #include <QProgressBar>
@@ -8,7 +10,6 @@
 #include <QString>
 #include <QVBoxLayout>
 #include <QtCharts>
-#include <QErrorMessage>
 
 namespace View {
 
@@ -52,8 +53,9 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     layout->addWidget(droneInfoContainer);
     QHBoxLayout* droneInfo = new QHBoxLayout(droneInfoContainer);
     droneInfoContainer->setLayout(droneInfo);
-    image = new QLabel();
-    image->setPixmap(QPixmap(":assets/images/agriDrone.png").scaled(300, 300, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QLabel* image = new QLabel();
+    // image->setPixmap(QPixmap(":assets/images/agriDrone.png").scaled(300, 300, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    image->setPixmap(QPixmap(":assets/images/agriDrone.png").scaledToHeight(250, Qt::SmoothTransformation));
     droneInfo->addWidget(image);
     // Informazioni testuali del drone disposte verticalmente
     QWidget* droneInfoTextContainer = new QWidget();
@@ -71,10 +73,6 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
         pBBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
     cpuTemperature = new QLabel("CPU Temperature: " + QString::number(57.4) + "°C");
     droneInfoText->addWidget(cpuTemperature);
-    location = new QLabel("GPS Loaction: " + QString::number(45) + "N " + QString::number(57) + "E");
-    droneInfoText->addWidget(location);
-    altitude = new QLabel("Altitude: " + QString::number(23) + "m");
-    droneInfoText->addWidget(altitude);
 
     QLabel* sensorsLabel = new QLabel("Mounted sensors:");
     layout->addWidget(sensorsLabel);
@@ -84,17 +82,23 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     QGridLayout* droneSensors = new QGridLayout();
     droneSensorsContainer->setLayout(droneSensors);
 
-    int gridPosition = 0;
+    int gridRowPosition = 0;
+    int gridColPosition = 0;
+    // row = [0...int(number of sockets/2)], col = [0,1]
+    // 2 sensors in a row 
+    // => grid->addWidget(widget, gridRowPosition/2, gridColPosition % 2);
+
     const std::vector<AbstractSensor*>& mountedSensors = drone->getMountedSensors();
     for (auto it = mountedSensors.begin(); it != mountedSensors.end(); ++it) {
+        (*it)->read();
         // QSplineSeries* series = new QSplineSeries();
         QLineSeries* series = new QLineSeries();
-        series->append(0, 6);
-        series->append(1, 4);
-        series->append(2, 2);
-        series->append(3, 8);
-        series->append(4, 3);
-        series->append(5, 5);
+        const std::list<double>& data = (*it)->getReadings();
+
+        int i = 0;
+        for (auto reading = data.begin(); reading != data.end(); ++reading) {
+            series->append(i++, *reading);
+        }
         auto chart = new QChart;
         chart->legend()->hide();
         chart->addSeries(series);
@@ -105,14 +109,13 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
         // chart->setAnimationDuration(150);
         auto chartView = new QChartView(chart);
         chartView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-        droneSensors->addWidget(chartView, 0, gridPosition++ % 2);
+        droneSensors->addWidget(chartView, gridRowPosition++/2, gridColPosition++ % 2);
     }
 
     for (unsigned int i = mountedSensors.size(); i < Drone::sensorSockets; ++i) {
-        // droneSensors->addWidget(empty, 0, 1);
-        QPushButton* btnMountSensor = new QPushButton("Mount thermometer");
-        droneSensors->addWidget(btnMountSensor, 0, gridPosition++ % 2);
-        connect(btnMountSensor, &QPushButton::clicked, std::bind(&DroneView::mountSensor, this, new Thermometer()));
+        EmptySensorSocket* ess = new EmptySensorSocket();
+        droneSensors->addWidget(ess, gridRowPosition++/2, gridColPosition++ % 2);
+        connect(ess, &EmptySensorSocket::mountSensor, this, &DroneView::mountSensor);
     }
 
     main->addWidget(titleBarContainer);
@@ -122,10 +125,11 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
 void DroneView::mountSensor(AbstractSensor* sensor) {
     try {
         drone->mountSensor(sensor);
+        // monta grafico passando la sua posizione
     } catch (std::string e) {
         QErrorMessage* error = new QErrorMessage(this);
         error->showMessage(QString::fromStdString(e));
-        connect(error, &QErrorMessage::finished, error, &QErrorMessage::close);
+        connect(error, &QErrorMessage::finished, this, &DroneView::back);
     }
 }
 

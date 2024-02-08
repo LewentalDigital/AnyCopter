@@ -40,7 +40,7 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
     QHBoxLayout* droneInsert = new QHBoxLayout(droneInsertContainer);
     droneInsertContainer->setLayout(droneInsert);
     image = new QLabel();
-    image->setPixmap(QPixmap(":assets/images/droneModels/3.png").scaled(300, 300, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    image->setPixmap(QPixmap(":assets/images/droneModels/3.png").scaledToHeight(200, Qt::SmoothTransformation));
     droneInsert->addWidget(image);
 
     // Input testuali del drone disposte verticalmente
@@ -66,33 +66,15 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
     QLabel* sensorsLabel = new QLabel("External sensors:");
     layout->addWidget(sensorsLabel);
 
-    QPushButton* btnDeploy = new QPushButton(QIcon(QPixmap(":/assets/icons/deploy.png")), "Deploy");
+    QPushButton* btnDeploy = new QPushButton(QIcon(QPixmap(":/assets/icons/deploy.svg")), "Deploy");
     btnDeploy->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return));
 
     connect(btnDeploy, &QPushButton::clicked, this, &DroneDeployView::handleDeploy);
 
-    // QSplineSeries* series = new QSplineSeries();
-    QLineSeries* series = new QLineSeries();
-    series->append(0, 6);
-    series->append(1, 4);
-    series->append(2, 2);
-    series->append(3, 8);
-    series->append(4, 3);
-    series->append(5, 5);
-    auto chart = new QChart;
-    chart->legend()->hide();
-    chart->addSeries(series);
-    chart->createDefaultAxes();
-    chart->setTitle("Simple Line Chart");
-    // chart->setAnimationOptions(QChart::SeriesAnimations);
-    // chart->setAnimationDuration(150);
-    auto chartView = new QChartView(chart);
-    chartView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
     main->addWidget(titleBarContainer);
     main->addWidget(centralWidget);
     main->addWidget(btnDeploy);
-    main->addWidget(chartView);
 }
 
 void DroneDeployView::handleDeploy() {

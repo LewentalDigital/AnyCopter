@@ -16,8 +16,8 @@ class Drone {
     std::string name;
     Thermometer tempCpu;
     BatteryChargeSensor battery;
-    GPS gps;
-    Altimeter altimeter;
+    // GPS gps;
+    // Altimeter altimeter;
 
     std::vector<AbstractSensor*> externalSensors;
 
