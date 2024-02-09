@@ -21,7 +21,8 @@ class EmptySensorSocket : public QWidget {
     EmptySensorSocket(QWidget* = nullptr);
 
    signals:
-    void mountSensor(AbstractSensor*);
+    
+    void mountSensor(const AbstractSensor&);
    public slots:
     void handleMount();
     void remove();

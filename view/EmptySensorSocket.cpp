@@ -77,7 +77,8 @@ void EmptySensorSocket::handleMount() {
         int bufferSize = bufferSizeInput->text().toInt();
         mountedSensor->setBufferSize(bufferSize);
     }
-    emit mountSensor(mountedSensor);
+    emit mountSensor(*mountedSensor);
+    delete mountedSensor; // to prevent garbage
 }
 
 void EmptySensorSocket::remove() {

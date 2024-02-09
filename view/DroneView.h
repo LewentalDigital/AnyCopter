@@ -34,7 +34,7 @@ class DroneView : public QWidget {
     DroneView(Drone*, QWidget* = nullptr);
 
    public slots:
-    void mountSensor(AbstractSensor*, int, int);
+    void mountSensor(const AbstractSensor&, int, int);
     void readNewData();
     void back();
 };

@@ -108,7 +108,7 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gri
         EmptySensorSocket* ess = new EmptySensorSocket();
         int row = gridRowPosition++;
         int col = gridColPosition++;  // beacause capture list allows only local variables
-        connect(ess, &EmptySensorSocket::mountSensor, [this, row, col](AbstractSensor* sensor) {
+        connect(ess, &EmptySensorSocket::mountSensor, [this, row, col](const AbstractSensor& sensor) {
             mountSensor(sensor, row / 2, col % 2);
         });
         droneSensors->addWidget(ess, row / 2, col % 2);
@@ -118,10 +118,11 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gri
     main->addWidget(scrollArea);
 }
 
-void DroneView::mountSensor(AbstractSensor* sensor, int row, int col) {
+void DroneView::mountSensor(const AbstractSensor& s, int row, int col) {
+    // AbstractSensor* sensor = new AbstractSensor(s);
+    AbstractSensor* sensor = &const_cast<AbstractSensor&>(s);
     try {
         if (BatteryChargeSensor* bcs = dynamic_cast<BatteryChargeSensor*>(sensor)) {
-            // BatteryChargeSensor(drone->getBatteryLevel());
             bcs->setCharge(drone->getBatteryLevel());
         }
         drone->mountSensor(sensor);
