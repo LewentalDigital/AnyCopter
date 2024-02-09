@@ -3,6 +3,7 @@
 
 #include <QLabel>
 #include <QWidget>
+#include <QProgressBar>
 
 #include "../model/Drone.h"
 
@@ -14,7 +15,7 @@ class DroneListItem : public QWidget {
     
     QLabel* image;
     QLabel* name;
-    QLabel* batteryLevel;
+    QProgressBar* pbBattery;
     QLabel* numSensors;
 
    public:

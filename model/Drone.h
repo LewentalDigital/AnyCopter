@@ -29,7 +29,7 @@ class Drone {
     void mountSensor(AbstractSensor*);
     void unmountSensor(std::vector<AbstractSensor*>::iterator);
     double getBatteryLevel();
-    int getNumEquippedSensors() const;
+    int getNumMountedSensors() const;
     const std::vector<AbstractSensor*>& getMountedSensors() const;
 };
 #endif

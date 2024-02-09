@@ -1,9 +1,10 @@
 #include "DroneListItem.h"
 
 #include <QHBoxLayout>
-#include <QVBoxLayout>
 #include <QPushButton>
 #include <QString>
+#include <QVBoxLayout>
+
 namespace View {
 
 DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
@@ -11,17 +12,23 @@ DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone
 
     image = new QLabel();
     image->setPixmap(QPixmap(":assets/images/agriDrone.png").scaledToHeight(100, Qt::SmoothTransformation));
-    
+
     QWidget* infoContainer = new QWidget();
     infoContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QVBoxLayout* info = new QVBoxLayout(infoContainer);
     infoContainer->setLayout(info);
-    
-    name = new QLabel(QString::fromStdString(drone->getName()));
-    batteryLevel = new QLabel(QString::number(drone->getBatteryLevel()) + "%");
-    numSensors = new QLabel(QString::number(drone->getNumEquippedSensors()) + " Sensors equipped");
+
+    name = new QLabel("<strong>" + QString::fromStdString(drone->getName()) + "</strong>");
+    pbBattery = new QProgressBar();
+    pbBattery->setValue(drone->getBatteryLevel());
+    if (drone->getBatteryLevel() > 20)
+        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #06b025; width: 1px;}");
+    else
+        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
+
+    numSensors = new QLabel("Mounted sensors: " + QString::number(drone->getNumMountedSensors()) + "/" + QString::number(Drone::sensorSockets));
     info->addWidget(name);
-    info->addWidget(batteryLevel);
+    info->addWidget(pbBattery);
     info->addWidget(numSensors);
 
     QPushButton* btnManage = new QPushButton("Manage");

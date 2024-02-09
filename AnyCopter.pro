@@ -34,6 +34,7 @@ HEADERS += model/AbstractSensor.h \
 SOURCES += main.cpp \
            model/AbstractSensor.cpp \
            model/BatteryChargeSensor.cpp \
+           model/CO2Sensor.cpp \
            model/Drone.cpp \
            model/DroneManager.cpp \
            model/Hygrometer.cpp \

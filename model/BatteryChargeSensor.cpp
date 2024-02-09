@@ -7,11 +7,11 @@ BatteryChargeSensor::BatteryChargeSensor(int bs) : AbstractSensor(bs, 1, 100), c
 }
 
 double dischargeFunction(double x) {
-    return -60 * log(x + 15) + 265;  // simulate battery discharge with tweaked log function
+    return -56 * log(x + 15) + 265;  // simulate battery discharge with tweaked log function
 }
 
 double inverseDischargeFunction(double y) {
-    return exp((265 - y) / 60) - 15;
+    return exp((265 - y) / 56) - 15;
 }
 
 void BatteryChargeSensor::read() {

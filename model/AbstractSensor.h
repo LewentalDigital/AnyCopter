@@ -16,15 +16,16 @@ class AbstractSensor {
     // methods for generating plausible simulation of readings
     double random(double, double) const;
     double randRange(double, double) const;
+    virtual void pushReading(double);
 
    public:
     AbstractSensor(int bufferSize = 24, double min = 0, double max = 30);
     virtual ~AbstractSensor() = default;
     virtual void read() = 0;
-    virtual void setBufferSize(int);
-    virtual unsigned int getBufferSize() const;
-    virtual void pushReading(double);
+    virtual double getCurrentReading();
     virtual const std::list<double>& getReadings() const;
+    virtual unsigned int getBufferSize() const;
+    virtual void setBufferSize(int);
 };
 
 #endif

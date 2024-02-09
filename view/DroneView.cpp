@@ -3,8 +3,6 @@
 #include <QErrorMessage>
 #include <QHBoxLayout>
 #include <QIcon>
-#include <QProgressBar>
-#include <QPushButton>
 #include <QScrollArea>
 #include <QString>
 #include <QVBoxLayout>
@@ -25,7 +23,8 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gri
     titleBarContainer->setLayout(titleBar);
     QPushButton* back = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "Back");
     back->setShortcut(QKeySequence::Back);
-    name = new QLabel(QString::fromStdString(drone->getName()));
+    name = new QLabel("<strong>" + QString::fromStdString(drone->getName()) + "</strong>");
+
     titleBar->addWidget(back);
     titleBar->addStretch();
     titleBar->addWidget(name);
@@ -105,7 +104,7 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gri
         droneSensors->addWidget(chartView, gridRowPosition++ / 2, gridColPosition++ % 2);
     }
 
-    for (unsigned int i = mountedSensors.size(); i < Drone::sensorSockets; ++i) {
+    for (unsigned int i = drone->getNumMountedSensors(); i < Drone::sensorSockets; ++i) {
         EmptySensorSocket* ess = new EmptySensorSocket();
         int row = gridRowPosition++;
         int col = gridColPosition++;  // beacause capture list allows only local variables

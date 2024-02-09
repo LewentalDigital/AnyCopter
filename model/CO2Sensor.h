@@ -5,8 +5,10 @@
 
 class CO2Sensor : public AbstractSensor {
    private:
+    int time;
+
    public:
-    void read() override {
-    }
+    CO2Sensor(int bufferSize = 24);
+    void read() override;
 };
 #endif

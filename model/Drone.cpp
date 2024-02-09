@@ -31,7 +31,7 @@ double Drone::getBatteryLevel() {
     return battery.getCharge();
 }
 
-int Drone::getNumEquippedSensors() const {
+int Drone::getNumMountedSensors() const {
     return externalSensors.size();
 }
 

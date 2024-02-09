@@ -16,12 +16,10 @@ double AbstractSensor::randRange(double start, double end) const {
     return dist(generator);
 }
 
-void AbstractSensor::setBufferSize(int size) {
-    bufferSize = size;
-}
-
-unsigned int AbstractSensor::getBufferSize() const {
-    return bufferSize;
+double AbstractSensor::getCurrentReading() {
+    read();
+    pushReading(reading);
+    return reading;
 }
 
 void AbstractSensor::pushReading(double reading) {
@@ -33,4 +31,12 @@ void AbstractSensor::pushReading(double reading) {
 
 const std::list<double>& AbstractSensor::getReadings() const {
     return readingsBuffer;
+}
+
+unsigned int AbstractSensor::getBufferSize() const {
+    return bufferSize;
+}
+
+void AbstractSensor::setBufferSize(int size) {
+    bufferSize = size;
 }
