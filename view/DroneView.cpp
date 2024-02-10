@@ -107,27 +107,13 @@ void DroneView::notify(AbstractSensor& sensor) {
 
 void DroneView::mountSensor(AbstractSensor* sensor, int row, int col) {
     try {
-        if (BatteryChargeSensor* bcs = dynamic_cast<BatteryChargeSensor*>(sensor)) {
+        if (BatteryChargeSensor* bcs = dynamic_cast<BatteryChargeSensor*>(sensor))
             bcs->setCharge(drone->getBatteryLevel());
-        }
-        drone->mountSensor(sensor);
 
-        QLineSeries* series = new QLineSeries();
-        const std::list<double>& data = sensor->getReadings();
-        int i = 0;
-        for (auto reading = data.begin(); reading != data.end(); ++reading) {
-            series->append(i++, *reading);
-        }
-        auto chart = new QChart;
-        chart->legend()->hide();
-        chart->addSeries(series);
-        chart->createDefaultAxes();
-        chart->setTitle("Simple Line Chart");
-        chart->setMargins(QMargins(6, 6, 6, 6));
-        auto chartView = new QChartView(chart);
-        chartView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-        delete droneSensors->itemAtPosition(row, col)->widget();
-        droneSensors->addWidget(chartView, row, col);
+        drone->mountSensor(sensor);
+        SensorChartVisitor visitor;
+        sensor->accept(visitor);
+        droneSensors->addWidget(visitor.getWidget(), row, col);
 
     } catch (std::string e) {
         QErrorMessage* error = new QErrorMessage(this);

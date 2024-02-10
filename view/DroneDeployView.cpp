@@ -54,7 +54,7 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
     nameInput->setMaxLength(32);
     nameLabel->setBuddy(nameInput);
 
-    QLabel* integratedSensors = new QLabel(QString::fromStdString("Integrated sensors: Thermometer for CPU, Battery charge sensor, Altimeter, GPS"));
+    QLabel* integratedSensors = new QLabel(QString::fromStdString("Integrated sensors: Thermometer for CPU, Battery charge sensor"));
     integratedSensors->setWordWrap(true);
 
     droneInsertText->addWidget(nameLabel);

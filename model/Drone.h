@@ -5,9 +5,7 @@
 #include <vector>
 
 #include "AbstractSensor.h"
-#include "Altimeter.h"
 #include "BatteryChargeSensor.h"
-#include "GPS.h"
 #include "Hygrometer.h"
 #include "Thermometer.h"
 
@@ -16,8 +14,6 @@ class Drone {
     std::string name;
     Thermometer tempCpu;
     BatteryChargeSensor battery;
-    // GPS gps;
-    // Altimeter altimeter;
 
     std::vector<AbstractSensor*> externalSensors;
 

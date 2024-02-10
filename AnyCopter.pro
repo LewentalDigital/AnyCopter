@@ -17,21 +17,19 @@ QT +=   widgets \
 
 # Input
 HEADERS += model/AbstractSensor.h \
-           model/Altimeter.h \
            model/BatteryChargeSensor.h \
            model/CO2Sensor.h \
            model/Drone.h \
            model/DroneManager.h \
            model/DroneObserverInterface.h \
-           model/GPS.h \
            model/Hygrometer.h \
            model/SensorObserverInterface.h \
-           model/Thermometer.h \
            model/SensorVisitorInterface.h \
+           model/Thermometer.h \
            view/DroneDeployView.h \
            view/DroneList.h \
-           view/DroneView.h \
            view/DroneListItem.h \
+           view/DroneView.h \
            view/EmptySensorSocket.h \
            view/MainWindow.h \
            view/SensorChartVisitor.h
@@ -45,8 +43,8 @@ SOURCES += main.cpp \
            model/Thermometer.cpp \
            view/DroneDeployView.cpp \
            view/DroneList.cpp \
-           view/DroneView.cpp \
            view/DroneListItem.cpp \
+           view/DroneView.cpp \
            view/EmptySensorSocket.cpp \
            view/MainWindow.cpp \
            view/SensorChartVisitor.cpp
