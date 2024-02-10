@@ -12,5 +12,7 @@ class Hygrometer : public AbstractSensor {
     Hygrometer(int bufferSize = 24);
 
     void read() override;
+
+    void accept(SensorVisitorInterface& visitor) override;
 };
 #endif

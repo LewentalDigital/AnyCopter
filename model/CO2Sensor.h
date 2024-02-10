@@ -8,7 +8,9 @@ class CO2Sensor : public AbstractSensor {
     int time;
 
    public:
-    CO2Sensor(int bufferSize = 24);
+    CO2Sensor(int bufferSize = 100);
     void read() override;
+
+    void accept(SensorVisitorInterface& visitor) override;
 };
 #endif

@@ -31,3 +31,7 @@ void BatteryChargeSensor::setCharge(double c) {
     charge = c;
     time = inverseDischargeFunction(c);
 }
+
+void BatteryChargeSensor::accept(SensorVisitorInterface& visitor) {
+    visitor.visitBatteryChargeSensor(*this);
+}

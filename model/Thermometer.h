@@ -12,7 +12,8 @@ class Thermometer : public AbstractSensor {
     Thermometer(int bufferSize = 24);
 
     void read() override;
-
     double getTemperature() const;
+
+    void accept(SensorVisitorInterface& visitor) override;
 };
 #endif

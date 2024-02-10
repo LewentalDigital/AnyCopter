@@ -14,6 +14,8 @@ class BatteryChargeSensor : public AbstractSensor {
     void read() override;
     double getCharge() const;
     void setCharge(double charge);
+
+    void accept(SensorVisitorInterface& visitor) override;
 };
 
 #endif

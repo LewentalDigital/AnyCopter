@@ -39,4 +39,10 @@ unsigned int AbstractSensor::getBufferSize() const {
 
 void AbstractSensor::setBufferSize(int size) {
     bufferSize = size;
+    for (auto observer = observers.begin(); observer != observers.end(); ++observer)
+        (*observer)->notify(*this);
+}
+
+void AbstractSensor::registerObserver(SensorObserverInterface* observer) {
+    observers.push_back(observer);
 }

@@ -10,3 +10,7 @@ void Hygrometer::read() {
     humidity += std::cos((++prevReadingTime) / 2);  // oscillation of humidity with cosine
     pushReading(humidity);
 }
+
+void Hygrometer::accept(SensorVisitorInterface& visitor) {
+    visitor.visitHygrometer(*this);
+}

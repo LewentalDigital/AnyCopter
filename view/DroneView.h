@@ -10,10 +10,11 @@
 
 #include "../model/AbstractSensor.h"
 #include "../model/Drone.h"
+#include "../model/SensorObserverInterface.h"
 
 namespace View {
 
-class DroneView : public QWidget {
+class DroneView : public QWidget, public SensorObserverInterface{
     Q_OBJECT
    private:
     Drone* drone;
@@ -23,18 +24,21 @@ class DroneView : public QWidget {
     // 2 sensors in a row
     // => grid->addWidget(widget, gridRowPosition/2, gridColPosition % 2);
 
-    // oggetti solo per cose che cambiano
     QLabel* name;
     QProgressBar* pbBattery;
     QLabel* cpuTemperature;
     QGridLayout* droneSensors;
     QPushButton* btnRead;
+    
+    QVector<QWidget*> sensorSockets;
 
    public:
     DroneView(Drone*, QWidget* = nullptr);
 
+    void notify(AbstractSensor&) override;
+
    public slots:
-    void mountSensor(const AbstractSensor&, int, int);
+    void mountSensor(AbstractSensor*, int, int);
     void readNewData();
     void back();
 };

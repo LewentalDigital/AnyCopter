@@ -10,6 +10,7 @@
 
 #include "../model/BatteryChargeSensor.h"
 #include "EmptySensorSocket.h"
+#include "SensorChartVisitor.h"
 
 namespace View {
 
@@ -82,33 +83,16 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gri
 
     const std::vector<AbstractSensor*>& mountedSensors = drone->getMountedSensors();
     for (auto it = mountedSensors.begin(); it != mountedSensors.end(); ++it) {
-        (*it)->read();
-        // QSplineSeries* series = new QSplineSeries();
-        QLineSeries* series = new QLineSeries();
-        const std::list<double>& data = (*it)->getReadings();
-
-        int i = 0;
-        for (auto reading = data.begin(); reading != data.end(); ++reading) {
-            series->append(i++, *reading);
-        }
-        auto chart = new QChart;
-        chart->legend()->hide();
-        chart->addSeries(series);
-        chart->createDefaultAxes();
-        chart->setTitle("Simple Line Chart");
-        chart->setMargins(QMargins(6, 6, 6, 6));
-        // chart->setAnimationOptions(QChart::SeriesAnimations);
-        // chart->setAnimationDuration(150);
-        auto chartView = new QChartView(chart);
-        chartView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-        droneSensors->addWidget(chartView, gridRowPosition++ / 2, gridColPosition++ % 2);
+        SensorChartVisitor visitor;
+        (*it)->accept(visitor);
+        droneSensors->addWidget(visitor.getWidget(), gridRowPosition++ / 2, gridColPosition++ % 2);
     }
 
     for (unsigned int i = drone->getNumMountedSensors(); i < Drone::sensorSockets; ++i) {
         EmptySensorSocket* ess = new EmptySensorSocket();
         int row = gridRowPosition++;
         int col = gridColPosition++;  // beacause capture list allows only local variables
-        connect(ess, &EmptySensorSocket::mountSensor, [this, row, col](const AbstractSensor& sensor) {
+        connect(ess, &EmptySensorSocket::mountSensor, [this, row, col](AbstractSensor* sensor) {
             mountSensor(sensor, row / 2, col % 2);
         });
         droneSensors->addWidget(ess, row / 2, col % 2);
@@ -118,9 +102,10 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gri
     main->addWidget(scrollArea);
 }
 
-void DroneView::mountSensor(const AbstractSensor& s, int row, int col) {
-    // AbstractSensor* sensor = new AbstractSensor(s);
-    AbstractSensor* sensor = &const_cast<AbstractSensor&>(s);
+void DroneView::notify(AbstractSensor& sensor) {
+}
+
+void DroneView::mountSensor(AbstractSensor* sensor, int row, int col) {
     try {
         if (BatteryChargeSensor* bcs = dynamic_cast<BatteryChargeSensor*>(sensor)) {
             bcs->setCharge(drone->getBatteryLevel());

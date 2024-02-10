@@ -10,3 +10,7 @@ void CO2Sensor::read() {
     pushReading(value);
     time++;
 }
+
+void CO2Sensor::accept(SensorVisitorInterface& visitor) {
+    visitor.visitCO2Sensor(*this);
+}
