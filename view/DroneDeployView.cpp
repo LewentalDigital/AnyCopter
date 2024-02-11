@@ -17,6 +17,7 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
     QWidget* titleBarContainer = new QWidget();
     titleBarContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QHBoxLayout* titleBar = new QHBoxLayout(titleBarContainer);
+    titleBar->setContentsMargins(0, 0, 0, 0);
     titleBarContainer->setLayout(titleBar);
     QPushButton* btnClose = new QPushButton(QIcon(QPixmap(":/assets/icons/close.svg")), "Cancel");
     btnClose->setShortcut(QKeySequence::Back);

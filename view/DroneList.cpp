@@ -15,10 +15,11 @@ DroneList::DroneList(DroneManager* dm, QWidget* parent) : QWidget(parent) {
     QWidget* titleBarContainer = new QWidget();
     titleBarContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QHBoxLayout* titleBar = new QHBoxLayout(titleBarContainer);
+    titleBar->setContentsMargins(0, 0, 0, 0);
     titleBarContainer->setLayout(titleBar);
     // QPushButton* back = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "Back");
     // back->setShortcut(QKeySequence::Back);
-    QLabel* title = new QLabel("Drones");
+    QLabel* title = new QLabel("<strong>Drone</strong>");
     // titleBar->addWidget(back);
     titleBar->addStretch();
     titleBar->addWidget(title);

@@ -13,6 +13,7 @@ class SensorChartVisitor : public SensorVisitorInterface {
 
    public:
     QWidget* getWidget();
+    // SensorChartVisitor();
     void visitBatteryChargeSensor(BatteryChargeSensor&) override;
     void visitCO2Sensor(CO2Sensor&) override;
     void visitHygrometer(Hygrometer&) override;

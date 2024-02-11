@@ -21,6 +21,7 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gri
     QWidget* titleBarContainer = new QWidget();
     titleBarContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QHBoxLayout* titleBar = new QHBoxLayout(titleBarContainer);
+    titleBar->setContentsMargins(0, 0, 0, 0);
     titleBarContainer->setLayout(titleBar);
     QPushButton* back = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "Back");
     back->setShortcut(QKeySequence::Back);
@@ -47,10 +48,10 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gri
     QHBoxLayout* droneInfo = new QHBoxLayout(droneInfoContainer);
     droneInfoContainer->setLayout(droneInfo);
     QLabel* image = new QLabel();
-    // image->setPixmap(QPixmap(":assets/images/agriDrone.png").scaled(300, 300, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     image->setPixmap(QPixmap(":assets/images/agriDrone.png").scaledToHeight(250, Qt::SmoothTransformation));
     droneInfo->addWidget(image);
-    // Informazioni testuali del drone disposte verticalmente
+
+    // Text info of drone
     QWidget* droneInfoTextContainer = new QWidget();
     droneInfoTextContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     droneInfo->addWidget(droneInfoTextContainer);
@@ -76,10 +77,12 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gri
     QLabel* sensorsLabel = new QLabel("Mounted sensors:");
     content->addWidget(sensorsLabel);
 
+    // Sensors
     QWidget* droneSensorsContainer = new QWidget();
     content->addWidget(droneSensorsContainer);
     droneSensors = new QGridLayout();
     droneSensorsContainer->setLayout(droneSensors);
+    droneSensors->setContentsMargins(0, 0, 0, 0);
 
     const std::vector<AbstractSensor*>& mountedSensors = drone->getMountedSensors();
     for (auto it = mountedSensors.begin(); it != mountedSensors.end(); ++it) {
@@ -109,10 +112,11 @@ void DroneView::mountSensor(AbstractSensor* sensor, int row, int col) {
     try {
         if (BatteryChargeSensor* bcs = dynamic_cast<BatteryChargeSensor*>(sensor))
             bcs->setCharge(drone->getBatteryLevel());
-
+        sensor->read();
         drone->mountSensor(sensor);
         SensorChartVisitor visitor;
         sensor->accept(visitor);
+        delete droneSensors->itemAtPosition(row, col)->widget();
         droneSensors->addWidget(visitor.getWidget(), row, col);
 
     } catch (std::string e) {
@@ -125,32 +129,22 @@ void DroneView::mountSensor(AbstractSensor* sensor, int row, int col) {
 void DroneView::readNewData() {
     pbBattery->setValue(drone->getBatteryLevel());
     if (drone->getBatteryLevel() > 20)
-        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #06b025; width: 1px;}");
+        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #06b025;}");
     else
-        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
+        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123;}");
     cpuTemperature = new QLabel("CPU Temperature: " + QString::number(57.4) + "°C");
 
     // orribile da fare bene
 
+    int row = 0;
+    int col = 0;
+
     const std::vector<AbstractSensor*>& mountedSensors = drone->getMountedSensors();
     for (auto it = mountedSensors.begin(); it != mountedSensors.end(); ++it) {
         (*it)->read();
-        QLineSeries* series = new QLineSeries();
-        const std::list<double>& data = (*it)->getReadings();
-
-        int i = 0;
-        for (auto reading = data.begin(); reading != data.end(); ++reading) {
-            series->append(i++, *reading);
-        }
-        auto chart = new QChart;
-        chart->legend()->hide();
-        chart->addSeries(series);
-        chart->createDefaultAxes();
-        chart->setTitle("Simple Line Chart");
-        chart->setMargins(QMargins(6, 6, 6, 6));
-        auto chartView = new QChartView(chart);
-        chartView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-        droneSensors->addWidget(chartView, 0, 1);
+        SensorChartVisitor visitor;
+        (*it)->accept(visitor);
+        droneSensors->addWidget(visitor.getWidget(), row++ / 2, col++ % 2);
     }
 }
 

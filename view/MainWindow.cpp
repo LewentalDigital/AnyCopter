@@ -59,7 +59,7 @@ MainWindow::MainWindow(DroneManager* dm) : droneManager(dm) {
     QMenu* menuInfo = menuBar()->addMenu("&Info");
     menuInfo->addAction(actionGithub);
 
-    connect(actionRefresh, &QAction::triggered, this, &MainWindow::quit);  // test
+    // connect(actionRefresh, &QAction::triggered, this, &MainWindow::quit);  // test
     connect(actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(actionDeploy, &QAction::triggered, this, &MainWindow::openDeployDroneView);
     connect(actionGithub, &QAction::triggered, this, &MainWindow::visitGithub);
@@ -83,15 +83,25 @@ void MainWindow::visitGithub() {
 
 void MainWindow::manageDrone(Drone* drone) {
     DroneView* dv = new DroneView(drone);
+    if (stackedWidget->currentIndex() > 0) {
+        QWidget* prevWidget = stackedWidget->currentWidget();
+        stackedWidget->removeWidget(prevWidget);
+        delete prevWidget;
+    }
     stackedWidget->addWidget(dv);
     stackedWidget->setCurrentIndex(1);
 }
 
 void MainWindow::openDeployDroneView() {
     DroneDeployView* ddv = new DroneDeployView();
+    if (stackedWidget->currentIndex() > 0) {
+        QWidget* prevWidget = stackedWidget->currentWidget();
+        stackedWidget->removeWidget(prevWidget);
+        delete prevWidget;
+    }
     stackedWidget->addWidget(ddv);
-    stackedWidget->setCurrentIndex(1);
     connect(ddv, &DroneDeployView::deploy, this, &MainWindow::deployNewDrone);
+    stackedWidget->setCurrentIndex(1);
 }
 
 void MainWindow::deployNewDrone(Drone* drone) {
