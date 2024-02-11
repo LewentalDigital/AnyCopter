@@ -9,6 +9,7 @@ class Thermometer : public AbstractSensor {
 
    public:
     Thermometer(int bufferSize = 24);
+    virtual ~Thermometer() = default;
 
     void read() override;
 

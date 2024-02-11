@@ -9,6 +9,7 @@ void Hygrometer::read() {
     reading = random((min + max) / 2, (min + max) / 5);
     reading += std::cos((++time) / 2);  // oscillation of humidity with cosine
     pushReading(reading);
+    AbstractSensor::read();
 }
 
 void Hygrometer::accept(SensorVisitorInterface& visitor) {

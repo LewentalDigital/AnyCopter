@@ -9,6 +9,7 @@ void CO2Sensor::read() {
     reading += random(25, 10);
     pushReading(reading);
     time++;
+    AbstractSensor::read();
 }
 
 void CO2Sensor::accept(SensorVisitorInterface& visitor) {

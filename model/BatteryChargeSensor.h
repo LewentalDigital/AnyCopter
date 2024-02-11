@@ -9,6 +9,7 @@ class BatteryChargeSensor : public AbstractSensor {
 
    public:
     BatteryChargeSensor(int bufferSize = 60);
+    virtual ~BatteryChargeSensor() = default;
 
     void read() override;
     void setCharge(double charge);

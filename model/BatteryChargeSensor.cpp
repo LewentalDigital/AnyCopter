@@ -21,6 +21,7 @@ void BatteryChargeSensor::read() {
         reading = (newValue > 0) ? newValue : 0;
     }
     pushReading(reading);
+    AbstractSensor::read();
 }
 
 void BatteryChargeSensor::setCharge(double c) {

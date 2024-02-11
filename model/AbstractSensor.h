@@ -25,9 +25,9 @@ class AbstractSensor {
 
    public:
     AbstractSensor(int bufferSize = 24, double min = 0, double max = 30);
-    virtual ~AbstractSensor() = default;
+    virtual ~AbstractSensor() = 0;
 
-    virtual void read() = 0;
+    virtual void read();
 
     virtual double getCurrentReading();
     virtual const std::list<double>& getReadings() const;

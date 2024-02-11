@@ -22,8 +22,8 @@ void Drone::mountSensor(AbstractSensor* sensor) {
         throw std::string("No more sensor sockets available");
 }
 
-void Drone::unmountSensor(std::vector<AbstractSensor*>::iterator it) {
-    externalSensors.erase(it);
+void Drone::unmountSensor(int index) {
+    externalSensors.erase(externalSensors.begin() + index);
 }
 
 double Drone::getBatteryLevel() {

@@ -9,6 +9,7 @@ class Hygrometer : public AbstractSensor {
 
    public:
     Hygrometer(int bufferSize = 24);
+    virtual ~Hygrometer() = default;
 
     void read() override;
 

@@ -2,6 +2,13 @@
 
 AbstractSensor::AbstractSensor(int bs, double m, double M) : bufferSize(bs), min(m), max(M) {}
 
+AbstractSensor::~AbstractSensor() {}
+
+void AbstractSensor::read() {
+    for (auto observer = observers.begin(); observer != observers.end(); ++observer)
+        (*observer)->notify(*this);
+}
+
 double AbstractSensor::random(double mean, double variation) const {
     std::random_device rd;
     std::mt19937 generator(rd());

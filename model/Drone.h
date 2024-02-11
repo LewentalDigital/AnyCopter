@@ -24,7 +24,7 @@ class Drone {
 
     std::string getName() const;
     void mountSensor(AbstractSensor*);
-    void unmountSensor(std::vector<AbstractSensor*>::iterator);
+    void unmountSensor(int);
 
     double getBatteryLevel();
     double getCpuTemperature();

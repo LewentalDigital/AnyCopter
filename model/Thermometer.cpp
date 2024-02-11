@@ -9,6 +9,7 @@ void Thermometer::read() {
     reading = random((max + min) / 2, 1);
     reading -= std::sin((++time) / 6) * 8;  // oscillation of temperature with sine
     pushReading(reading);
+    AbstractSensor::read();
 }
 
 void Thermometer::accept(SensorVisitorInterface& visitor) {
