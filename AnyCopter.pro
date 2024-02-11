@@ -32,7 +32,8 @@ HEADERS += model/AbstractSensor.h \
            view/DroneView.h \
            view/EmptySensorSocket.h \
            view/MainWindow.h \
-           view/SensorChartVisitor.h
+           view/SensorChartVisitor.h \
+           view/SensorView.h
 SOURCES += main.cpp \
            model/AbstractSensor.cpp \
            model/BatteryChargeSensor.cpp \
@@ -47,5 +48,6 @@ SOURCES += main.cpp \
            view/DroneView.cpp \
            view/EmptySensorSocket.cpp \
            view/MainWindow.cpp \
-           view/SensorChartVisitor.cpp
+           view/SensorChartVisitor.cpp \
+           view/SensorView.cpp
 RESOURCES += resources.qrc

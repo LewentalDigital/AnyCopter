@@ -19,7 +19,9 @@ EmptySensorSocket::EmptySensorSocket(QWidget* parent) : QWidget(parent) {
 
     // Title 
     QWidget* titleContainer = new QWidget();
+    titleContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QHBoxLayout* title = new QHBoxLayout(titleContainer);
+    title->setContentsMargins(10, 0, 10, 0);
     titleContainer->setLayout(title);
     QLabel* titleIcon = new QLabel();
     titleIcon->setPixmap(QPixmap(":assets/icons/hardware-chip.svg").scaledToHeight(28, Qt::SmoothTransformation));
