@@ -18,11 +18,7 @@ class DroneView : public QWidget, public SensorObserverInterface{
     Q_OBJECT
    private:
     Drone* drone;
-    int gridRowPosition;
-    int gridColPosition;
-    // row = [0...int(number of sockets/2)], col = [0,1]
-    // 2 sensors in a row
-    // => grid->addWidget(widget, gridRowPosition/2, gridColPosition % 2);
+    int removedSensors;
 
     QLabel* name;
     QProgressBar* pbBattery;
@@ -38,7 +34,8 @@ class DroneView : public QWidget, public SensorObserverInterface{
     void notify(AbstractSensor&) override;
 
    public slots:
-    void mountSensor(AbstractSensor*, int, int);
+    void mountSensor(AbstractSensor*, int);
+    void removeSensor(int);
     void readNewData();
     void back();
 };

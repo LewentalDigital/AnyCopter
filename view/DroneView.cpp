@@ -14,7 +14,7 @@
 
 namespace View {
 
-DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gridRowPosition(0), gridColPosition(0) {
+DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), removedSensors(0) {
     QVBoxLayout* main = new QVBoxLayout(this);
 
     // Panel title bar
@@ -66,7 +66,7 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gri
         pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #06b025; width: 1px;}");
     else
         pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
-    cpuTemperature = new QLabel("CPU Temperature: " + QString::number(57.4) + "°C");
+    cpuTemperature = new QLabel("CPU Temperature: " + QString::number(drone->getCpuTemperature()) + "°C");
     droneInfoText->addWidget(cpuTemperature);
     btnRead = new QPushButton("Read new sensor data");
     // if (drone->getMountedSensors().size() > 0)
@@ -84,20 +84,26 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gri
     droneSensorsContainer->setLayout(droneSensors);
     droneSensors->setContentsMargins(0, 0, 0, 0);
 
+    int gridIndex = 0;  // grid has 2 columns and whatever rows, so this index is used to calculate the row and column where to place sensors
+    // gridIndex / 2 is the row, gridIndex % 2 is the column
+    // so the gridLayout can be considered a normal array indexed by gridIndex, this inedx will match the vector of sensors mounted on the drone
     const std::vector<AbstractSensor*>& mountedSensors = drone->getMountedSensors();
     for (auto it = mountedSensors.begin(); it != mountedSensors.end(); ++it) {
         SensorView* sv = new SensorView(*it);
-        droneSensors->addWidget(sv, gridRowPosition++ / 2, gridColPosition++ % 2);
+        connect(sv, &SensorView::remove, [this, gridIndex]() {
+            removeSensor(gridIndex);
+        });
+        droneSensors->addWidget(sv, gridIndex / 2, gridIndex % 2);
+        gridIndex++;
     }
 
     for (unsigned int i = drone->getNumMountedSensors(); i < Drone::sensorSockets; ++i) {
         EmptySensorSocket* ess = new EmptySensorSocket();
-        int row = gridRowPosition++;
-        int col = gridColPosition++;  // beacause capture list allows only local variables
-        connect(ess, &EmptySensorSocket::mountSensor, [this, row, col](AbstractSensor* sensor) {
-            mountSensor(sensor, row / 2, col % 2);
+        connect(ess, &EmptySensorSocket::mountSensor, [this, gridIndex](AbstractSensor* sensor) {
+            mountSensor(sensor, gridIndex);
         });
-        droneSensors->addWidget(ess, row / 2, col % 2);
+        droneSensors->addWidget(ess, gridIndex / 2, gridIndex % 2);
+        gridIndex++;
     }
 
     main->addWidget(titleBarContainer);
@@ -107,16 +113,19 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gri
 void DroneView::notify(AbstractSensor& sensor) {
 }
 
-void DroneView::mountSensor(AbstractSensor* sensor, int row, int col) {
+void DroneView::mountSensor(AbstractSensor* sensor, int i) {
     try {
         if (BatteryChargeSensor* bcs = dynamic_cast<BatteryChargeSensor*>(sensor))
             bcs->setCharge(drone->getBatteryLevel());
         sensor->read();
         drone->mountSensor(sensor);
-        SensorView* sv = new SensorView(sensor);
-        delete droneSensors->itemAtPosition(row, col)->widget();
-        droneSensors->addWidget(sv, row, col);
 
+        SensorView* sv = new SensorView(sensor);
+        connect(sv, &SensorView::remove, [this, i]() {
+            removeSensor(i);
+        });
+        delete droneSensors->itemAtPosition(i / 2, i % 2)->widget();
+        droneSensors->addWidget(sv, i / 2, i % 2);
     } catch (std::string e) {
         QErrorMessage* error = new QErrorMessage(this);
         error->showMessage(QString::fromStdString(e));
@@ -124,24 +133,24 @@ void DroneView::mountSensor(AbstractSensor* sensor, int row, int col) {
     }
 }
 
+void DroneView::removeSensor(int i) {
+    drone->unmountSensor(i - removedSensors);
+    EmptySensorSocket* ess = new EmptySensorSocket();
+    connect(ess, &EmptySensorSocket::mountSensor, [this, i](AbstractSensor* sensor) {
+        mountSensor(sensor, i);
+    });
+    delete droneSensors->itemAtPosition(i / 2, i % 2)->widget();
+    droneSensors->addWidget(ess, i / 2, i % 2);
+    removedSensors++;
+}
+
 void DroneView::readNewData() {
     pbBattery->setValue(drone->getBatteryLevel());
-    if (drone->getBatteryLevel() > 20)
-        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #06b025;}");
-    else
-        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123;}");
-    cpuTemperature = new QLabel("CPU Temperature: " + QString::number(57.4) + "°C");
-
-    // orribile da fare bene
-
-    int row = 0;
-    int col = 0;
+    
 
     const std::vector<AbstractSensor*>& mountedSensors = drone->getMountedSensors();
     for (auto it = mountedSensors.begin(); it != mountedSensors.end(); ++it) {
         (*it)->read();
-        SensorView* sv = new SensorView(*it);
-        droneSensors->addWidget(sv, row++ / 2, col++ % 2);
     }
 }
 

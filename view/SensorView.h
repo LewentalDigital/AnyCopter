@@ -3,6 +3,7 @@
 
 #include <QLabel>
 #include <QPushButton>
+#include <QVBoxLayout>
 #include <QWidget>
 
 #include "../model/AbstractSensor.h"
@@ -16,6 +17,8 @@ class SensorView : public QWidget, public SensorObserverInterface {
     QLabel* bufferSize;
     QPushButton* btnEdit;
     QPushButton* btnRemove;
+    QVBoxLayout* main;
+    QWidget* content;
 
    public:
     SensorView(AbstractSensor*, QWidget* = nullptr);

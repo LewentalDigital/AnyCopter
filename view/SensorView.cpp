@@ -10,9 +10,9 @@ namespace View {
 SensorView::SensorView(AbstractSensor* sensor, QWidget* parent) : QWidget(parent) {
     SensorChartVisitor visitor;
     sensor->accept(visitor);
-    QWidget* content = visitor.getWidget(); // get custom chart from visitor of sensor chart
+    content = visitor.getWidget();  // get custom chart from visitor of sensor chart
 
-    QVBoxLayout* main = new QVBoxLayout();
+    main = new QVBoxLayout();
     main->setContentsMargins(0, 0, 0, 0);
     setLayout(main);
 
@@ -34,9 +34,17 @@ SensorView::SensorView(AbstractSensor* sensor, QWidget* parent) : QWidget(parent
 
     main->addWidget(titleBarContainer);
     main->addWidget(content);
+
+    sensor->registerObserver(this);
 }
 
 void SensorView::notify(AbstractSensor& sensor) {
+    bufferSize->setText("Buffer size: " + QString::number(sensor.getBufferSize()));
+    SensorChartVisitor visitor;
+    sensor.accept(visitor);
+    delete content;
+    content = visitor.getWidget();
+    main->addWidget(content);
 }
 
 }  // namespace View
