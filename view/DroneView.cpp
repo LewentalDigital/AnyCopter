@@ -10,7 +10,7 @@
 
 #include "../model/BatteryChargeSensor.h"
 #include "EmptySensorSocket.h"
-#include "SensorChartVisitor.h"
+#include "SensorView.h"
 
 namespace View {
 
@@ -86,9 +86,8 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), gri
 
     const std::vector<AbstractSensor*>& mountedSensors = drone->getMountedSensors();
     for (auto it = mountedSensors.begin(); it != mountedSensors.end(); ++it) {
-        SensorChartVisitor visitor;
-        (*it)->accept(visitor);
-        droneSensors->addWidget(visitor.getWidget(), gridRowPosition++ / 2, gridColPosition++ % 2);
+        SensorView* sv = new SensorView(*it);
+        droneSensors->addWidget(sv, gridRowPosition++ / 2, gridColPosition++ % 2);
     }
 
     for (unsigned int i = drone->getNumMountedSensors(); i < Drone::sensorSockets; ++i) {
@@ -114,10 +113,9 @@ void DroneView::mountSensor(AbstractSensor* sensor, int row, int col) {
             bcs->setCharge(drone->getBatteryLevel());
         sensor->read();
         drone->mountSensor(sensor);
-        SensorChartVisitor visitor;
-        sensor->accept(visitor);
+        SensorView* sv = new SensorView(sensor);
         delete droneSensors->itemAtPosition(row, col)->widget();
-        droneSensors->addWidget(visitor.getWidget(), row, col);
+        droneSensors->addWidget(sv, row, col);
 
     } catch (std::string e) {
         QErrorMessage* error = new QErrorMessage(this);
@@ -142,9 +140,8 @@ void DroneView::readNewData() {
     const std::vector<AbstractSensor*>& mountedSensors = drone->getMountedSensors();
     for (auto it = mountedSensors.begin(); it != mountedSensors.end(); ++it) {
         (*it)->read();
-        SensorChartVisitor visitor;
-        (*it)->accept(visitor);
-        droneSensors->addWidget(visitor.getWidget(), row++ / 2, col++ % 2);
+        SensorView* sv = new SensorView(*it);
+        droneSensors->addWidget(sv, row++ / 2, col++ % 2);
     }
 }
 
