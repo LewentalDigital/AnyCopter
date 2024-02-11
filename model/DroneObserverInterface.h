@@ -1,7 +1,7 @@
 #ifndef DRONEOBSERVERINTERFACE_H
 #define DRONEOBSERVERINTERFACE_H
 
-class Character;
+class Drone;
 
 class DroneObserverInterface {
    public:

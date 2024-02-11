@@ -60,6 +60,7 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), rem
     QLabel* batteryLabel = new QLabel("Battery level:");
     droneInfoText->addWidget(batteryLabel);
     pbBattery = new QProgressBar();
+    drone->readHardware();
     pbBattery->setValue(drone->getBatteryLevel());
     droneInfoText->addWidget(pbBattery);
     if (drone->getBatteryLevel() > 20)
@@ -108,9 +109,17 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), rem
 
     main->addWidget(titleBarContainer);
     main->addWidget(scrollArea);
+
+    drone->registerObserver(this);
 }
 
-void DroneView::notify(AbstractSensor& sensor) {
+DroneView::~DroneView() {
+    drone->unregisterObserver(this);
+}
+
+void DroneView::notify(Drone& d) {
+    pbBattery->setValue(d.getBatteryLevel());
+    cpuTemperature->setText("CPU Temperature: " + QString::number(d.getCpuTemperature()) + "°C");
 }
 
 void DroneView::mountSensor(AbstractSensor* sensor, int i) {
@@ -145,8 +154,7 @@ void DroneView::removeSensor(int i) {
 }
 
 void DroneView::readNewData() {
-    pbBattery->setValue(drone->getBatteryLevel());
-    
+    drone->readHardware();
 
     const std::vector<AbstractSensor*>& mountedSensors = drone->getMountedSensors();
     for (auto it = mountedSensors.begin(); it != mountedSensors.end(); ++it) {

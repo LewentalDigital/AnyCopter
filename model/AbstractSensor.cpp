@@ -23,7 +23,7 @@ double AbstractSensor::randRange(double start, double end) const {
     return dist(generator);
 }
 
-double AbstractSensor::getCurrentReading() {
+double AbstractSensor::getCurrentReading() const {
     return reading;
 }
 
@@ -50,4 +50,8 @@ void AbstractSensor::setBufferSize(int size) {
 
 void AbstractSensor::registerObserver(SensorObserverInterface* observer) {
     observers.push_back(observer);
+}
+
+void AbstractSensor::unregisterObserver(SensorObserverInterface* observer) {
+    observers.remove(observer);
 }

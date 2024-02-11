@@ -2,17 +2,18 @@
 #define VIEW_DRONELISTITEM_H
 
 #include <QLabel>
-#include <QWidget>
 #include <QProgressBar>
+#include <QWidget>
 
 #include "../model/Drone.h"
+#include "../model/DroneObserverInterface.h"
 
 namespace View {
-class DroneListItem : public QWidget {
+class DroneListItem : public QWidget, public DroneObserverInterface {
     Q_OBJECT
    private:
     Drone* drone;
-    
+
     QLabel* image;
     QLabel* name;
     QProgressBar* pbBattery;
@@ -20,6 +21,8 @@ class DroneListItem : public QWidget {
 
    public:
     DroneListItem(Drone*, QWidget* = nullptr);
+    ~DroneListItem();
+    void notify(Drone&) override;
 
    signals:
     void manageDrone(Drone*);

@@ -12,7 +12,7 @@ namespace View {
 void SensorChartVisitor::setupChart() {
     chart->legend()->hide();
     chart->setMargins(QMargins(6, 6, 6, 6));
-    chart->createDefaultAxes();
+    // chart->createDefaultAxes();
     chartView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 }
 
@@ -29,6 +29,10 @@ QWidget* SensorChartVisitor::getWidget() {
 
 QWidget* SensorChartVisitor::getTitle() {
     return title;
+}
+
+QChart* SensorChartVisitor::getChart() {
+    return chart;
 }
 
 void SensorChartVisitor::visitBatteryChargeSensor(BatteryChargeSensor& bcs) {
@@ -58,6 +62,9 @@ void SensorChartVisitor::visitBatteryChargeSensor(BatteryChargeSensor& bcs) {
         series->append(i++, *reading);
     chart = new QChart();
     chart->addSeries(series);
+    QValueAxis* axisY = new QValueAxis();
+    axisY->setRange(0, 100);
+    chart->addAxis(axisY, Qt::AlignLeft);
     chartView = new QChartView(chart);
     setupChart();
 

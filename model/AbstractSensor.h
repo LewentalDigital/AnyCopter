@@ -3,7 +3,6 @@
 
 #include <list>
 #include <random>
-#include <vector>
 
 #include "SensorObserverInterface.h"
 #include "SensorVisitorInterface.h"
@@ -12,7 +11,7 @@ class AbstractSensor {
    private:
     unsigned int bufferSize;  // number of readings the sensor can memorize
     std::list<double> readingsBuffer;
-    std::vector<SensorObserverInterface*> observers;
+    std::list<SensorObserverInterface*> observers;
 
    protected:
     double reading; // Value of the last reading
@@ -29,13 +28,14 @@ class AbstractSensor {
 
     virtual void read();
 
-    virtual double getCurrentReading();
+    virtual double getCurrentReading() const;
     virtual const std::list<double>& getReadings() const;
     virtual unsigned int getBufferSize() const;
 
     virtual void setBufferSize(int);
 
     void registerObserver(SensorObserverInterface*);
+    void unregisterObserver(SensorObserverInterface*);
     virtual void accept(SensorVisitorInterface& visitor) = 0;
 };
 

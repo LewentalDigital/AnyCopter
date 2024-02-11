@@ -20,6 +20,7 @@ DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone
 
     name = new QLabel("<strong>" + QString::fromStdString(drone->getName()) + "</strong>");
     pbBattery = new QProgressBar();
+    drone->readHardware();
     pbBattery->setValue(drone->getBatteryLevel());
     if (drone->getBatteryLevel() > 20)
         pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #06b025; width: 1px;}");
@@ -40,6 +41,17 @@ DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone
     main->addWidget(infoContainer);
     main->addStretch();
     main->addWidget(btnManage);
+
+    drone->registerObserver(this);
+}
+
+DroneListItem::~DroneListItem() {
+    drone->unregisterObserver(this);
+}
+
+void DroneListItem::notify(Drone& d) {
+    pbBattery->setValue(d.getBatteryLevel());
+    numSensors->setText("Mounted sensors: " + QString::number(d.getNumMountedSensors()) + "/" + QString::number(Drone::sensorSockets));
 }
 
 }  // namespace View
