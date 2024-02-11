@@ -30,7 +30,7 @@ class DroneView : public QWidget, public SensorObserverInterface{
     QGridLayout* droneSensors;
     QPushButton* btnRead;
     
-    QVector<QWidget*> sensorSockets;
+    // QVector<QWidget*> sensorSockets;
 
    public:
     DroneView(Drone*, QWidget* = nullptr);

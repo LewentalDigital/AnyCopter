@@ -1,8 +1,5 @@
 #include "SensorChartVisitor.h"
 
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QProgressBar>
 #include <QtCharts>
 
 #include "../model/BatteryChargeSensor.h"
@@ -11,6 +8,32 @@
 #include "../model/Thermometer.h"
 
 namespace View {
+
+void SensorChartVisitor::init() { // Fare sensorview e implementare dlete e edit facilmente
+    widget = new QWidget();
+    QVBoxLayout* content = new QVBoxLayout();
+    content->setContentsMargins(0, 0, 0, 0);
+    widget->setLayout(content);
+
+    QWidget* titleBarContainer = new QWidget();
+    QHBoxLayout* titleBar = new QHBoxLayout(titleBarContainer);
+    titleBar->setContentsMargins(0, 0, 0, 0);
+    titleBarContainer->setLayout(titleBar);
+    QPushButton* btnEdit = new QPushButton(QIcon(QPixmap(":/assets/icons/edit.svg")), "Edit");
+    QPushButton* btnRemove = new QPushButton(QIcon(QPixmap(":/assets/icons/remove.svg")), "Remove");
+    titleBar->addWidget(title);
+    titleBar->addStretch();
+    titleBar->addWidget(btnEdit);
+    titleBar->addWidget(btnRemove);
+
+    chart->legend()->hide();
+    chart->setMargins(QMargins(6, 6, 6, 6));
+    chart->createDefaultAxes();
+    chartView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+
+    content->addWidget(titleBarContainer);
+    content->addWidget(chartView);
+}
 
 QWidget* SensorChartVisitor::getWidget() {
     return widget;
@@ -51,23 +74,7 @@ void SensorChartVisitor::visitBatteryChargeSensor(BatteryChargeSensor& bcs) {
 }
 
 void SensorChartVisitor::visitCO2Sensor(CO2Sensor& co2s) {
-    widget = new QWidget();
-    QVBoxLayout* content = new QVBoxLayout();
-    content->setContentsMargins(0, 0, 0, 0);
-    widget->setLayout(content);
-
-    QWidget* titleBarContainer = new QWidget();
-    QHBoxLayout* titleBar = new QHBoxLayout(titleBarContainer);
-    titleBar->setContentsMargins(0, 0, 0, 0);
-    titleBarContainer->setLayout(titleBar);
-    QLabel* title = new QLabel("CO2 Sensor, buffer size:" + QString::number(co2s.getBufferSize()));
-    QPushButton* btnEdit = new QPushButton(QIcon(QPixmap(":/assets/icons/edit.svg")), "Edit");
-    QPushButton* btnRemove = new QPushButton(QIcon(QPixmap(":/assets/icons/remove.svg")), "Remove");
-    titleBar->addWidget(title);
-    titleBar->addStretch();
-    titleBar->addWidget(btnEdit);
-    titleBar->addWidget(btnRemove);
-
+    title = new QLabel("CO2 Sensor, buffer size:" + QString::number(co2s.getBufferSize()));
     QSplineSeries* series = new QSplineSeries();
     const std::list<double>& data = co2s.getReadings();
 
@@ -75,17 +82,10 @@ void SensorChartVisitor::visitCO2Sensor(CO2Sensor& co2s) {
     for (auto reading = data.begin(); reading != data.end(); ++reading)
         series->append(i++, *reading);
 
-    QChart* chart = new QChart;
-    chart->legend()->hide();
+    chart = new QChart();
     chart->addSeries(series);
-    chart->createDefaultAxes();
-    // chart->setTitle("CO2 Sensor readings");
-    chart->setMargins(QMargins(6, 6, 6, 6));
-    QChartView* chartView = new QChartView(chart);
-    chartView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-
-    content->addWidget(titleBarContainer);
-    content->addWidget(chartView);
+    chartView = new QChartView(chart);
+    init();
 }
 
 void SensorChartVisitor::visitHygrometer(Hygrometer& h) {
