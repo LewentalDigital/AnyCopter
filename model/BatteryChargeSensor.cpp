@@ -2,8 +2,8 @@
 
 #include <cmath>
 
-BatteryChargeSensor::BatteryChargeSensor(int bs) : AbstractSensor(bs, 1, 100), charge(randRange(min, max)) {
-    setCharge(charge);
+BatteryChargeSensor::BatteryChargeSensor(int bs) : AbstractSensor(bs, 1, 100) {
+    setCharge(randRange(min, max));
 }
 
 double dischargeFunction(double x) {
@@ -15,20 +15,16 @@ double inverseDischargeFunction(double y) {
 }
 
 void BatteryChargeSensor::read() {
-    if (charge > 0) {
+    if (reading > 0) {
         time += random(0, 0.5);  // a bit of randomness
         double newValue = dischargeFunction(time++);
-        charge = (newValue > 0) ? newValue : 0;
+        reading = (newValue > 0) ? newValue : 0;
     }
-    pushReading(charge);
-}
-
-double BatteryChargeSensor::getCharge() const {
-    return charge;
+    pushReading(reading);
 }
 
 void BatteryChargeSensor::setCharge(double c) {
-    charge = c;
+    reading = c;
     time = inverseDischargeFunction(c);
 }
 

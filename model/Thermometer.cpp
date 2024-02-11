@@ -2,16 +2,13 @@
 
 #include <cmath>
 
-Thermometer::Thermometer(int bs) : AbstractSensor(bs, 16, 32), prevReadingTime(0) {
+Thermometer::Thermometer(int bs) : AbstractSensor(bs, 16, 32), time(0) {
 }
 
 void Thermometer::read() {
-    temperature = random((max + min) / 2, 1);
-    temperature -= std::sin((++prevReadingTime) / 6) * 8;  // oscillation of temperature with sine
-    pushReading(temperature);
-}
-double Thermometer::getTemperature() const {
-    return temperature;
+    reading = random((max + min) / 2, 1);
+    reading -= std::sin((++time) / 6) * 8;  // oscillation of temperature with sine
+    pushReading(reading);
 }
 
 void Thermometer::accept(SensorVisitorInterface& visitor) {

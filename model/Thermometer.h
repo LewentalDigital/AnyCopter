@@ -5,14 +5,12 @@
 
 class Thermometer : public AbstractSensor {
    private:
-    double temperature;
-    int prevReadingTime;
+    int time;
 
    public:
     Thermometer(int bufferSize = 24);
 
     void read() override;
-    double getTemperature() const;
 
     void accept(SensorVisitorInterface& visitor) override;
 };

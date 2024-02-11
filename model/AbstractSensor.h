@@ -10,12 +10,12 @@
 
 class AbstractSensor {
    private:
-    double reading;
     unsigned int bufferSize;  // number of readings the sensor can memorize
     std::list<double> readingsBuffer;
     std::vector<SensorObserverInterface*> observers;
 
    protected:
+    double reading; // Value of the last reading
     // min and max values the sensor can read, but in this simulation they are used as an interval for reasonable readings
     double min, max;
     // methods for generating plausible simulation of readings

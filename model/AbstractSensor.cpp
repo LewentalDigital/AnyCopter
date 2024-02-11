@@ -17,8 +17,6 @@ double AbstractSensor::randRange(double start, double end) const {
 }
 
 double AbstractSensor::getCurrentReading() {
-    read();
-    pushReading(reading);
     return reading;
 }
 

@@ -5,8 +5,7 @@
 
 class Hygrometer : public AbstractSensor {
    private:
-    int prevReadingTime;
-    double humidity;
+    int time;
 
    public:
     Hygrometer(int bufferSize = 24);

@@ -5,14 +5,12 @@
 
 class BatteryChargeSensor : public AbstractSensor {
    private:
-    double charge;
     double time;
 
    public:
     BatteryChargeSensor(int bufferSize = 60);
 
     void read() override;
-    double getCharge() const;
     void setCharge(double charge);
 
     void accept(SensorVisitorInterface& visitor) override;

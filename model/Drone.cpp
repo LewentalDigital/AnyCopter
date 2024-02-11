@@ -28,7 +28,12 @@ void Drone::unmountSensor(std::vector<AbstractSensor*>::iterator it) {
 
 double Drone::getBatteryLevel() {
     battery.read();
-    return battery.getCharge();
+    return battery.getCurrentReading();
+}
+
+double Drone::getCpuTemperature() {
+    tempCpu.read();
+    return tempCpu.getCurrentReading();
 }
 
 int Drone::getNumMountedSensors() const {
