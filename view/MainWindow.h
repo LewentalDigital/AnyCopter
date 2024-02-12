@@ -6,6 +6,7 @@
 
 #include "../model/Drone.h"
 #include "../model/DroneManager.h"
+#include "../model/persistence/PersistenceManager.h"
 #include "DroneList.h"
 
 namespace View {
@@ -14,6 +15,7 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
    private:
     DroneManager* droneManager;
+    PersistenceManager persistenceManager;
     QStackedWidget* stackedWidget;
     DroneList* droneList;
 

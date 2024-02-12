@@ -16,7 +16,7 @@
 
 namespace View {
 
-MainWindow::MainWindow(DroneManager* dm) : droneManager(dm) {
+MainWindow::MainWindow(DroneManager* dm) : droneManager(dm), persistenceManager(dm->getDrones()) {
     QAction* actionCreate = new QAction("New");
     actionCreate->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_N));
 
@@ -74,6 +74,7 @@ MainWindow::MainWindow(DroneManager* dm) : droneManager(dm) {
 }
 
 void MainWindow::quit() {
+    persistenceManager.save("savefile.csv");
     QApplication::quit();
 }
 

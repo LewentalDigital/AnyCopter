@@ -16,7 +16,9 @@ QT +=   widgets \
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # Input
-HEADERS += model/AbstractSensor.h \
+HEADERS += model/persistence/PersistenceManager.h \
+           model/persistence/SensorSaveVisitor.h \
+           model/AbstractSensor.h \
            model/BatteryChargeSensor.h \
            model/CO2Sensor.h \
            model/Drone.h \
@@ -35,6 +37,8 @@ HEADERS += model/AbstractSensor.h \
            view/SensorChartVisitor.h \
            view/SensorView.h
 SOURCES += main.cpp \
+           model/persistence/PersistenceManager.cpp \
+           model/persistence/SensorSaveVisitor.cpp \
            model/AbstractSensor.cpp \
            model/BatteryChargeSensor.cpp \
            model/CO2Sensor.cpp \

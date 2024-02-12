@@ -32,4 +32,5 @@ std::list<double> DroneManager::getAllReadings() const {
             }
         }
     }
+    return readings;
 }
