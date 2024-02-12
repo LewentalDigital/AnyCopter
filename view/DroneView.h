@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QVector>
 #include <QWidget>
+#include <array>
 
 #include "../model/AbstractSensor.h"
 #include "../model/Drone.h"
@@ -18,7 +19,8 @@ class DroneView : public QWidget, public DroneObserverInterface {
     Q_OBJECT
    private:
     Drone* drone;
-    int removedSensors;
+    std::vector<int> sensorPos;  // sensorPos[n] < 0 => free socket, sensorPos[n] >= 0 => position of sensor in the vector
+
 
     QLabel* name;
     QProgressBar* pbBattery;
@@ -35,6 +37,7 @@ class DroneView : public QWidget, public DroneObserverInterface {
    public slots:
     void mountSensor(AbstractSensor*, int);
     void removeSensor(int);
+    void editSensor(int);
     void readNewData();
     void back();
 };

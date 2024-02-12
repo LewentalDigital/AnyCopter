@@ -59,7 +59,7 @@ MainWindow::MainWindow(DroneManager* dm) : droneManager(dm) {
     QMenu* menuInfo = menuBar()->addMenu("&Info");
     menuInfo->addAction(actionGithub);
 
-    // connect(actionRefresh, &QAction::triggered, this, &MainWindow::quit);  // test
+    connect(actionRefresh, &QAction::triggered, this, &MainWindow::refresh);
     connect(actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(actionDeploy, &QAction::triggered, this, &MainWindow::openDeployDroneView);
     connect(actionGithub, &QAction::triggered, this, &MainWindow::visitGithub);
@@ -75,6 +75,17 @@ MainWindow::MainWindow(DroneManager* dm) : droneManager(dm) {
 
 void MainWindow::quit() {
     QApplication::quit();
+}
+
+void MainWindow::refresh() {  // make every observer update
+    const std::vector<Drone*>& drones = droneManager->getDrones();
+    for (auto drone = drones.begin(); drone != drones.end(); ++drone) {
+        (*drone)->readHardware();
+        const std::vector<AbstractSensor*>& sensors = (*drone)->getMountedSensors();
+        for (auto sensor = sensors.begin(); sensor != sensors.end(); ++sensor) {
+            (*sensor)->read();
+        }
+    }
 }
 
 void MainWindow::visitGithub() {

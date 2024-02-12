@@ -22,6 +22,7 @@ class MainWindow : public QMainWindow {
 
    public slots:
     void quit();
+    void refresh();
     void visitGithub();
     // void viewDroneList();
     void manageDrone(Drone*);

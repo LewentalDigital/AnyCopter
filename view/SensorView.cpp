@@ -45,12 +45,17 @@ SensorView::~SensorView() {
 
 void SensorView::notify(AbstractSensor& sensor) {
     bufferSize->setText("Buffer size: " + QString::number(sensor.getBufferSize()));
+    
     QList<QAbstractSeries*> seriesList = chart->series();
     static_cast<QLineSeries *>(chart->series()[0])->append(int(sensor.getReadings().size()), sensor.getReadings().back());
-    // chart->createDefaultAxes();
+    chart->createDefaultAxes();
     chart->update();
 
 
+    // SensorChartVisitor visitor;
+    // sensor->accept(visitor); 
+    // content = visitor.getWidget();  // get custom chart from visitor of sensor chart
+    // // chart = visitor.getChart();
     
 }
 

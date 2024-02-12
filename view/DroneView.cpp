@@ -14,7 +14,7 @@
 
 namespace View {
 
-DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), removedSensors(0) {
+DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     QVBoxLayout* main = new QVBoxLayout(this);
 
     // Panel title bar
@@ -94,7 +94,11 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), rem
         connect(sv, &SensorView::remove, [this, gridIndex]() {
             removeSensor(gridIndex);
         });
+        connect(sv, &SensorView::edit, [this, gridIndex]() {
+            editSensor(gridIndex);
+        });
         droneSensors->addWidget(sv, gridIndex / 2, gridIndex % 2);
+        sensorPos.push_back(gridIndex);
         gridIndex++;
     }
 
@@ -104,6 +108,7 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d), rem
             mountSensor(sensor, gridIndex);
         });
         droneSensors->addWidget(ess, gridIndex / 2, gridIndex % 2);
+        sensorPos.push_back(-1);
         gridIndex++;
     }
 
@@ -118,6 +123,7 @@ DroneView::~DroneView() {
 }
 
 void DroneView::notify(Drone& d) {
+    name->setText("<strong>" + QString::fromStdString(d.getName()) + "</strong>");
     pbBattery->setValue(d.getBatteryLevel());
     cpuTemperature->setText("CPU Temperature: " + QString::number(d.getCpuTemperature()) + "°C");
 }
@@ -133,8 +139,12 @@ void DroneView::mountSensor(AbstractSensor* sensor, int i) {
         connect(sv, &SensorView::remove, [this, i]() {
             removeSensor(i);
         });
+        connect(sv, &SensorView::edit, [this, i]() {
+            editSensor(i);
+        });
         delete droneSensors->itemAtPosition(i / 2, i % 2)->widget();
         droneSensors->addWidget(sv, i / 2, i % 2);
+        sensorPos[i] = drone->getNumMountedSensors() - 1;
     } catch (std::string e) {
         QErrorMessage* error = new QErrorMessage(this);
         error->showMessage(QString::fromStdString(e));
@@ -143,14 +153,24 @@ void DroneView::mountSensor(AbstractSensor* sensor, int i) {
 }
 
 void DroneView::removeSensor(int i) {
-    drone->unmountSensor(i - removedSensors);
+    drone->unmountSensor(sensorPos[i]);
     EmptySensorSocket* ess = new EmptySensorSocket();
     connect(ess, &EmptySensorSocket::mountSensor, [this, i](AbstractSensor* sensor) {
         mountSensor(sensor, i);
     });
     delete droneSensors->itemAtPosition(i / 2, i % 2)->widget();
     droneSensors->addWidget(ess, i / 2, i % 2);
-    removedSensors++;
+
+    for (unsigned int j = 0; j < sensorPos.size(); ++j)  // should not work but it does ;)
+        sensorPos[j]--;
+    sensorPos[i] = -1;
+}
+
+void DroneView::editSensor(int i) {  // attenzione con gli indici!!!
+    bool ok;
+    int value = QInputDialog::getInt(this, "Edit Sensor buffer size", "Enter new sensor buffer size:", drone->getMountedSensors()[sensorPos[i]]->getBufferSize(), 0, 256, 1, &ok);
+    if (ok)
+        drone->getMountedSensors()[sensorPos[i]]->setBufferSize(value);
 }
 
 void DroneView::readNewData() {
