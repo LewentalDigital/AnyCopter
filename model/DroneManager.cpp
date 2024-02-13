@@ -10,6 +10,10 @@ DroneManager::~DroneManager() {
 }
 
 void DroneManager::deployDrone(Drone* deployedDrone) {
+    for (Drone* drone : drones)
+        if (drone->getName() == deployedDrone->getName())
+            throw std::string("Drone with name \"" + deployedDrone->getName() + "\" already exists, Drones must have unique names.");
+
     drones.push_back(deployedDrone);
 }
 

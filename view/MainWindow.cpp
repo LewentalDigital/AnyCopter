@@ -5,6 +5,7 @@
 #include <QDesktopServices>
 #include <QMenu>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QScrollArea>
 #include <QUrl>
 #include <QVBoxLayout>
@@ -17,13 +18,8 @@
 namespace View {
 
 MainWindow::MainWindow(DroneManager* dm) : droneManager(dm), persistenceManager(dm->getDrones()) {
-    std::vector<Drone*> d = persistenceManager.load("savefile.csv");
-    for (auto drone = d.begin(); drone != d.end(); ++drone) {
-        droneManager->deployDrone(*drone);
-        droneList->addDrone(*drone);
-    }
-    
-    
+    persistenceManager.load("savefile.csv", *droneManager);
+
     QAction* actionCreate = new QAction("New");
     actionCreate->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_N));
 
@@ -67,6 +63,7 @@ MainWindow::MainWindow(DroneManager* dm) : droneManager(dm), persistenceManager(
     menuInfo->addAction(actionGithub);
 
     connect(actionRefresh, &QAction::triggered, this, &MainWindow::refresh);
+    connect(actionSave, &QAction::triggered, this, &MainWindow::save);
     connect(actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(actionDeploy, &QAction::triggered, this, &MainWindow::openDeployDroneView);
     connect(actionGithub, &QAction::triggered, this, &MainWindow::visitGithub);
@@ -80,9 +77,8 @@ MainWindow::MainWindow(DroneManager* dm) : droneManager(dm), persistenceManager(
     setCentralWidget(stackedWidget);
 }
 
-void MainWindow::quit() {
+void MainWindow::save() {
     persistenceManager.save("savefile.csv");
-    QApplication::quit();
 }
 
 void MainWindow::refresh() {  // make every observer update
@@ -94,6 +90,10 @@ void MainWindow::refresh() {  // make every observer update
             (*sensor)->read();
         }
     }
+}
+
+void MainWindow::quit() {
+    QApplication::quit();
 }
 
 void MainWindow::visitGithub() {
@@ -124,8 +124,12 @@ void MainWindow::openDeployDroneView() {
 }
 
 void MainWindow::deployNewDrone(Drone* drone) {
-    droneManager->deployDrone(drone);
-    droneList->addDrone(drone);
+    try {
+        droneManager->deployDrone(drone);
+        droneList->addDrone(drone);
+    } catch (std::string errorMsg) {
+        QMessageBox::warning(this, "Error", QString::fromStdString(errorMsg));
+    }
 }
 
 }  // namespace View

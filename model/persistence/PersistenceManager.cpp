@@ -36,18 +36,14 @@ void PersistenceManager::save(const std::string &filename) {
     }
 }
 
-std::vector<Drone *> PersistenceManager::load(const std::string &filename) const {
-    std::vector<Drone *> retDrones;
-    Drone* gino = new Drone("gino");
-    retDrones.push_back(gino);
-
+void PersistenceManager::load(const std::string &filename, DroneManager &droneManager) {
     std::ifstream f(filename, std::ios_base::app);
     std::string line;
 
     if (f.is_open()) {
         if (f.peek() == std::ifstream::traits_type::eof()) {
             f.close();
-            return retDrones;
+            return;
         }
 
         while (getline(f, line)) {
@@ -55,30 +51,29 @@ std::vector<Drone *> PersistenceManager::load(const std::string &filename) const
             std::istringstream iss(line);
 
             getline(iss, droneName, PersistenceManager::SEPARATOR);
-            // Drone *drone = new Drone(droneName);
+            Drone *drone = new Drone(droneName);
 
-            // while (getline(iss, sensorId, PersistenceManager::SEPARATOR)) {
-            //         getline(iss, sensorBufferSize, PersistenceManager::SEPARATOR);
-            //         getline(iss, sensorReadings, PersistenceManager::SEPARATOR);
+            while (getline(iss, sensorId, PersistenceManager::SEPARATOR)) {
+                getline(iss, sensorBufferSize, PersistenceManager::SEPARATOR);
+                getline(iss, sensorReadings, PersistenceManager::SEPARATOR);
 
-            //         unsigned int buffer = stoul(sensorBufferSize);
-            //         unsigned int readings = stoul(sensorReadings);
-            //         AbstractSensor *sensor;
+                unsigned int buffer = stoul(sensorBufferSize);
+                unsigned int readings = stoul(sensorReadings);
+                AbstractSensor *sensor;
 
-            //         if (sensorId == "BatteryChargeSensor") {
-            //             sensor = new BatteryChargeSensor(buffer);
-            //         } else {
-            //             sensor = new Thermometer(buffer);
-            //         }
+                if (sensorId == "BatteryChargeSensor") {
+                    sensor = new BatteryChargeSensor(buffer);
+                } else {
+                    sensor = new Thermometer(buffer);
+                }
 
-            //         for (int i = 0; i < readings; i++)
-            //             sensor->read();
-            //         drone->mountSensor(sensor);
-            // }
-            // retDrones.push_back(new Drone("gino"));
+                for (unsigned int i = 0; i < readings; i++)
+                    sensor->read();
+                drone->mountSensor(sensor);
+            }
+            droneManager.deployDrone(drone);
         }
         f.close();
-        return retDrones;
     } else {
         throw std::runtime_error("Error managing load file; maybe it's already open in another program?");
     }

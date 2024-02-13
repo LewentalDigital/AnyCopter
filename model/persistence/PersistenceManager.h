@@ -2,6 +2,7 @@
 #include <string>
 
 #include "../Drone.h"
+#include "../DroneManager.h"
 
 class PersistenceManager {
    private:
@@ -11,5 +12,5 @@ class PersistenceManager {
    public:
     PersistenceManager(const std::vector<Drone *> &drones);
     void save(const std::string &);
-    std::vector<Drone *> load(const std::string &) const;
+    void load(const std::string &, DroneManager &);
 };

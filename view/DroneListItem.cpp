@@ -8,6 +8,7 @@
 namespace View {
 
 DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QHBoxLayout* main = new QHBoxLayout(this);
 
     image = new QLabel();

@@ -23,6 +23,7 @@ class MainWindow : public QMainWindow {
     MainWindow(DroneManager* = nullptr);
 
    public slots:
+    void save();
     void quit();
     void refresh();
     void visitGithub();

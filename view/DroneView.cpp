@@ -1,6 +1,6 @@
 #include "DroneView.h"
 
-#include <QErrorMessage>
+#include <QMessageBox>
 #include <QHBoxLayout>
 #include <QIcon>
 #include <QScrollArea>
@@ -145,10 +145,9 @@ void DroneView::mountSensor(AbstractSensor* sensor, int i) {
         delete droneSensors->itemAtPosition(i / 2, i % 2)->widget();
         droneSensors->addWidget(sv, i / 2, i % 2);
         sensorPos[i] = drone->getNumMountedSensors() - 1;
-    } catch (std::string e) {
-        QErrorMessage* error = new QErrorMessage(this);
-        error->showMessage(QString::fromStdString(e));
-        connect(error, &QErrorMessage::finished, this, &DroneView::back);
+    } catch (std::string errorMsg) {
+        QMessageBox::warning(this, "Error", QString::fromStdString(errorMsg));
+        back();
     }
 }
 
