@@ -14,14 +14,6 @@ int main(int argc, char *argv[]) {
     
     DroneManager droneManager;
 
-    Drone *d1 = new Drone("Drone 1");
-    d1->mountSensor(new BatteryChargeSensor());
-    droneManager.deployDrone(d1);
-    droneManager.deployDrone(new Drone("Drone 2"));
-    droneManager.deployDrone(new Drone("Drone 3"));
-    droneManager.deployDrone(new Drone("Drone 4"));
-    droneManager.deployDrone(new Drone("Drone 5"));
-
     View::MainWindow window(&droneManager);
     window.resize(1024, 576);
     window.show();

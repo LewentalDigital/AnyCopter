@@ -17,6 +17,13 @@
 namespace View {
 
 MainWindow::MainWindow(DroneManager* dm) : droneManager(dm), persistenceManager(dm->getDrones()) {
+    std::vector<Drone*> d = persistenceManager.load("savefile.csv");
+    for (auto drone = d.begin(); drone != d.end(); ++drone) {
+        droneManager->deployDrone(*drone);
+        droneList->addDrone(*drone);
+    }
+    
+    
     QAction* actionCreate = new QAction("New");
     actionCreate->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_N));
 
