@@ -3,6 +3,8 @@
 #include <QAction>
 #include <QApplication>
 #include <QDesktopServices>
+#include <QErrorMessage>
+#include <QFileDialog>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -18,18 +20,16 @@
 namespace View {
 
 MainWindow::MainWindow(DroneManager* dm) : droneManager(dm), persistenceManager(dm->getDrones()) {
-    persistenceManager.load("savefile.csv", *droneManager);
-
     QAction* actionCreate = new QAction("New");
     actionCreate->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_N));
 
-    QAction* actionOpen = new QAction("Open");
+    QAction* actionOpen = new QAction("Open Configuration");
     actionOpen->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_O));
 
-    QAction* actionSave = new QAction("Save");
+    QAction* actionSave = new QAction("Save Configuration");
     actionSave->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_S));
 
-    QAction* actionSaveAs = new QAction("Save As");
+    QAction* actionSaveAs = new QAction("Save Configuration As");
     actionSaveAs->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_S));
 
     QAction* actionQuit = new QAction("Quit");
@@ -62,8 +62,10 @@ MainWindow::MainWindow(DroneManager* dm) : droneManager(dm), persistenceManager(
     QMenu* menuInfo = menuBar()->addMenu("&Info");
     menuInfo->addAction(actionGithub);
 
+    connect(actionOpen, &QAction::triggered, this, &MainWindow::open);
     connect(actionRefresh, &QAction::triggered, this, &MainWindow::refresh);
     connect(actionSave, &QAction::triggered, this, &MainWindow::save);
+    connect(actionSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
     connect(actionQuit, &QAction::triggered, this, &MainWindow::quit);
     connect(actionDeploy, &QAction::triggered, this, &MainWindow::openDeployDroneView);
     connect(actionGithub, &QAction::triggered, this, &MainWindow::visitGithub);
@@ -71,14 +73,42 @@ MainWindow::MainWindow(DroneManager* dm) : droneManager(dm), persistenceManager(
     droneList = new DroneList(dm, this);
     connect(droneList, &DroneList::manageDrone, this, &MainWindow::manageDrone);
 
+    loadConfig("savefile.csv");
+
     stackedWidget = new QStackedWidget(this);
     stackedWidget->addWidget(droneList);
 
     setCentralWidget(stackedWidget);
 }
 
+void MainWindow::loadConfig(const QString& configFile) {
+    try {
+        persistenceManager.load(configFile.toStdString(), *droneManager);
+        for (Drone* drone : droneManager->getDrones())
+            droneList->addDrone(drone);
+    } catch (std::string errorMsg) {
+        QErrorMessage* error = new QErrorMessage(this);
+        error->showMessage("Error in configuration file " + configFile + ": \n" + QString::fromStdString(errorMsg));
+    }
+}
+
+void MainWindow::open() {
+    QString filename = QFileDialog::getOpenFileName(this, "Open Configuration", "", "CSV files (*.csv)");
+    // if (filename != "") {
+    persistenceManager.load(filename.toStdString(), *droneManager);
+    // droneList->refresh();
+    // }
+}
+
 void MainWindow::save() {
     persistenceManager.save("savefile.csv");
+}
+
+void MainWindow::saveAs() {
+    QString filename = QFileDialog::getSaveFileName(this, "Save Configuration As", "", "CSV files (*.csv)");
+    // if (filename != "") {
+    persistenceManager.save(filename.toStdString());
+    // }
 }
 
 void MainWindow::refresh() {  // make every observer update

@@ -48,7 +48,7 @@ void DroneList::addDrone(Drone* d) {
     droneItems.push_back(new DroneListItem(d));
     connect(droneItems.back(), &DroneListItem::manageDrone, this, &DroneList::manageDrone);
     content->addWidget(droneItems.back());
-    // scrollArea->ensureWidgetVisible(droneItems.back()); // non funziona :(
+    // scrollArea->ensureWidgetVisible(droneItems.back()); // not working :(
 }
 
 DroneList::~DroneList() {

@@ -167,7 +167,7 @@ void DroneView::removeSensor(int i) {
 
 void DroneView::editSensor(int i) {  // attenzione con gli indici!!!
     bool ok;
-    int value = QInputDialog::getInt(this, "Edit Sensor buffer size", "Enter new sensor buffer size:", drone->getMountedSensors()[sensorPos[i]]->getBufferSize(), 0, 256, 1, &ok);
+    int value = QInputDialog::getInt(this, "Edit Sensor buffer size", "Enter new sensor buffer size:", drone->getMountedSensors()[sensorPos[i]]->getBufferSize(), 1, 256, 1, &ok);
     if (ok)
         drone->getMountedSensors()[sensorPos[i]]->setBufferSize(value);
 }

@@ -19,11 +19,15 @@ class MainWindow : public QMainWindow {
     QStackedWidget* stackedWidget;
     DroneList* droneList;
 
+    void loadConfig(const QString&);
+
    public:
     MainWindow(DroneManager* = nullptr);
 
    public slots:
+    void open();
     void save();
+    void saveAs();
     void quit();
     void refresh();
     void visitGithub();

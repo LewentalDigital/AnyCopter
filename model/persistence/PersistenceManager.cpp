@@ -17,45 +17,46 @@ PersistenceManager::PersistenceManager(const std::vector<Drone *> &drones) : dro
 const char PersistenceManager::SEPARATOR = ',';
 
 void PersistenceManager::save(const std::string &filename) {
-    std::ofstream f(filename, std::ios_base::app);
+    // std::ofstream file(filename, std::ios_base::app);
+    std::ofstream file(filename, std::ios_base::trunc);
 
-    if (f.is_open()) {
+    if (file.is_open()) {
         for (auto d = drones.begin(); d != drones.end(); ++d) {
-            f << (*d)->getName() << PersistenceManager::SEPARATOR;
+            file << (*d)->getName() << PersistenceManager::SEPARATOR;
             for (auto s = (*d)->getMountedSensors().begin(); s != (*d)->getMountedSensors().end(); ++s) {
                 SensorSaveVisitor visitor;
                 (*s)->accept(visitor);
-                f << visitor.getId() << PersistenceManager::SEPARATOR
+                file << visitor.getId() << PersistenceManager::SEPARATOR
                   << (*s)->getBufferSize() << PersistenceManager::SEPARATOR
                   << (*s)->getReadings().size() << PersistenceManager::SEPARATOR;
             }
-            f << std::endl;
+            file << std::endl;
         }
     } else {
-        throw std::runtime_error("Error managing save file; maybe it's already open in another program?");
+        throw std::string("Error managing save file; maybe it's already open in another program?");
     }
 }
 
 void PersistenceManager::load(const std::string &filename, DroneManager &droneManager) {
-    std::ifstream f(filename, std::ios_base::app);
+    std::ifstream file(filename, std::ios_base::app);
     std::string line;
 
-    if (f.is_open()) {
-        if (f.peek() == std::ifstream::traits_type::eof()) {
-            f.close();
-            return;
-        }
+    if (file.is_open()) {
+        // if (file.peek() == std::ifstream::traits_type::eof()) {
+        //     file.close();
+        //     return;
+        // }
 
-        while (getline(f, line)) {
+        while (getline(file, line)) {
             std::string droneName, sensorId, sensorBufferSize, sensorReadings;
-            std::istringstream iss(line);
+            std::istringstream stream(line);
 
-            getline(iss, droneName, PersistenceManager::SEPARATOR);
+            getline(stream, droneName, PersistenceManager::SEPARATOR);
             Drone *drone = new Drone(droneName);
 
-            while (getline(iss, sensorId, PersistenceManager::SEPARATOR)) {
-                getline(iss, sensorBufferSize, PersistenceManager::SEPARATOR);
-                getline(iss, sensorReadings, PersistenceManager::SEPARATOR);
+            while (getline(stream, sensorId, PersistenceManager::SEPARATOR)) {
+                getline(stream, sensorBufferSize, PersistenceManager::SEPARATOR);
+                getline(stream, sensorReadings, PersistenceManager::SEPARATOR);
 
                 unsigned int buffer = stoul(sensorBufferSize);
                 unsigned int readings = stoul(sensorReadings);
@@ -73,8 +74,8 @@ void PersistenceManager::load(const std::string &filename, DroneManager &droneMa
             }
             droneManager.deployDrone(drone);
         }
-        f.close();
+        file.close();
     } else {
-        throw std::runtime_error("Error managing load file; maybe it's already open in another program?");
+        throw std::string("Error managing load file; maybe it's already open in another program?");
     }
 }
