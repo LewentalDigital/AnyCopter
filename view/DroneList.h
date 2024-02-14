@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 #include <QVector>
 #include <QWidget>
+#include <vector>
 
 #include "../model/Drone.h"
 #include "../model/DroneManager.h"
@@ -22,13 +23,14 @@ class DroneList : public QWidget {
     QVBoxLayout* content;
 
    public:
-    DroneList(DroneManager*, QWidget* = nullptr);
+    DroneList(const std::vector<Drone*>&, QWidget* = nullptr);
     ~DroneList();
 
    signals:
     void manageDrone(Drone*);
    public slots:
     void addDrone(Drone*);
+    void reload(const std::vector<Drone*>&);
 };
 
 }  // namespace View

@@ -21,6 +21,10 @@ void DroneManager::removeDrone(const std::vector<Drone*>::iterator it) {
     drones.erase(it);
 }
 
+void DroneManager::clear() {
+    drones.clear();
+}
+
 const std::vector<Drone*>& DroneManager::getDrones() const {
     return drones;
 }

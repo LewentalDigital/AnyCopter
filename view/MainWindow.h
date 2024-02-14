@@ -14,7 +14,7 @@ namespace View {
 class MainWindow : public QMainWindow {
     Q_OBJECT
    private:
-    DroneManager* droneManager;
+    DroneManager& droneManager;
     PersistenceManager persistenceManager;
     QStackedWidget* stackedWidget;
     DroneList* droneList;
@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow {
     void loadConfig(const QString&);
 
    public:
-    MainWindow(DroneManager* = nullptr);
+    MainWindow(DroneManager&);
 
    public slots:
     void open();

@@ -8,7 +8,7 @@
 
 namespace View {
 
-DroneList::DroneList(DroneManager* dm, QWidget* parent) : QWidget(parent) {
+DroneList::DroneList(const std::vector<Drone*>& drones, QWidget* parent) : QWidget(parent) {
     QBoxLayout* main = new QVBoxLayout(this);
 
     // Panel title bar
@@ -33,7 +33,6 @@ DroneList::DroneList(DroneManager* dm, QWidget* parent) : QWidget(parent) {
     contentContainer->setLayout(content);
     content->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
-    const std::vector<Drone*>& drones = dm->getDrones();
     for (std::vector<Drone*>::const_iterator it = drones.begin(); it != drones.end(); it++) {
         droneItems.push_back(new DroneListItem(*it));
         connect(droneItems[droneItems.size() - 1], &DroneListItem::manageDrone, this, &DroneList::manageDrone);
@@ -44,16 +43,29 @@ DroneList::DroneList(DroneManager* dm, QWidget* parent) : QWidget(parent) {
     main->addWidget(scrollArea);
 }
 
+DroneList::~DroneList() {
+    for (DroneListItem* item : droneItems) {
+        delete item;
+    }
+}
+
 void DroneList::addDrone(Drone* d) {
     droneItems.push_back(new DroneListItem(d));
     connect(droneItems.back(), &DroneListItem::manageDrone, this, &DroneList::manageDrone);
     content->addWidget(droneItems.back());
-    // scrollArea->ensureWidgetVisible(droneItems.back()); // not working :(
+    // scrollArea->ensureWidgetVisible(droneItems.back()); // not working :( maybe if called fromm main window
 }
 
-DroneList::~DroneList() {
+void DroneList::reload(const std::vector<Drone*>& drones) {
     for (DroneListItem* item : droneItems) {
+        content->removeWidget(item);
         delete item;
+    }
+    droneItems.clear();
+    for (Drone* drone : drones) {
+        droneItems.push_back(new DroneListItem(drone));
+        connect(droneItems[droneItems.size() - 1], &DroneListItem::manageDrone, this, &DroneList::manageDrone);
+        content->addWidget(droneItems[droneItems.size() - 1]);
     }
 }
 

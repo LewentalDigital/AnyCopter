@@ -16,6 +16,7 @@ class DroneManager {
 
     void deployDrone(Drone*);
     void removeDrone(const std::vector<Drone*>::iterator);
+    void clear();
 
     const std::vector<Drone*>& getDrones() const;
     std::list<double> getAllReadings() const;
