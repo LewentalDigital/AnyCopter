@@ -146,6 +146,7 @@ void MainWindow::manageDrone(Drone* drone) {
     connect(dv, &DroneView::sensorRemoved, this, &MainWindow::save);
     connect(dv, &DroneView::sensorMounted, this, &MainWindow::save);
     connect(dv, &DroneView::sensorEdited, this, &MainWindow::save);
+    connect(dv, &DroneView::deleteDrone, this, &MainWindow::deleteDrone);
 }
 
 void MainWindow::openDeployDroneView() {
@@ -164,10 +165,24 @@ void MainWindow::deployNewDrone(Drone* drone) {
     try {
         droneManager.deployDrone(drone);
         droneList->addDrone(drone);
+        save();
+        droneList->loadSearchList(droneManager.getDrones());
+        droneList->resetSearch();
     } catch (std::string errorMsg) {
         QMessageBox::warning(this, "Error", QString::fromStdString(errorMsg));
     }
+}
+
+void MainWindow::deleteDrone(Drone* drone) {
+    for (std::vector<Drone*>::const_iterator it = droneManager.getDrones().begin(); it != droneManager.getDrones().end(); ++it) {
+        if ((*it) == drone) {
+            droneManager.removeDrone(it);
+            break;
+        }
+    }
+    droneList->removeDrone(drone);
     save();
+    droneList->loadSearchList(droneManager.getDrones());
 }
 
 }  // namespace View

@@ -57,11 +57,8 @@ DroneList::DroneList(const std::vector<Drone*>& drones, QWidget* parent) : QWidg
     contentContainer->setLayout(content);
     content->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
-    for (std::vector<Drone*>::const_iterator it = drones.begin(); it != drones.end(); it++) {
-        droneItems.push_back(new DroneListItem(*it));
-        connect(droneItems[droneItems.size() - 1], &DroneListItem::manageDrone, this, &DroneList::manageDrone);
-        content->addWidget(droneItems[droneItems.size() - 1]);
-    }
+    loadDroneItems(drones);
+    loadSearchList(drones);
 
     main->addLayout(titleBar);
     main->addLayout(searchBar);
@@ -74,11 +71,8 @@ DroneList::~DroneList() {
 }
 
 void DroneList::loadDroneItems(const std::vector<Drone*>& drones) {
-    for (std::vector<Drone*>::const_iterator it = drones.begin(); it != drones.end(); ++it) {
-        droneItems.push_back(new DroneListItem(*it));
-        connect(droneItems[droneItems.size() - 1], &DroneListItem::manageDrone, this, &DroneList::manageDrone);
-        content->addWidget(droneItems[droneItems.size() - 1]);
-    }
+    for (std::vector<Drone*>::const_iterator it = drones.begin(); it != drones.end(); ++it)
+        addDrone(*it);
 }
 
 void DroneList::loadSearchList(const std::vector<Drone*>& drones) {
@@ -101,12 +95,23 @@ void DroneList::addDrone(Drone* d) {
     content->addWidget(droneItems.back());
 }
 
+void DroneList::removeDrone(Drone* d) {
+    for (auto it = droneItems.begin(); it != droneItems.end(); ++it) {
+        if (&(*it)->getDrone() == d) {
+            content->removeWidget(*it);
+            delete *it;
+            droneItems.erase(it);
+            break;
+        }
+    }
+}
+
 void DroneList::searchFocus() {
     searchInput->setFocus();
 }
 
 void DroneList::search() {
-    QString query = searchInput->text();
+    QString query = searchInput->text().simplified().replace( " ", "" );
 
     for (DroneListItem* item : droneItems) {
         bool matchSensor = false;

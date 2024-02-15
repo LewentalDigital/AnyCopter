@@ -26,16 +26,18 @@ class DroneList : public QWidget {
     QVBoxLayout* content;
 
     void loadDroneItems(const std::vector<Drone*>&);
-    void loadSearchList(const std::vector<Drone*>&);
 
    public:
     DroneList(const std::vector<Drone*>& = std::vector<Drone*>(), QWidget* = nullptr);
     ~DroneList();
 
+    void loadSearchList(const std::vector<Drone*>&);
+
    signals:
     void manageDrone(Drone*);
    public slots:
     void addDrone(Drone*);
+    void removeDrone(Drone*);
     void searchFocus();
     void search();
     void resetSearch();

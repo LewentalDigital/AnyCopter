@@ -3,8 +3,6 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <typeinfo>
-
 #include "../AbstractSensor.h"
 #include "../BatteryChargeSensor.h"
 #include "../CO2Sensor.h"
@@ -87,20 +85,24 @@ void PersistenceManager::load(const std::string &filename) {
                 getline(stream, sensorReadings, PersistenceManager::SEPARATOR);
 
                 unsigned int buffer = stoul(sensorBufferSize);
-                unsigned int readings = stoul(sensorReadings);
+                unsigned int readings = (unsigned int)stoi(sensorReadings);
                 AbstractSensor *sensor;
 
-                if (sensorId.compare(typeid(BatteryChargeSensor).name()) == 0)
+                if (sensorId.compare(BatteryChargeSensor().getId()) == 0) {
                     sensor = new BatteryChargeSensor();
-                else if (sensorId.compare(typeid(CO2Sensor).name()) == 0)
+                    if (BatteryChargeSensor *bcs = dynamic_cast<BatteryChargeSensor *>(sensor))
+                        bcs->setCharge(drone->getBatteryLevel());
+                } else if (sensorId.compare(CO2Sensor().getId()) == 0) {
                     sensor = new CO2Sensor();
-                else if (sensorId.compare(typeid(Hygrometer).name()) == 0)
+                } else if (sensorId.compare(Hygrometer().getId()) == 0) {
                     sensor = new Hygrometer();
-                else if (sensorId.compare(typeid(Thermometer).name()) == 0)
+                } else if (sensorId.compare(Thermometer().getId()) == 0) {
                     sensor = new Thermometer();
-                else
-                    sensor = new BatteryChargeSensor();
+                } else {
+                    sensor = new Thermometer();
+                }
                 // There must be a better way to do this
+                // is visitor necessary? how
 
                 sensor->setBufferSize(buffer);
                 for (unsigned int i = 0; i < readings; i++)

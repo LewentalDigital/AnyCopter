@@ -10,14 +10,14 @@ DroneManager::~DroneManager() {
 }
 
 void DroneManager::deployDrone(Drone* deployedDrone) {
-    for (Drone* drone : drones)
-        if (drone->getName() == deployedDrone->getName())
+    for (auto drone = drones.begin(); drone != drones.end(); ++drone)
+        if ((*drone)->getName() == deployedDrone->getName())
             throw std::string("Drone with name \"" + deployedDrone->getName() + "\" already exists, Drones must have unique names.");
 
     drones.push_back(deployedDrone);
 }
 
-void DroneManager::removeDrone(const std::vector<Drone*>::iterator it) {
+void DroneManager::removeDrone(std::vector<Drone*>::const_iterator it) {
     drones.erase(it);
 }
 

@@ -26,6 +26,7 @@ class Drone {
     virtual ~Drone();
 
     std::string getName() const;
+    void setName(std::string);
     void mountSensor(AbstractSensor*);
     void unmountSensor(int);
     void readHardware();

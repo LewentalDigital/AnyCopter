@@ -69,6 +69,7 @@ const Drone& DroneListItem::getDrone() const {
 }
 
 void DroneListItem::notify(Drone& d) {
+    name->setText("<strong>" + QString::fromStdString(d.getName()) + "</strong>");
     pbBattery->setValue(d.getBatteryLevel());
     if (drone->getBatteryLevel() > 20)
         pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #06b025; width: 1px;}");

@@ -18,21 +18,24 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     QVBoxLayout* main = new QVBoxLayout(this);
 
     // Panel title bar
-    QWidget* titleBarContainer = new QWidget();
-    titleBarContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    QHBoxLayout* titleBar = new QHBoxLayout(titleBarContainer);
+    // titleBarContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    QHBoxLayout* titleBar = new QHBoxLayout();
     titleBar->setContentsMargins(0, 0, 0, 0);
-    titleBarContainer->setLayout(titleBar);
-    QPushButton* back = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "Back");
-    back->setShortcut(QKeySequence::Back);
+    QPushButton* btnBack = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "Back");
+    btnBack->setShortcut(QKeySequence::Back);
     name = new QLabel("<strong>" + QString::fromStdString(drone->getName()) + "</strong>");
-
-    titleBar->addWidget(back);
+    QPushButton* btnEdit = new QPushButton(QIcon(QPixmap(":/assets/icons/edit.svg")), "Edit drone name");
+    QPushButton* btnDel = new QPushButton(QIcon(QPixmap(":/assets/icons/remove.svg")), "Delete drone");
+    titleBar->addWidget(btnBack);
     titleBar->addStretch();
     titleBar->addWidget(name);
     titleBar->addStretch();
+    titleBar->addWidget(btnEdit);
+    titleBar->addWidget(btnDel);
 
-    connect(back, &QPushButton::clicked, this, &DroneView::back);
+    connect(btnBack, &QPushButton::clicked, this, &DroneView::back);
+    connect(btnEdit, &QPushButton::clicked, this, &DroneView::editDrone);
+    connect(btnDel, &QPushButton::clicked, this, &DroneView::handleDeleteDrone);
 
     // Panel content
     QScrollArea* scrollArea = new QScrollArea();
@@ -42,21 +45,18 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     contentContainer->setLayout(content);
     scrollArea->setWidget(contentContainer);
 
+
     // Drone information
-    QWidget* droneInfoContainer = new QWidget();
-    content->addWidget(droneInfoContainer);
-    QHBoxLayout* droneInfo = new QHBoxLayout(droneInfoContainer);
-    droneInfoContainer->setLayout(droneInfo);
+    QHBoxLayout* droneInfo = new QHBoxLayout();
+    content->addLayout(droneInfo);
+
     QLabel* image = new QLabel();
     image->setPixmap(QPixmap(":assets/images/agriDrone.png").scaledToHeight(250, Qt::SmoothTransformation));
     droneInfo->addWidget(image);
 
     // Text info of drone
-    QWidget* droneInfoTextContainer = new QWidget();
-    droneInfoTextContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    droneInfo->addWidget(droneInfoTextContainer);
-    QVBoxLayout* droneInfoText = new QVBoxLayout(droneInfoTextContainer);
-    droneInfoTextContainer->setLayout(droneInfoText);
+    QVBoxLayout* droneInfoText = new QVBoxLayout();
+    droneInfo->addLayout(droneInfoText);
     QLabel* batteryLabel = new QLabel("Battery level:");
     droneInfoText->addWidget(batteryLabel);
     pbBattery = new QProgressBar();
@@ -79,10 +79,8 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     content->addWidget(sensorsLabel);
 
     // Sensors
-    QWidget* droneSensorsContainer = new QWidget();
-    content->addWidget(droneSensorsContainer);
     droneSensors = new QGridLayout();
-    droneSensorsContainer->setLayout(droneSensors);
+    content->addLayout(droneSensors);
     droneSensors->setContentsMargins(0, 0, 0, 0);
 
     int gridIndex = 0;  // grid has 2 columns and whatever rows, so this index is used to calculate the row and column where to place sensors
@@ -112,7 +110,7 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
         gridIndex++;
     }
 
-    main->addWidget(titleBarContainer);
+    main->addLayout(titleBar);
     main->addWidget(scrollArea);
 
     drone->registerObserver(this);
@@ -126,6 +124,22 @@ void DroneView::notify(Drone& d) {
     name->setText("<strong>" + QString::fromStdString(d.getName()) + "</strong>");
     pbBattery->setValue(d.getBatteryLevel());
     cpuTemperature->setText("CPU Temperature: " + QString::number(d.getCpuTemperature()) + "°C");
+}
+
+void DroneView::editDrone() {
+    bool ok;
+    QString text = QInputDialog::getText(this, "Edit drone name", "Enter new drone name:", QLineEdit::Normal, QString::fromStdString(drone->getName()), &ok);
+    if (ok && !text.isEmpty()) {
+        drone->setName(text.toStdString());
+    }
+}
+
+void DroneView::handleDeleteDrone() {
+    int result = QMessageBox::question(this, "Delete drone", "Are you sure you want to delete this drone?", QMessageBox::Yes | QMessageBox::No);
+    if (result == QMessageBox::Yes) {
+        emit deleteDrone(drone);
+        back();
+    }
 }
 
 void DroneView::mountSensor(AbstractSensor* sensor, int i) {

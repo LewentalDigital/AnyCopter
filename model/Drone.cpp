@@ -14,6 +14,13 @@ std::string Drone::getName() const {
     return name;
 }
 
+void Drone::setName(std::string n) {
+    name = n;
+    
+    for (auto observer = observers.begin(); observer != observers.end(); ++observer)
+        (*observer)->notify(*this);
+}
+
 void Drone::mountSensor(AbstractSensor* sensor) {
     if (externalSensors.size() < sensorSockets) {
         externalSensors.push_back(sensor);

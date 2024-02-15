@@ -33,9 +33,10 @@ class MainWindow : public QMainWindow {
     void visitGithub();
     // void openDroneList();
     void openSearch();
+    void deployNewDrone(Drone*);
+    void deleteDrone(Drone*);
     void manageDrone(Drone*);
     void openDeployDroneView();
-    void deployNewDrone(Drone*);
 };
 
 }  // namespace View

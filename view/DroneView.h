@@ -37,8 +37,11 @@ class DroneView : public QWidget, public DroneObserverInterface {
     void sensorMounted();
     void sensorRemoved();
     void sensorEdited();
+    void deleteDrone(Drone*);
 
    public slots:
+    void editDrone();
+    void handleDeleteDrone();
     void mountSensor(AbstractSensor*, int);
     void removeSensor(int);
     void editSensor(int);
