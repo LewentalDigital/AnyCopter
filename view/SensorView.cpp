@@ -9,11 +9,11 @@ namespace View {
 
 SensorView::SensorView(AbstractSensor* sensor, QWidget* parent) : QWidget(parent), sensor(sensor) {
     SensorChartVisitor visitor;
-    sensor->accept(visitor); 
+    sensor->accept(visitor);
     content = visitor.getWidget();  // get custom chart from visitor of sensor chart
     chart = visitor.getChart();     // get chart from visitor so i can update it later
 
-    QVBoxLayout* main = new QVBoxLayout();
+    main = new QVBoxLayout();
     main->setContentsMargins(0, 0, 0, 0);
     setLayout(main);
 
@@ -40,23 +40,18 @@ SensorView::SensorView(AbstractSensor* sensor, QWidget* parent) : QWidget(parent
 }
 
 SensorView::~SensorView() {
-    sensor->unregisterObserver(this); // if this view gets deleted it should unregister from the observer list
+    sensor->unregisterObserver(this);  // if this view gets deleted it should unregister from the observer list
 }
 
 void SensorView::notify(AbstractSensor& sensor) {
     bufferSize->setText("Buffer size: " + QString::number(sensor.getBufferSize()));
-    
-    QList<QAbstractSeries*> seriesList = chart->series();
-    static_cast<QLineSeries *>(chart->series()[0])->append(int(sensor.getReadings().size()), sensor.getReadings().back());
-    chart->createDefaultAxes();
-    chart->update();
+    SensorChartVisitor visitor;
+    sensor.accept(visitor);
+    chart = visitor.getChart();
 
-
-    // SensorChartVisitor visitor;
-    // sensor->accept(visitor); 
-    // content = visitor.getWidget();  // get custom chart from visitor of sensor chart
-    // // chart = visitor.getChart();
-    
+    delete content;
+    content = visitor.getWidget();
+    main->addWidget(content);
 }
 
 }  // namespace View

@@ -10,7 +10,9 @@ class CO2Sensor : public AbstractSensor {
    public:
     CO2Sensor(int bufferSize = 100);
     virtual ~CO2Sensor() = default;
+
     void read() override;
+    std::string getId() const override;
 
     void accept(SensorVisitorInterface& visitor) override;
 };

@@ -12,6 +12,7 @@ class Thermometer : public AbstractSensor {
     virtual ~Thermometer() = default;
 
     void read() override;
+    std::string getId() const override;
 
     void accept(SensorVisitorInterface& visitor) override;
 };

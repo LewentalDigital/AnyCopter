@@ -3,7 +3,9 @@
 
 #include <QChart>
 #include <QLabel>
+#include <QLineSeries>
 #include <QPushButton>
+#include <QVBoxLayout>
 #include <QWidget>
 
 #include "../model/AbstractSensor.h"
@@ -16,10 +18,12 @@ class SensorView : public QWidget, public SensorObserverInterface {
    private:
     AbstractSensor* sensor;
 
+    QVBoxLayout* main;
     QLabel* bufferSize;
     QPushButton* btnEdit;
     QPushButton* btnRemove;
     QWidget* content;
+    QLineSeries series;
     QChart* chart;
 
    public:

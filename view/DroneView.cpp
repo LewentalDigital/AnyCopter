@@ -1,8 +1,8 @@
 #include "DroneView.h"
 
-#include <QMessageBox>
 #include <QHBoxLayout>
 #include <QIcon>
+#include <QMessageBox>
 #include <QScrollArea>
 #include <QString>
 #include <QVBoxLayout>
@@ -149,6 +149,8 @@ void DroneView::mountSensor(AbstractSensor* sensor, int i) {
         QMessageBox::warning(this, "Error", QString::fromStdString(errorMsg));
         back();
     }
+
+    emit sensorMounted();
 }
 
 void DroneView::removeSensor(int i) {
@@ -160,16 +162,20 @@ void DroneView::removeSensor(int i) {
     delete droneSensors->itemAtPosition(i / 2, i % 2)->widget();
     droneSensors->addWidget(ess, i / 2, i % 2);
 
-    for (unsigned int j = 0; j < sensorPos.size(); ++j)  // should not work but it does ;)
+    for (unsigned int j = i; j < sensorPos.size(); ++j)  // it works, but why ?
         sensorPos[j]--;
     sensorPos[i] = -1;
+
+    emit sensorRemoved();
 }
 
-void DroneView::editSensor(int i) {  // attenzione con gli indici!!!
+void DroneView::editSensor(int i) {
     bool ok;
     int value = QInputDialog::getInt(this, "Edit Sensor buffer size", "Enter new sensor buffer size:", drone->getMountedSensors()[sensorPos[i]]->getBufferSize(), 1, 256, 1, &ok);
     if (ok)
         drone->getMountedSensors()[sensorPos[i]]->setBufferSize(value);
+
+    emit sensorEdited();
 }
 
 void DroneView::readNewData() {

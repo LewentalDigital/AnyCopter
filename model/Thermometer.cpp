@@ -12,6 +12,10 @@ void Thermometer::read() {
     AbstractSensor::read();
 }
 
+std::string Thermometer::getId() const {
+    return "Thermometer";
+}
+
 void Thermometer::accept(SensorVisitorInterface& visitor) {
     visitor.visitThermometer(*this);
 }

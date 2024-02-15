@@ -22,6 +22,8 @@ class DroneListItem : public QWidget, public DroneObserverInterface {
    public:
     DroneListItem(Drone*, QWidget* = nullptr);
     ~DroneListItem();
+    
+    const Drone& getDrone() const;
     void notify(Drone&) override;
 
    signals:

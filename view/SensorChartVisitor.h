@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QtCharts>
+#include <QLineSeries>
 
 #include "../model/SensorVisitorInterface.h"
 
@@ -12,7 +13,8 @@ namespace View {
 class SensorChartVisitor : public SensorVisitorInterface {
    private:
     QWidget* widget;
-    
+
+    QLineSeries* series;
     QChart* chart;
     QChartView* chartView;
 
@@ -22,6 +24,7 @@ class SensorChartVisitor : public SensorVisitorInterface {
    public:
     QWidget* getWidget();
     QWidget* getTitle();
+    QLineSeries* getSeries();
     QChart* getChart();
     void setupChart();
     void setupTitle();

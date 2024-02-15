@@ -12,6 +12,10 @@ void Hygrometer::read() {
     AbstractSensor::read();
 }
 
+std::string Hygrometer::getId() const {
+    return "Hygrometer";
+}
+
 void Hygrometer::accept(SensorVisitorInterface& visitor) {
     visitor.visitHygrometer(*this);
 }

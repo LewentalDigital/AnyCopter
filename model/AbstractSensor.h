@@ -3,6 +3,7 @@
 
 #include <list>
 #include <random>
+#include <string>
 
 #include "SensorObserverInterface.h"
 #include "SensorVisitorInterface.h"
@@ -31,6 +32,7 @@ class AbstractSensor {
     virtual double getCurrentReading() const;
     virtual const std::list<double>& getReadings() const;
     virtual unsigned int getBufferSize() const;
+    virtual std::string getId() const = 0;
 
     virtual void setBufferSize(int);
 

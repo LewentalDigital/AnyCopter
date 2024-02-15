@@ -67,7 +67,8 @@ void PersistenceManager::save(const std::string &filename) {
 }
 
 void PersistenceManager::load(const std::string &filename) {
-    std::ifstream file(filename, std::ios_base::app);
+    std::ifstream file(filename, std::ios_base::in);
+    // std::ifstream file(filename, std::ios_base::app);
     std::string line;
 
     droneManager.clear(); // clear all drones and sensors to load new ones

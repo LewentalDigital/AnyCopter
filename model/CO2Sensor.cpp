@@ -12,6 +12,10 @@ void CO2Sensor::read() {
     AbstractSensor::read();
 }
 
+std::string CO2Sensor::getId() const {
+    return "CO2Sensor";
+}
+
 void CO2Sensor::accept(SensorVisitorInterface& visitor) {
     visitor.visitCO2Sensor(*this);
 }

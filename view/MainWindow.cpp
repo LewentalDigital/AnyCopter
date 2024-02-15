@@ -38,8 +38,8 @@ MainWindow::MainWindow(DroneManager& dm) : droneManager(dm), persistenceManager(
     QAction* actionDeploy = new QAction("New drone");
     actionDeploy->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_N));
 
-    QAction* actionVewList = new QAction("List of drones");
-    actionVewList->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_L));
+    QAction* actionDroneList = new QAction("List of drones");
+    actionDroneList->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_L));
 
     QAction* actionGithub = new QAction("Visit LewentalDigital GitHub page");
 
@@ -51,7 +51,7 @@ MainWindow::MainWindow(DroneManager& dm) : droneManager(dm), persistenceManager(
     menuFile->addSeparator();
     menuFile->addAction(actionQuit);
     QMenu* menuView = menuBar()->addMenu("&View");
-    menuView->addAction(actionVewList);
+    menuView->addAction(actionDroneList);
     menuView->addAction(actionSearch);
     menuView->addSeparator();
     menuView->addAction(actionRefresh);
@@ -63,6 +63,7 @@ MainWindow::MainWindow(DroneManager& dm) : droneManager(dm), persistenceManager(
     connect(actionOpen, &QAction::triggered, this, &MainWindow::open);
     connect(actionSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
     connect(actionQuit, &QAction::triggered, this, &MainWindow::quit);
+    connect(actionSearch, &QAction::triggered, this, &MainWindow::openSearch);
     connect(actionRefresh, &QAction::triggered, this, &MainWindow::refresh);
     connect(actionGithub, &QAction::triggered, this, &MainWindow::visitGithub);
 
@@ -91,10 +92,12 @@ void MainWindow::loadConfig(const QString& configFile) {
 
 void MainWindow::open() {
     QString filename = QFileDialog::getOpenFileName(this, "Open Configuration", "", "CSV files (*.csv)");
-    int result = QMessageBox::question(this, "Confirm config overwrite", "Loading new configuration will overwirte the current. Load configuration from " + filename + "?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-    if (result == QMessageBox::Yes)
-        if (filename != "")
+    if (filename != "") {
+        int result = QMessageBox::question(this, "Confirm config overwrite", "Loading new configuration will overwirte the current. Load configuration from " + filename + "?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (result == QMessageBox::Yes) {
             loadConfig(filename);
+        }
+    }
 }
 
 void MainWindow::save() {
@@ -127,15 +130,22 @@ void MainWindow::visitGithub() {
     QDesktopServices::openUrl(QUrl("https://github.com/LewentalDigital/AnyCopter"));
 }
 
+void MainWindow::openSearch() {
+    droneList->searchFocus();
+}
+
 void MainWindow::manageDrone(Drone* drone) {
-    DroneView* dv = new DroneView(drone);
     if (stackedWidget->currentIndex() > 0) {
         QWidget* prevWidget = stackedWidget->currentWidget();
         stackedWidget->removeWidget(prevWidget);
         delete prevWidget;
     }
+    DroneView* dv = new DroneView(drone);
     stackedWidget->addWidget(dv);
     stackedWidget->setCurrentIndex(1);
+    connect(dv, &DroneView::sensorRemoved, this, &MainWindow::save);
+    connect(dv, &DroneView::sensorMounted, this, &MainWindow::save);
+    connect(dv, &DroneView::sensorEdited, this, &MainWindow::save);
 }
 
 void MainWindow::openDeployDroneView() {

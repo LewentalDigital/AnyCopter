@@ -29,6 +29,10 @@ void BatteryChargeSensor::setCharge(double c) {
     time = inverseDischargeFunction(c);
 }
 
+std::string BatteryChargeSensor::getId() const {
+    return "BatteryChargeSensor";
+}
+
 void BatteryChargeSensor::accept(SensorVisitorInterface& visitor) {
     visitor.visitBatteryChargeSensor(*this);
 }

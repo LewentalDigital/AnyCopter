@@ -1,6 +1,9 @@
 #include "DroneList.h"
 
 #include <QBoxLayout>
+#include <QScrollArea>
+#include <QStringList>
+#include <QStringListModel>
 #include <vector>
 
 #include "../model/Drone.h"
@@ -11,21 +14,42 @@ namespace View {
 DroneList::DroneList(const std::vector<Drone*>& drones, QWidget* parent) : QWidget(parent) {
     QBoxLayout* main = new QVBoxLayout(this);
 
-    // Panel title bar
-    QWidget* titleBarContainer = new QWidget();
-    titleBarContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    QHBoxLayout* titleBar = new QHBoxLayout(titleBarContainer);
+    // Title bar
+    QHBoxLayout* titleBar = new QHBoxLayout();
     titleBar->setContentsMargins(0, 0, 0, 0);
-    titleBarContainer->setLayout(titleBar);
-    // QPushButton* back = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "Back");
-    // back->setShortcut(QKeySequence::Back);
-    QLabel* title = new QLabel("<strong>Drone</strong>");
-    // titleBar->addWidget(back);
+    QPushButton* back = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "Back");
+    back->setShortcut(QKeySequence::Back);
+    QLabel* title = new QLabel("<strong>Drones</strong>");
+    titleBar->addWidget(back);
     titleBar->addStretch();
     titleBar->addWidget(title);
     titleBar->addStretch();
 
-    scrollArea = new QScrollArea();
+    // completer for drone names and sensors so it will suggest searches
+    completer = new QCompleter(this);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    completer->setFilterMode(Qt::MatchContains);
+    // completer->setCompletionMode(QCompleter::PopupCompletion);
+
+    // Search bar
+    QHBoxLayout* searchBar = new QHBoxLayout();
+    searchBar->setContentsMargins(0, 0, 0, 0);
+    searchInput = new QLineEdit();
+    searchInput->setCompleter(completer);
+    searchInput->setPlaceholderText("Search for drones or sensors");
+    searchInput->setMaxLength(32);
+    QPushButton* btnSearch = new QPushButton(QIcon(QPixmap(":/assets/icons/search.svg")), "Search");
+    QPushButton* btnReset = new QPushButton("Reset");
+
+    searchBar->addWidget(searchInput);
+    searchBar->addWidget(btnSearch);
+    searchBar->addWidget(btnReset);
+
+    connect(searchInput, &QLineEdit::returnPressed, this, &DroneList::search);
+    connect(btnSearch, &QPushButton::clicked, this, &DroneList::search);
+    connect(btnReset, &QPushButton::clicked, this, &DroneList::resetSearch);
+
+    QScrollArea* scrollArea = new QScrollArea();
     scrollArea->setWidgetResizable(true);
     QWidget* contentContainer = new QWidget(scrollArea);
     scrollArea->setWidget(contentContainer);
@@ -39,21 +63,60 @@ DroneList::DroneList(const std::vector<Drone*>& drones, QWidget* parent) : QWidg
         content->addWidget(droneItems[droneItems.size() - 1]);
     }
 
-    main->addWidget(titleBarContainer);
+    main->addLayout(titleBar);
+    main->addLayout(searchBar);
     main->addWidget(scrollArea);
 }
 
 DroneList::~DroneList() {
-    for (DroneListItem* item : droneItems) {
+    for (DroneListItem* item : droneItems)
         delete item;
+}
+
+void DroneList::loadDroneItems(const std::vector<Drone*>& drones) {
+    for (std::vector<Drone*>::const_iterator it = drones.begin(); it != drones.end(); ++it) {
+        droneItems.push_back(new DroneListItem(*it));
+        connect(droneItems[droneItems.size() - 1], &DroneListItem::manageDrone, this, &DroneList::manageDrone);
+        content->addWidget(droneItems[droneItems.size() - 1]);
     }
+}
+
+void DroneList::loadSearchList(const std::vector<Drone*>& drones) {
+    QStringList searchList;
+    for (std::vector<Drone*>::const_iterator drone = drones.begin(); drone != drones.end(); ++drone) {
+        searchList << QString::fromStdString((*drone)->getName());
+        std::vector<AbstractSensor*> sensors = (*drone)->getMountedSensors();
+        for (std::vector<AbstractSensor*>::const_iterator sensor = sensors.begin(); sensor != sensors.end(); ++sensor) {
+            searchList << QString::fromStdString((*sensor)->getId());
+        }
+    }
+    completer->setModel(new QStringListModel(searchList));
 }
 
 void DroneList::addDrone(Drone* d) {
     droneItems.push_back(new DroneListItem(d));
     connect(droneItems.back(), &DroneListItem::manageDrone, this, &DroneList::manageDrone);
     content->addWidget(droneItems.back());
-    // scrollArea->ensureWidgetVisible(droneItems.back()); // not working :( maybe if called fromm main window
+}
+
+void DroneList::searchFocus() {
+    searchInput->setFocus();
+}
+
+void DroneList::search() {
+    QString query = searchInput->text();
+
+    for (DroneListItem* item : droneItems) {
+        if (QString::fromStdString((item->getDrone()).getName()).contains(query, Qt::CaseInsensitive))
+            item->show();
+        else
+            item->hide();
+    }
+}
+
+void DroneList::resetSearch() {
+    searchInput->clear();
+    search();
 }
 
 void DroneList::reload(const std::vector<Drone*>& drones) {
@@ -62,11 +125,8 @@ void DroneList::reload(const std::vector<Drone*>& drones) {
         delete item;
     }
     droneItems.clear();
-    for (Drone* drone : drones) {
-        droneItems.push_back(new DroneListItem(drone));
-        connect(droneItems[droneItems.size() - 1], &DroneListItem::manageDrone, this, &DroneList::manageDrone);
-        content->addWidget(droneItems[droneItems.size() - 1]);
-    }
+    loadDroneItems(drones);
+    loadSearchList(drones);
 }
 
 }  // namespace View

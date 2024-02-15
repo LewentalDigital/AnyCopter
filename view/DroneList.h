@@ -1,7 +1,9 @@
 #ifndef VIEW_DRONELIST_H
 #define VIEW_DRONELIST_H
 
-#include <QScrollArea>
+#include <QCompleter>
+#include <QLineEdit>
+#include <QPushButton>
 #include <QVBoxLayout>
 #include <QVector>
 #include <QWidget>
@@ -19,17 +21,24 @@ class DroneList : public QWidget {
     DroneManager* droneManager;
     QVector<DroneListItem*> droneItems;
 
-    QScrollArea* scrollArea;
+    QCompleter* completer;
+    QLineEdit* searchInput;
     QVBoxLayout* content;
 
+    void loadDroneItems(const std::vector<Drone*>&);
+    void loadSearchList(const std::vector<Drone*>&);
+
    public:
-    DroneList(const std::vector<Drone*>&, QWidget* = nullptr);
+    DroneList(const std::vector<Drone*>& = std::vector<Drone*>(), QWidget* = nullptr);
     ~DroneList();
 
    signals:
     void manageDrone(Drone*);
    public slots:
     void addDrone(Drone*);
+    void searchFocus();
+    void search();
+    void resetSearch();
     void reload(const std::vector<Drone*>&);
 };
 

@@ -31,7 +31,8 @@ class MainWindow : public QMainWindow {
     void quit();
     void refresh();
     void visitGithub();
-    // void viewDroneList();
+    // void openDroneList();
+    void openSearch();
     void manageDrone(Drone*);
     void openDeployDroneView();
     void deployNewDrone(Drone*);

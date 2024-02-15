@@ -1,5 +1,7 @@
 #include "SensorChartVisitor.h"
 
+#include <QAreaSeries>
+#include <QPen>
 #include <QtCharts>
 
 #include "../model/BatteryChargeSensor.h"
@@ -31,6 +33,10 @@ QWidget* SensorChartVisitor::getTitle() {
     return title;
 }
 
+QLineSeries* SensorChartVisitor::getSeries() {
+    return series;
+}
+
 QChart* SensorChartVisitor::getChart() {
     return chart;
 }
@@ -56,18 +62,31 @@ void SensorChartVisitor::visitBatteryChargeSensor(BatteryChargeSensor& bcs) {
         pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px;  background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123;}");
 
     QLineSeries* series = new QLineSeries();
+    // QColor color("#41cc64");
+    // QPen pen(color);  //  green line
+    // pen.setWidth(2);  // width of the line
+    // series->setPen(pen);
+
     const std::list<double>& data = bcs.getReadings();
     int i = 0;
     for (auto reading = data.begin(); reading != data.end(); ++reading)
         series->append(i++, *reading);
+
+    QAreaSeries* areaSeries = new QAreaSeries(series);  // Area below line
+    QColor areaColor("#41cc64cc");
+    QBrush brush(areaColor);
+    areaSeries->setBrush(brush);
+    QColor lineColor("#41cc64");
+    QPen pen(lineColor);  //  green line
+    pen.setWidth(2);      // width of the line
+    areaSeries->setPen(pen);
+
     chart = new QChart();
-    chart->addSeries(series);
+    chart->addSeries(areaSeries);
     chartView = new QChartView(chart);
     setupChart();
-    // QValueAxis* axisY = new QValueAxis();
-    // axisY->setRange(0, 100);
-    // chart->addAxis(axisY, Qt::AlignLeft);
     chart->axes(Qt::Vertical).back()->setRange(0, 100);
+    chart->axes(Qt::Horizontal).back()->setRange(0, bcs.getBufferSize());
 
     content->addWidget(chartView);
     content->addWidget(pbBattery);
@@ -80,6 +99,8 @@ void SensorChartVisitor::visitCO2Sensor(CO2Sensor& co2s) {
     titleContent->addWidget(icon);
     titleContent->addWidget(new QLabel("<strong>CO2 Sensor</strong>"));
 
+
+// f7ac44
     QLineSeries* series = new QLineSeries();
     const std::list<double>& data = co2s.getReadings();
     int i = 0;
@@ -104,8 +125,18 @@ void SensorChartVisitor::visitHygrometer(Hygrometer& h) {
     int i = 0;
     for (auto reading = data.begin(); reading != data.end(); ++reading)
         series->append(i++, *reading);
-    chart = new QChart;
-    chart->addSeries(series);
+
+    QAreaSeries* areaSeries = new QAreaSeries(series);  // Area below line
+    QColor areaColor("#4bb2bfcc");
+    QBrush brush(areaColor);
+    areaSeries->setBrush(brush);
+    QColor lineColor("#028b9f");
+    QPen pen(lineColor);  //  green line
+    pen.setWidth(2);      // width of the line
+    areaSeries->setPen(pen);
+
+    chart = new QChart();
+    chart->addSeries(areaSeries);
     chartView = new QChartView(chart);
     setupChart();
     widget = chartView;
@@ -119,6 +150,10 @@ void SensorChartVisitor::visitThermometer(Thermometer& t) {
     titleContent->addWidget(new QLabel("<strong>Thermometer</strong>"));
 
     QSplineSeries* series = new QSplineSeries();
+    QColor color("#ff6961");
+    QPen pen(color);
+    pen.setWidth(2);
+    series->setPen(pen);
     const std::list<double>& data = t.getReadings();
     int i = 0;
     for (auto reading = data.begin(); reading != data.end(); ++reading)

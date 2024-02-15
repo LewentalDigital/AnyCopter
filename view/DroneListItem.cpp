@@ -50,6 +50,10 @@ DroneListItem::~DroneListItem() {
     drone->unregisterObserver(this);
 }
 
+const Drone& DroneListItem::getDrone() const {
+    return *drone;
+}
+
 void DroneListItem::notify(Drone& d) {
     pbBattery->setValue(d.getBatteryLevel());
     numSensors->setText("Mounted sensors: " + QString::number(d.getNumMountedSensors()) + "/" + QString::number(Drone::sensorSockets));

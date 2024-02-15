@@ -13,6 +13,7 @@ class BatteryChargeSensor : public AbstractSensor {
 
     void read() override;
     void setCharge(double charge);
+    std::string getId() const override;
 
     void accept(SensorVisitorInterface& visitor) override;
 };

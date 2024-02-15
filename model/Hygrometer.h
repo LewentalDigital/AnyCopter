@@ -12,6 +12,7 @@ class Hygrometer : public AbstractSensor {
     virtual ~Hygrometer() = default;
 
     void read() override;
+    std::string getId() const override;
 
     void accept(SensorVisitorInterface& visitor) override;
 };
