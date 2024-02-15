@@ -5,6 +5,9 @@
 #include <QString>
 #include <QVBoxLayout>
 
+#include "../model/AbstractSensor.h"
+#include "SensorChartVisitor.h"
+
 namespace View {
 
 DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
@@ -14,10 +17,7 @@ DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone
     image = new QLabel();
     image->setPixmap(QPixmap(":assets/images/agriDrone.png").scaledToHeight(100, Qt::SmoothTransformation));
 
-    QWidget* infoContainer = new QWidget();
-    infoContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    QVBoxLayout* info = new QVBoxLayout(infoContainer);
-    infoContainer->setLayout(info);
+    QVBoxLayout* infoDrone = new QVBoxLayout();
 
     name = new QLabel("<strong>" + QString::fromStdString(drone->getName()) + "</strong>");
     pbBattery = new QProgressBar();
@@ -27,11 +27,24 @@ DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone
         pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #06b025; width: 1px;}");
     else
         pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
+    cpuTemperature = new QLabel("CPU temperature: " + QString::number(drone->getCpuTemperature()) + "°C");
+
+    infoDrone->addWidget(name);
+    infoDrone->addWidget(pbBattery);
+    infoDrone->addWidget(cpuTemperature);
+
+    infoSensors = new QVBoxLayout();
 
     numSensors = new QLabel("Mounted sensors: " + QString::number(drone->getNumMountedSensors()) + "/" + QString::number(Drone::sensorSockets));
-    info->addWidget(name);
-    info->addWidget(pbBattery);
-    info->addWidget(numSensors);
+    numSensors->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    infoSensors->addWidget(numSensors);
+
+    for (AbstractSensor* sensor : drone->getMountedSensors()) {
+        SensorChartVisitor visitor;
+        sensor->accept(visitor);
+        infoSensors->addWidget(visitor.getTitle());
+        // sensors.push_back(visitor.getTitle());
+    }
 
     QPushButton* btnManage = new QPushButton("Manage");
     btnManage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
@@ -39,7 +52,8 @@ DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone
     connect(btnManage, &QPushButton::clicked, std::bind(&DroneListItem::manageDrone, this, drone));
 
     main->addWidget(image);
-    main->addWidget(infoContainer);
+    main->addLayout(infoDrone);
+    main->addLayout(infoSensors);
     main->addStretch();
     main->addWidget(btnManage);
 
@@ -56,7 +70,24 @@ const Drone& DroneListItem::getDrone() const {
 
 void DroneListItem::notify(Drone& d) {
     pbBattery->setValue(d.getBatteryLevel());
-    numSensors->setText("Mounted sensors: " + QString::number(d.getNumMountedSensors()) + "/" + QString::number(Drone::sensorSockets));
+    if (drone->getBatteryLevel() > 20)
+        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #06b025; width: 1px;}");
+    else
+        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
+    cpuTemperature->setText("CPU temperature: " + QString::number(drone->getCpuTemperature()) + "°C");
+    numSensors->setText("Mounted sensors: " + QString::number(drone->getNumMountedSensors()) + "/" + QString::number(Drone::sensorSockets));
+
+    QLayoutItem* child;
+    while ((child = infoSensors->takeAt(1)) != nullptr) {
+        delete child->widget();  // delete the widget
+        delete child;                // delete the layout item
+    }
+
+    for (AbstractSensor* sensor : drone->getMountedSensors()) {
+        SensorChartVisitor visitor;
+        sensor->accept(visitor);
+        infoSensors->addWidget(visitor.getTitle());
+    }
 }
 
 }  // namespace View

@@ -3,6 +3,7 @@
 
 #include <QLabel>
 #include <QProgressBar>
+#include <QVBoxLayout>
 #include <QWidget>
 
 #include "../model/Drone.h"
@@ -14,15 +15,18 @@ class DroneListItem : public QWidget, public DroneObserverInterface {
    private:
     Drone* drone;
 
+    QVBoxLayout* infoSensors;
+
     QLabel* image;
     QLabel* name;
     QProgressBar* pbBattery;
+    QLabel* cpuTemperature;
     QLabel* numSensors;
 
    public:
     DroneListItem(Drone*, QWidget* = nullptr);
     ~DroneListItem();
-    
+
     const Drone& getDrone() const;
     void notify(Drone&) override;
 

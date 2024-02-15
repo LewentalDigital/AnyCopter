@@ -87,7 +87,9 @@ void DroneList::loadSearchList(const std::vector<Drone*>& drones) {
         searchList << QString::fromStdString((*drone)->getName());
         std::vector<AbstractSensor*> sensors = (*drone)->getMountedSensors();
         for (std::vector<AbstractSensor*>::const_iterator sensor = sensors.begin(); sensor != sensors.end(); ++sensor) {
-            searchList << QString::fromStdString((*sensor)->getId());
+            if (!searchList.contains(QString::fromStdString((*sensor)->getId()))) {
+                searchList << QString::fromStdString((*sensor)->getId());
+            }
         }
     }
     completer->setModel(new QStringListModel(searchList));
@@ -107,7 +109,14 @@ void DroneList::search() {
     QString query = searchInput->text();
 
     for (DroneListItem* item : droneItems) {
-        if (QString::fromStdString((item->getDrone()).getName()).contains(query, Qt::CaseInsensitive))
+        bool matchSensor = false;
+        for (AbstractSensor* sensor : item->getDrone().getMountedSensors()) {
+            if (QString::fromStdString(sensor->getId()).contains(query, Qt::CaseInsensitive)) {
+                matchSensor = true;
+                break;
+            }
+        }
+        if (QString::fromStdString((item->getDrone()).getName()).contains(query, Qt::CaseInsensitive) || matchSensor)
             item->show();
         else
             item->hide();

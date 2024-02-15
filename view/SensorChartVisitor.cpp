@@ -20,7 +20,9 @@ void SensorChartVisitor::setupChart() {
 
 void SensorChartVisitor::setupTitle() {
     title = new QWidget();
+    title->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     titleContent = new QHBoxLayout();
+    titleContent->setAlignment(Qt::AlignLeft);
     titleContent->setContentsMargins(10, 0, 10, 0);
     title->setLayout(titleContent);
 }

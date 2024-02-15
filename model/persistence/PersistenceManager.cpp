@@ -5,10 +5,10 @@
 #include <sstream>
 #include <typeinfo>
 
-#include "../DroneManager.h"
 #include "../AbstractSensor.h"
 #include "../BatteryChargeSensor.h"
 #include "../CO2Sensor.h"
+#include "../DroneManager.h"
 #include "../Hygrometer.h"
 #include "../Thermometer.h"
 #include "SensorSaveVisitor.h"
@@ -16,19 +16,19 @@
 const std::string PersistenceManager::defaultSaveFile = "savefile.csv";
 const char PersistenceManager::SEPARATOR = ',';
 
-PersistenceManager::PersistenceManager(DroneManager& dm) : droneManager(dm) {
-    for (Drone* drone : droneManager.getDrones()) {
+PersistenceManager::PersistenceManager(DroneManager &dm) : droneManager(dm) {
+    for (Drone *drone : droneManager.getDrones()) {
         drone->registerObserver(this);
-        for (AbstractSensor* sensor : drone->getMountedSensors()) {
+        for (AbstractSensor *sensor : drone->getMountedSensors()) {
             sensor->registerObserver(this);
         }
     }
 }
 
 PersistenceManager::~PersistenceManager() {
-    for (Drone* drone : droneManager.getDrones()) {
+    for (Drone *drone : droneManager.getDrones()) {
         drone->unregisterObserver(this);
-        for (AbstractSensor* sensor : drone->getMountedSensors()) {
+        for (AbstractSensor *sensor : drone->getMountedSensors()) {
             sensor->unregisterObserver(this);
         }
     }
@@ -41,15 +41,19 @@ void PersistenceManager::notify(Drone &drone) {
 void PersistenceManager::notify(AbstractSensor &sensor) {
     save(PersistenceManager::defaultSaveFile);
     unsigned int noWarning = sensor.getBufferSize();
-    noWarning++; // to avoid compiler warning
+    noWarning++;  // to avoid compiler warning
 }
 
-void PersistenceManager::save(const std::string &filename) {
-    // std::ofstream file(filename, std::ios_base::app);
+void PersistenceManager::save(const std::string &fn) {
+    std::string filename = fn;
+    std::string extension = filename.substr(filename.find_last_of(".") + 1);
+    if (extension.compare("csv") != 0)
+        filename += ".csv";
+
     std::ofstream file(filename, std::ios_base::trunc);  // it will overwrite the file with new changes
 
     if (file.is_open()) {
-        const std::vector<Drone*> drones = droneManager.getDrones();
+        const std::vector<Drone *> drones = droneManager.getDrones();
         for (auto d = drones.begin(); d != drones.end(); ++d) {
             file << (*d)->getName() << PersistenceManager::SEPARATOR;
             for (auto s = (*d)->getMountedSensors().begin(); s != (*d)->getMountedSensors().end(); ++s) {
@@ -71,7 +75,7 @@ void PersistenceManager::load(const std::string &filename) {
     // std::ifstream file(filename, std::ios_base::app);
     std::string line;
 
-    droneManager.clear(); // clear all drones and sensors to load new ones
+    droneManager.clear();  // clear all drones and sensors to load new ones
 
     if (file.is_open()) {
         while (getline(file, line)) {
