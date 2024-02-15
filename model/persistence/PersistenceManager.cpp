@@ -11,7 +11,6 @@
 #include "../DroneManager.h"
 #include "../Hygrometer.h"
 #include "../Thermometer.h"
-#include "SensorSaveVisitor.h"
 
 const std::string PersistenceManager::defaultSaveFile = "savefile.csv";
 const char PersistenceManager::SEPARATOR = ',';
@@ -57,9 +56,7 @@ void PersistenceManager::save(const std::string &fn) {
         for (auto d = drones.begin(); d != drones.end(); ++d) {
             file << (*d)->getName() << PersistenceManager::SEPARATOR;
             for (auto s = (*d)->getMountedSensors().begin(); s != (*d)->getMountedSensors().end(); ++s) {
-                SensorSaveVisitor visitor;
-                (*s)->accept(visitor);
-                file << visitor.getId() << PersistenceManager::SEPARATOR
+                file << (*s)->getId() << PersistenceManager::SEPARATOR
                      << (*s)->getBufferSize() << PersistenceManager::SEPARATOR
                      << (*s)->getReadings().size() << PersistenceManager::SEPARATOR;
             }

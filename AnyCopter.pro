@@ -17,7 +17,6 @@ QT +=   widgets \
 
 # Input
 HEADERS += model/persistence/PersistenceManager.h \
-           model/persistence/SensorSaveVisitor.h \
            model/AbstractSensor.h \
            model/BatteryChargeSensor.h \
            model/CO2Sensor.h \
@@ -38,7 +37,6 @@ HEADERS += model/persistence/PersistenceManager.h \
            view/SensorView.h
 SOURCES += main.cpp \
            model/persistence/PersistenceManager.cpp \
-           model/persistence/SensorSaveVisitor.cpp \
            model/AbstractSensor.cpp \
            model/BatteryChargeSensor.cpp \
            model/CO2Sensor.cpp \
