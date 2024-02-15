@@ -62,10 +62,6 @@ void SensorChartVisitor::visitBatteryChargeSensor(BatteryChargeSensor& bcs) {
         pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px;  background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123;}");
 
     QLineSeries* series = new QLineSeries();
-    // QColor color("#41cc64");
-    // QPen pen(color);  //  green line
-    // pen.setWidth(2);  // width of the line
-    // series->setPen(pen);
 
     const std::list<double>& data = bcs.getReadings();
     int i = 0;
@@ -73,7 +69,7 @@ void SensorChartVisitor::visitBatteryChargeSensor(BatteryChargeSensor& bcs) {
         series->append(i++, *reading);
 
     QAreaSeries* areaSeries = new QAreaSeries(series);  // Area below line
-    QColor areaColor("#41cc64cc");
+    QColor areaColor("#41cc64e3");
     QBrush brush(areaColor);
     areaSeries->setBrush(brush);
     QColor lineColor("#41cc64");
@@ -99,10 +95,13 @@ void SensorChartVisitor::visitCO2Sensor(CO2Sensor& co2s) {
     titleContent->addWidget(icon);
     titleContent->addWidget(new QLabel("<strong>CO2 Sensor</strong>"));
 
-
-// f7ac44
     QLineSeries* series = new QLineSeries();
     const std::list<double>& data = co2s.getReadings();
+    QColor color("#f7ac44");
+    QPen pen(color);
+    pen.setWidth(2);
+    series->setPen(pen);
+
     int i = 0;
     for (auto reading = data.begin(); reading != data.end(); ++reading)
         series->append(i++, *reading);
@@ -131,8 +130,8 @@ void SensorChartVisitor::visitHygrometer(Hygrometer& h) {
     QBrush brush(areaColor);
     areaSeries->setBrush(brush);
     QColor lineColor("#028b9f");
-    QPen pen(lineColor);  //  green line
-    pen.setWidth(2);      // width of the line
+    QPen pen(lineColor);
+    pen.setWidth(2);
     areaSeries->setPen(pen);
 
     chart = new QChart();
@@ -154,6 +153,7 @@ void SensorChartVisitor::visitThermometer(Thermometer& t) {
     QPen pen(color);
     pen.setWidth(2);
     series->setPen(pen);
+
     const std::list<double>& data = t.getReadings();
     int i = 0;
     for (auto reading = data.begin(); reading != data.end(); ++reading)

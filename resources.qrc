@@ -3,7 +3,6 @@
 <qresource>
     <file>assets/icons/icon.svg</file>
     <file>assets/images/agriDrone.png</file>
-    <file>assets/images/droneModels/3.png</file>
     <file>assets/icons/arrow-back.svg</file>
     <file>assets/icons/close.svg</file>
     <file>assets/icons/deploy.svg</file>
