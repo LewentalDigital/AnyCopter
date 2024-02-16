@@ -44,6 +44,11 @@ unsigned int AbstractSensor::getBufferSize() const {
 
 void AbstractSensor::setBufferSize(int size) {
     bufferSize = size;
+    
+    auto it = readingsBuffer.begin();
+    while (readingsBuffer.size() > bufferSize) // forget older readings if buffer size is reduced
+        it = readingsBuffer.erase(it);
+
     for (auto observer = observers.begin(); observer != observers.end(); ++observer)
         (*observer)->notify(*this);
 }

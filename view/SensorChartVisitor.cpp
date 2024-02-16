@@ -35,16 +35,9 @@ QWidget* SensorChartVisitor::getTitle() {
     return title;
 }
 
-QLineSeries* SensorChartVisitor::getSeries() {
-    return series;
-}
-
-QChart* SensorChartVisitor::getChart() {
-    return chart;
-}
-
 void SensorChartVisitor::visitBatteryChargeSensor(BatteryChargeSensor& bcs) {
     setupTitle();
+
     QLabel* icon = new QLabel();
     icon->setPixmap(QPixmap(":assets/icons/battery-half.svg").scaledToHeight(28, Qt::SmoothTransformation));
     titleContent->addWidget(icon);
@@ -57,13 +50,11 @@ void SensorChartVisitor::visitBatteryChargeSensor(BatteryChargeSensor& bcs) {
 
     QProgressBar* pbBattery = new QProgressBar();
     pbBattery->setOrientation(Qt::Vertical);
-    pbBattery->setValue(bcs.getReadings().back());
-    
-    if (bcs.getReadings().back() <= 20)
-        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 3px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
+    pbBattery->setValue(bcs.getCurrentReading());
+    if (bcs.getCurrentReading() <= 20)
+        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 3px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123}");
 
     QLineSeries* series = new QLineSeries();
-
     const std::list<double>& data = bcs.getReadings();
     int i = 0;
     for (auto reading = data.begin(); reading != data.end(); ++reading)

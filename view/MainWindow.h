@@ -33,7 +33,7 @@ class MainWindow : public QMainWindow {
     void quit();
     void refresh();
     void visitGithub();
-    // void openDroneList();
+    void openDroneList();
     void openSearch();
     void deployNewDrone(Drone*);
     void deleteDrone(Drone*);

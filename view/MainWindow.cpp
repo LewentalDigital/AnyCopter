@@ -20,6 +20,23 @@
 namespace View {
 
 MainWindow::MainWindow(DroneManager& dm) : droneManager(dm), persistenceManager(dm) {
+    
+    stackedWidget = new QStackedWidget(this);
+    setCentralWidget(stackedWidget);
+
+    dashboard = new Dashboard(droneManager, this);
+    
+    droneList = new DroneList(dm.getDrones(), this);
+    connect(droneList, &DroneList::manageDrone, this, &MainWindow::manageDrone);
+    
+
+    loadConfig(QString::fromStdString(PersistenceManager::DEFAUL_SAVE_FILE));
+    
+    
+    stackedWidget->addWidget(droneList);
+    // stackedWidget->addWidget(dashboard);
+
+
     QAction* actionOpen = new QAction("Load Config");
     actionOpen->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_O));
 
@@ -64,26 +81,11 @@ MainWindow::MainWindow(DroneManager& dm) : droneManager(dm), persistenceManager(
     connect(actionOpen, &QAction::triggered, this, &MainWindow::open);
     connect(actionSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
     connect(actionQuit, &QAction::triggered, this, &MainWindow::quit);
+    connect(actionDroneList, &QAction::triggered, this, &MainWindow::openDroneList);
     connect(actionSearch, &QAction::triggered, this, &MainWindow::openSearch);
     connect(actionRefresh, &QAction::triggered, this, &MainWindow::refresh);
     connect(actionGithub, &QAction::triggered, this, &MainWindow::visitGithub);
 
-    stackedWidget = new QStackedWidget(this);
-    setCentralWidget(stackedWidget);
-
-    // dashboard = new Dashboard(droneManager, this);
-    DroneDeployView* ddp = new DroneDeployView(); 
-    
-    droneList = new DroneList(dm.getDrones(), this);
-    connect(droneList, &DroneList::manageDrone, this, &MainWindow::manageDrone);
-    
-
-    loadConfig(QString::fromStdString(PersistenceManager::defaultSaveFile));
-    
-    
-    // stackedWidget->addWidget(droneList);
-    // stackedWidget->addWidget(dashboard);
-    stackedWidget->addWidget(ddp);
 
 }
 
@@ -110,7 +112,7 @@ void MainWindow::open() {
 }
 
 void MainWindow::save() {
-    persistenceManager.save(PersistenceManager::defaultSaveFile);
+    persistenceManager.save(PersistenceManager::DEFAUL_SAVE_FILE);
 }
 
 void MainWindow::saveAs() {
@@ -137,6 +139,16 @@ void MainWindow::quit() {
 
 void MainWindow::visitGithub() {
     QDesktopServices::openUrl(QUrl("https://github.com/LewentalDigital/AnyCopter"));
+}
+
+void MainWindow::openDroneList() {
+    if (stackedWidget->currentIndex() > 0) {
+        QWidget* prevWidget = stackedWidget->currentWidget();
+        stackedWidget->removeWidget(prevWidget);
+        delete prevWidget;
+    }
+    stackedWidget->addWidget(droneList);
+    stackedWidget->setCurrentIndex(1);
 }
 
 void MainWindow::openSearch() {

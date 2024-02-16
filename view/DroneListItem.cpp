@@ -19,7 +19,8 @@ DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone
 
     QVBoxLayout* infoDrone = new QVBoxLayout();
 
-    name = new QLabel("<strong>" + QString::fromStdString(drone->getName()) + "</strong>");
+    name = new QLabel(QString::fromStdString(drone->getName()));
+    name->setObjectName("title");
     pbBattery = new QProgressBar();
     drone->readHardware();
     pbBattery->setValue(drone->getBatteryLevel());
@@ -33,7 +34,7 @@ DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone
 
     infoSensors = new QVBoxLayout();
 
-    numSensors = new QLabel("Mounted sensors: " + QString::number(drone->getNumMountedSensors()) + "/" + QString::number(Drone::sensorSockets));
+    numSensors = new QLabel("Mounted sensors: " + QString::number(drone->getNumMountedSensors()) + "/" + QString::number(Drone::SENSOR_SOKETS));
     numSensors->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     infoSensors->addWidget(numSensors);
 
@@ -66,19 +67,17 @@ const Drone& DroneListItem::getDrone() const {
 }
 
 void DroneListItem::notify(Drone& d) {
-    name->setText("<strong>" + QString::fromStdString(d.getName()) + "</strong>");
+    name->setText(QString::fromStdString(d.getName()));
     pbBattery->setValue(d.getBatteryLevel());
-    if (drone->getBatteryLevel() > 20)
-        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #06b025; width: 1px;}");
-    else
-        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
+    if (drone->getBatteryLevel() <= 20)
+        pbBattery->setStyleSheet("QProgressBar { border: 1px solid grey; border-radius: 3px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123}");
     cpuTemperature->setText("CPU temperature: " + QString::number(drone->getCpuTemperature()) + "°C");
-    numSensors->setText("Mounted sensors: " + QString::number(drone->getNumMountedSensors()) + "/" + QString::number(Drone::sensorSockets));
+    numSensors->setText("Mounted sensors: " + QString::number(drone->getNumMountedSensors()) + "/" + QString::number(Drone::SENSOR_SOKETS));
 
     QLayoutItem* child;
     while ((child = infoSensors->takeAt(1)) != nullptr) {
         delete child->widget();  // delete the widget
-        delete child;                // delete the layout item
+        delete child;            // delete the layout item
     }
 
     for (AbstractSensor* sensor : drone->getMountedSensors()) {

@@ -17,10 +17,12 @@ DroneList::DroneList(const std::vector<Drone*>& drones, QWidget* parent) : QWidg
     // Title bar
     QHBoxLayout* titleBar = new QHBoxLayout();
     titleBar->setContentsMargins(0, 0, 0, 0);
+
     QPushButton* back = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "Back");
     back->setShortcut(QKeySequence::Back);
-    QLabel* title = new QLabel("<strong>Drones</strong>");
+    QLabel* title = new QLabel("Drones");
     title->setObjectName("title");
+
     titleBar->addWidget(back);
     titleBar->addStretch();
     titleBar->addWidget(title);
@@ -30,11 +32,11 @@ DroneList::DroneList(const std::vector<Drone*>& drones, QWidget* parent) : QWidg
     completer = new QCompleter(this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     completer->setFilterMode(Qt::MatchContains);
-    // completer->setCompletionMode(QCompleter::PopupCompletion);
 
     // Search bar
     QHBoxLayout* searchBar = new QHBoxLayout();
     searchBar->setContentsMargins(0, 0, 0, 0);
+    
     searchInput = new QLineEdit();
     searchInput->setCompleter(completer);
     searchInput->setPlaceholderText("Search for drones or sensors");

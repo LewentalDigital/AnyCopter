@@ -11,7 +11,6 @@ class DroneManager {
     std::vector<Drone*> drones;
 
    public:
-    DroneManager();
     ~DroneManager();
 
     void deployDrone(Drone*);

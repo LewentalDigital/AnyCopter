@@ -24,8 +24,6 @@ class SensorChartVisitor : public SensorVisitorInterface {
    public:
     QWidget* getWidget();
     QWidget* getTitle();
-    QLineSeries* getSeries();
-    QChart* getChart();
     void setupChart();
     void setupTitle();
     void visitBatteryChargeSensor(BatteryChargeSensor&) override;

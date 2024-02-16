@@ -1,11 +1,11 @@
 #include "EmptySensorSocket.h"
 
+#include <QFormLayout>
 #include <QHBoxLayout>
 #include <QIcon>
 #include <QIntValidator>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <QFormLayout>
 
 #include "../model/BatteryChargeSensor.h"
 #include "../model/CO2Sensor.h"
@@ -17,24 +17,21 @@ namespace View {
 EmptySensorSocket::EmptySensorSocket(QWidget* parent) : QWidget(parent) {
     QVBoxLayout* main = new QVBoxLayout(this);
 
-    // Title 
-    QWidget* titleContainer = new QWidget();
-    titleContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    QHBoxLayout* title = new QHBoxLayout(titleContainer);
-    title->setContentsMargins(10, 0, 10, 0);
-    titleContainer->setLayout(title);
+    // Title
+    QHBoxLayout* titleBar = new QHBoxLayout();
+    titleBar->setContentsMargins(10, 0, 10, 0);
     QLabel* titleIcon = new QLabel();
+    titleIcon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     titleIcon->setPixmap(QPixmap(":assets/icons/hardware-chip.svg").scaledToHeight(28, Qt::SmoothTransformation));
-    QLabel* titleLabel = new QLabel("Empty Sensor Socket");
-    title->addWidget(titleIcon);
-    title->addWidget(titleLabel);
-    title->addStretch();
+    QLabel* title = new QLabel("Empty Sensor Socket");
+    title->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    titleBar->addWidget(titleIcon);
+    titleBar->addWidget(title);
+    titleBar->addStretch();
 
     // Form to input data for the new sensor
     QLabel* mountLabel = new QLabel("Mount new sensor:");
-    QWidget* formContainer = new QWidget();
-    QFormLayout* formLayout = new QFormLayout;
-    formContainer->setLayout(formLayout);
+    QFormLayout* formLayout = new QFormLayout();
     sensorType = new QComboBox();
     sensorType->insertItem(0, QIcon(":assets/icons/thermometer.svg"), "Thermometer");
     sensorType->insertItem(1, QIcon(":assets/icons/water.svg"), "Hygrometer");
@@ -52,8 +49,8 @@ EmptySensorSocket::EmptySensorSocket(QWidget* parent) : QWidget(parent) {
 
     connect(btnMountSensor, &QPushButton::clicked, this, &EmptySensorSocket::handleMount);
 
-    main->addWidget(titleContainer);
-    main->addWidget(formContainer);
+    main->addLayout(titleBar);
+    main->addLayout(formLayout);
 }
 
 void EmptySensorSocket::handleMount() {

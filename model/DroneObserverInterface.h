@@ -6,7 +6,7 @@ class Drone;
 class DroneObserverInterface {
    public:
     virtual ~DroneObserverInterface() = default;
-    virtual void notify(Drone& character) = 0;
+    virtual void notify(Drone&) = 0;
 };
 
 #endif

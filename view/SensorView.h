@@ -23,8 +23,6 @@ class SensorView : public QWidget, public SensorObserverInterface {
     QPushButton* btnEdit;
     QPushButton* btnRemove;
     QWidget* content;
-    QLineSeries series;
-    QChart* chart;
 
    public:
     SensorView(AbstractSensor*, QWidget* = nullptr);

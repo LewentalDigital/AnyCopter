@@ -22,15 +22,16 @@ class Drone {
     std::list<DroneObserverInterface*> observers;
 
    public:
-    static const unsigned int sensorSockets;  // sarebbe da chiamare numSocets?
+    static const unsigned int SENSOR_SOKETS;
     Drone(std::string);
     virtual ~Drone();
 
     std::string getName() const;
     void setName(std::string);
-    void mountSensor(AbstractSensor*);
-    void unmountSensor(int);
-    void readHardware();
+    void rechargeBattery(double);
+    virtual void mountSensor(AbstractSensor*);
+    virtual void unmountSensor(int);
+    virtual void readHardware();
 
     double getBatteryLevel() const;
     double getCpuTemperature() const;

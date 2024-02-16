@@ -1,9 +1,8 @@
 #include "Drone.h"
 
-const unsigned int Drone::sensorSockets = 2;
+const unsigned int Drone::SENSOR_SOKETS = 2;
 
-Drone::Drone(std::string n) : name(n) {
-}
+Drone::Drone(std::string n) : name(n) {}
 
 Drone::~Drone() {
     for (AbstractSensor* sensor : externalSensors)
@@ -21,8 +20,15 @@ void Drone::setName(std::string n) {
         (*observer)->notify(*this);
 }
 
+void Drone::rechargeBattery(double lvl) {
+    battery.setCharge(lvl);
+    
+    for (auto observer = observers.begin(); observer != observers.end(); ++observer)
+        (*observer)->notify(*this);
+}
+
 void Drone::mountSensor(AbstractSensor* sensor) {
-    if (externalSensors.size() < sensorSockets) {
+    if (externalSensors.size() < SENSOR_SOKETS) {
         externalSensors.push_back(sensor);
     } else
         throw std::string("No more sensor sockets available");

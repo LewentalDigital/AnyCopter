@@ -3,8 +3,6 @@
 #include "Hygrometer.h"
 #include "CO2Sensor.h"
 
-DroneManager::DroneManager() {}
-
 DroneManager::~DroneManager() {
     for (Drone* drone : drones) {
         delete drone;

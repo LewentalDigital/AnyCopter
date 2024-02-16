@@ -16,11 +16,13 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
     // Panel title bar 
     QHBoxLayout* titleBar = new QHBoxLayout();
     titleBar->setContentsMargins(0, 0, 0, 0);
+
     QPushButton* btnClose = new QPushButton(QIcon(QPixmap(":/assets/icons/close.svg")), "Cancel");
     btnClose->setShortcut(QKeySequence::Back);
-    QLabel* title = new QLabel(QString::fromStdString("<strong>Deploy new Drone</strong>"));
+    QLabel* title = new QLabel(QString::fromStdString("Deploy new Drone"));
     title->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     title->setObjectName("title");
+
     titleBar->addWidget(btnClose);
     titleBar->addStretch();
     titleBar->addWidget(title);
@@ -31,8 +33,8 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
     // Panel content
     QVBoxLayout* content = new QVBoxLayout();
 
-
     QHBoxLayout* droneInsert = new QHBoxLayout();
+    
     image = new QLabel();
     image->setPixmap(QPixmap(":assets/images/agriDrone.png").scaledToHeight(200, Qt::SmoothTransformation));
     // Input testuali del drone disposte verticalmente
@@ -72,6 +74,7 @@ void DroneDeployView::handleDeploy() {
         QMessageBox::warning(this, "Input error", "Drone name cannot be empty!");
     } else {
         Drone* d = new Drone(nameInput->text().toStdString());
+        d->rechargeBattery(100);
         emit deploy(d);
         close();
     }

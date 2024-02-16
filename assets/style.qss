@@ -12,7 +12,7 @@ QPushButton:hover {
 }
 
 QPushButton:pressed {
-    
+
 }
 
 QLineEdit {
@@ -43,6 +43,11 @@ QProgressBar::chunk {
 }
 
 #title {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: bold;
+}
+
+#btnRead {
+    min-height: 60px;
+    
 }

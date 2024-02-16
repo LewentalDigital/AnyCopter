@@ -15,27 +15,31 @@
 namespace View {
 
 DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
+    drone->readHardware();
+
     QVBoxLayout* main = new QVBoxLayout(this);
 
     // Panel title bar
-    // titleBarContainer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QHBoxLayout* titleBar = new QHBoxLayout();
     titleBar->setContentsMargins(0, 0, 0, 0);
+
+    name = new QLabel(QString::fromStdString(drone->getName()));
+    name->setObjectName("title");
     QPushButton* btnBack = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "Back");
     btnBack->setShortcut(QKeySequence::Back);
-    name = new QLabel("<strong>" + QString::fromStdString(drone->getName()) + "</strong>");
     QPushButton* btnEdit = new QPushButton(QIcon(QPixmap(":/assets/icons/edit.svg")), "Edit drone name");
     QPushButton* btnDel = new QPushButton(QIcon(QPixmap(":/assets/icons/remove.svg")), "Delete drone");
+
+    connect(btnBack, &QPushButton::clicked, this, &DroneView::back);
+    connect(btnEdit, &QPushButton::clicked, this, &DroneView::editDrone);
+    connect(btnDel, &QPushButton::clicked, this, &DroneView::handleDeleteDrone);
+
     titleBar->addWidget(btnBack);
     titleBar->addStretch();
     titleBar->addWidget(name);
     titleBar->addStretch();
     titleBar->addWidget(btnEdit);
     titleBar->addWidget(btnDel);
-
-    connect(btnBack, &QPushButton::clicked, this, &DroneView::back);
-    connect(btnEdit, &QPushButton::clicked, this, &DroneView::editDrone);
-    connect(btnDel, &QPushButton::clicked, this, &DroneView::handleDeleteDrone);
 
     // Panel content
     QScrollArea* scrollArea = new QScrollArea();
@@ -45,40 +49,37 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     contentContainer->setLayout(content);
     scrollArea->setWidget(contentContainer);
 
-
     // Drone information
     QHBoxLayout* droneInfo = new QHBoxLayout();
-    content->addLayout(droneInfo);
 
     QLabel* image = new QLabel();
     image->setPixmap(QPixmap(":assets/images/agriDrone.png").scaledToHeight(250, Qt::SmoothTransformation));
-    droneInfo->addWidget(image);
-
     // Text info of drone
     QVBoxLayout* droneInfoText = new QVBoxLayout();
-    droneInfo->addLayout(droneInfoText);
-    QLabel* batteryLabel = new QLabel("Battery level:");
-    droneInfoText->addWidget(batteryLabel);
+    QLabel* labelBattery = new QLabel("Battery level:");
     pbBattery = new QProgressBar();
-    drone->readHardware();
     pbBattery->setValue(drone->getBatteryLevel());
-    droneInfoText->addWidget(pbBattery);
     if (drone->getBatteryLevel() <= 20)
         pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 3px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
     cpuTemperature = new QLabel("CPU Temperature: " + QString::number(drone->getCpuTemperature()) + "°C");
-    droneInfoText->addWidget(cpuTemperature);
     btnRead = new QPushButton("Read new sensor data");
-    // if (drone->getMountedSensors().size() > 0)
-    droneInfoText->addWidget(btnRead);
+    btnRead->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Return));
+    btnRead->setObjectName("btnRead");
 
     connect(btnRead, &QPushButton::clicked, this, &DroneView::readNewData);
 
-    QLabel* sensorsLabel = new QLabel("Mounted sensors:");
-    content->addWidget(sensorsLabel);
+    droneInfoText->addWidget(labelBattery);
+    droneInfoText->addWidget(pbBattery);
+    droneInfoText->addWidget(cpuTemperature);
+    droneInfoText->addWidget(btnRead);
+
+    droneInfo->addWidget(image);
+    droneInfo->addLayout(droneInfoText);
+
 
     // Sensors
+    QLabel* labelSensors = new QLabel("Mounted sensors:");
     droneSensors = new QGridLayout();
-    content->addLayout(droneSensors);
     droneSensors->setContentsMargins(0, 0, 0, 0);
 
     int gridIndex = 0;  // grid has 2 columns and whatever rows, so this index is used to calculate the row and column where to place sensors
@@ -86,6 +87,7 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     // so the gridLayout can be considered a normal array indexed by gridIndex, this inedx will match the vector of sensors mounted on the drone
     const std::vector<AbstractSensor*>& mountedSensors = drone->getMountedSensors();
     for (auto it = mountedSensors.begin(); it != mountedSensors.end(); ++it) {
+        (*it)->read();
         SensorView* sv = new SensorView(*it);
         connect(sv, &SensorView::remove, [this, gridIndex]() {
             removeSensor(gridIndex);
@@ -98,7 +100,7 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
         gridIndex++;
     }
 
-    for (unsigned int i = drone->getNumMountedSensors(); i < Drone::sensorSockets; ++i) {
+    for (unsigned int i = drone->getNumMountedSensors(); i < Drone::SENSOR_SOKETS; ++i) {
         EmptySensorSocket* ess = new EmptySensorSocket();
         connect(ess, &EmptySensorSocket::mountSensor, [this, gridIndex](AbstractSensor* sensor) {
             mountSensor(sensor, gridIndex);
@@ -107,6 +109,11 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
         sensorPos.push_back(-1);
         gridIndex++;
     }
+
+
+    content->addLayout(droneInfo);
+    content->addWidget(labelSensors);
+    content->addLayout(droneSensors);
 
     main->addLayout(titleBar);
     main->addWidget(scrollArea);
@@ -119,7 +126,7 @@ DroneView::~DroneView() {
 }
 
 void DroneView::notify(Drone& d) {
-    name->setText("<strong>" + QString::fromStdString(d.getName()) + "</strong>");
+    name->setText(QString::fromStdString(d.getName()));
     pbBattery->setValue(d.getBatteryLevel());
     cpuTemperature->setText("CPU Temperature: " + QString::number(d.getCpuTemperature()) + "°C");
 }
