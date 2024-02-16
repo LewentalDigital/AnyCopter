@@ -58,10 +58,9 @@ void SensorChartVisitor::visitBatteryChargeSensor(BatteryChargeSensor& bcs) {
     QProgressBar* pbBattery = new QProgressBar();
     pbBattery->setOrientation(Qt::Vertical);
     pbBattery->setValue(bcs.getReadings().back());
-    if (bcs.getReadings().back())
-        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px;  background-color: #e6e6e6; } QProgressBar::chunk {background-color: #06b025;}");
-    else
-        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px;  background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123;}");
+    
+    if (bcs.getReadings().back() <= 20)
+        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 3px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
 
     QLineSeries* series = new QLineSeries();
 

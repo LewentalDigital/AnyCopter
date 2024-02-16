@@ -27,6 +27,7 @@ HEADERS += model/persistence/PersistenceManager.h \
            model/SensorObserverInterface.h \
            model/SensorVisitorInterface.h \
            model/Thermometer.h \
+           view/Dashboard.h \
            view/DroneDeployView.h \
            view/DroneList.h \
            view/DroneListItem.h \
@@ -44,6 +45,7 @@ SOURCES += main.cpp \
            model/DroneManager.cpp \
            model/Hygrometer.cpp \
            model/Thermometer.cpp \
+           view/Dashboard.cpp \
            view/DroneDeployView.cpp \
            view/DroneList.cpp \
            view/DroneListItem.cpp \

@@ -8,6 +8,7 @@
 #include "BatteryChargeSensor.h"
 #include "Hygrometer.h"
 #include "Thermometer.h"
+#include "CO2Sensor.h"
 #include "DroneObserverInterface.h"
 
 class Drone {

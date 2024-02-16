@@ -50,6 +50,7 @@ MainWindow::MainWindow(DroneManager& dm) : droneManager(dm), persistenceManager(
     menuFile->addAction(actionSaveAs);
     menuFile->addSeparator();
     menuFile->addAction(actionQuit);
+
     QMenu* menuView = menuBar()->addMenu("&View");
     menuView->addAction(actionDroneList);
     menuView->addAction(actionSearch);
@@ -67,15 +68,23 @@ MainWindow::MainWindow(DroneManager& dm) : droneManager(dm), persistenceManager(
     connect(actionRefresh, &QAction::triggered, this, &MainWindow::refresh);
     connect(actionGithub, &QAction::triggered, this, &MainWindow::visitGithub);
 
+    stackedWidget = new QStackedWidget(this);
+    setCentralWidget(stackedWidget);
+
+    // dashboard = new Dashboard(droneManager, this);
+    DroneDeployView* ddp = new DroneDeployView(); 
+    
     droneList = new DroneList(dm.getDrones(), this);
     connect(droneList, &DroneList::manageDrone, this, &MainWindow::manageDrone);
+    
 
     loadConfig(QString::fromStdString(PersistenceManager::defaultSaveFile));
+    
+    
+    // stackedWidget->addWidget(droneList);
+    // stackedWidget->addWidget(dashboard);
+    stackedWidget->addWidget(ddp);
 
-    stackedWidget = new QStackedWidget(this);
-    stackedWidget->addWidget(droneList);
-
-    setCentralWidget(stackedWidget);
 }
 
 void MainWindow::loadConfig(const QString& configFile) {

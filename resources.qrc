@@ -1,6 +1,7 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
 <qresource>
+    <file>assets/style.qss</file>
     <file>assets/icons/icon.svg</file>
     <file>assets/images/agriDrone.png</file>
     <file>assets/icons/arrow-back.svg</file>

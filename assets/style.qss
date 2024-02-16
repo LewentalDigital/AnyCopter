@@ -1,0 +1,48 @@
+
+/* Example styles */
+
+QPushButton {
+    padding: 5px 15px;
+    border-radius: 3px;
+    border: 1px solid grey;
+}
+
+QPushButton:hover {
+    background-color: grey;
+}
+
+QPushButton:pressed {
+    
+}
+
+QLineEdit {
+    padding: 5px;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+}
+
+QScrollArea {
+    border: none;
+}
+
+QProgressBar {
+    border: 1px solid grey;
+    border-radius: 3px;
+    text-align: center;
+    background-color: #e6e6e6;
+}
+
+QProgressBar::chunk {
+    background-color: #06b025;
+}
+
+#DroneListItem {
+    border: 1px solid grey;
+    background-color: #ff0000;
+    color: #ff0000;
+}
+
+#title {
+    font-size: 14px;
+    font-weight: bold;
+}

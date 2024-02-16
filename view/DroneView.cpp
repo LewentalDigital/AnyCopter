@@ -63,10 +63,8 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     drone->readHardware();
     pbBattery->setValue(drone->getBatteryLevel());
     droneInfoText->addWidget(pbBattery);
-    if (drone->getBatteryLevel() > 20)
-        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #06b025; width: 1px;}");
-    else
-        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
+    if (drone->getBatteryLevel() <= 20)
+        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 3px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
     cpuTemperature = new QLabel("CPU Temperature: " + QString::number(drone->getCpuTemperature()) + "°C");
     droneInfoText->addWidget(cpuTemperature);
     btnRead = new QPushButton("Read new sensor data");

@@ -23,10 +23,8 @@ DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone
     pbBattery = new QProgressBar();
     drone->readHardware();
     pbBattery->setValue(drone->getBatteryLevel());
-    if (drone->getBatteryLevel() > 20)
-        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #06b025; width: 1px;}");
-    else
-        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 0px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
+    if (drone->getBatteryLevel() <= 20)
+        pbBattery->setStyleSheet(" QProgressBar { border: 1px solid grey; border-radius: 3px; text-align: center; background-color: #e6e6e6; } QProgressBar::chunk {background-color: #e81123; width: 1px;}");
     cpuTemperature = new QLabel("CPU temperature: " + QString::number(drone->getCpuTemperature()) + "°C");
 
     infoDrone->addWidget(name);
@@ -43,7 +41,6 @@ DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone
         SensorChartVisitor visitor;
         sensor->accept(visitor);
         infoSensors->addWidget(visitor.getTitle());
-        // sensors.push_back(visitor.getTitle());
     }
 
     QPushButton* btnManage = new QPushButton("Manage");

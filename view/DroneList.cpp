@@ -20,6 +20,7 @@ DroneList::DroneList(const std::vector<Drone*>& drones, QWidget* parent) : QWidg
     QPushButton* back = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "Back");
     back->setShortcut(QKeySequence::Back);
     QLabel* title = new QLabel("<strong>Drones</strong>");
+    title->setObjectName("title");
     titleBar->addWidget(back);
     titleBar->addStretch();
     titleBar->addWidget(title);
@@ -90,7 +91,9 @@ void DroneList::loadSearchList(const std::vector<Drone*>& drones) {
 }
 
 void DroneList::addDrone(Drone* d) {
-    droneItems.push_back(new DroneListItem(d));
+    DroneListItem* item = new DroneListItem(d);
+    item->setObjectName("DroneListItem");
+    droneItems.push_back(item);
     connect(droneItems.back(), &DroneListItem::manageDrone, this, &DroneList::manageDrone);
     content->addWidget(droneItems.back());
 }

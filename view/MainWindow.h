@@ -7,6 +7,7 @@
 #include "../model/Drone.h"
 #include "../model/DroneManager.h"
 #include "../model/persistence/PersistenceManager.h"
+#include "Dashboard.h"
 #include "DroneList.h"
 
 namespace View {
@@ -17,6 +18,7 @@ class MainWindow : public QMainWindow {
     DroneManager& droneManager;
     PersistenceManager persistenceManager;
     QStackedWidget* stackedWidget;
+    Dashboard* dashboard;
     DroneList* droneList;
 
     void loadConfig(const QString&);
