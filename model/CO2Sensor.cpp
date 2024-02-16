@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-CO2Sensor::CO2Sensor(int bs) : AbstractSensor(bs, 0, 650), time(0) {}
+CO2Sensor::CO2Sensor(unsigned int bs) : AbstractSensor(bs, 0, 650), time(0) {}
 
 void CO2Sensor::read() {
     reading = max * cos(time / 12) + max;

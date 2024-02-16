@@ -8,7 +8,7 @@ class Thermometer : public AbstractSensor {
     int time;
 
    public:
-    Thermometer(int bufferSize = 24);
+    Thermometer(unsigned int bufferSize = 24);
     virtual ~Thermometer() = default;
 
     void read() override;

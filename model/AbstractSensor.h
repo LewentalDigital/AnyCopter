@@ -24,7 +24,7 @@ class AbstractSensor {
     virtual void pushReading(double);
 
    public:
-    AbstractSensor(int bufferSize = 24, double min = 0, double max = 30);
+    AbstractSensor(unsigned int bufferSize = 24, double min = 0, double max = 30);
     virtual ~AbstractSensor() = 0;
 
     virtual void read();

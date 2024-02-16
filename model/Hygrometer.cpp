@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-Hygrometer::Hygrometer(int bs) : AbstractSensor(bs, 50, 75), time(0) {
+Hygrometer::Hygrometer(unsigned int bs) : AbstractSensor(bs, 50, 75), time(0) {
 }
 
 void Hygrometer::read() {

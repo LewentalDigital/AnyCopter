@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-Thermometer::Thermometer(int bs) : AbstractSensor(bs, 16, 32), time(0) {
+Thermometer::Thermometer(unsigned int bs) : AbstractSensor(bs, 16, 32), time(0) {
 }
 
 void Thermometer::read() {

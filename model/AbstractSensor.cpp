@@ -1,6 +1,6 @@
 #include "AbstractSensor.h"
 
-AbstractSensor::AbstractSensor(int bs, double m, double M) : bufferSize(bs), min(m), max(M) {}
+AbstractSensor::AbstractSensor(unsigned int bs, double m, double M) : bufferSize(bs), min(m), max(M) {}
 
 AbstractSensor::~AbstractSensor() {}
 

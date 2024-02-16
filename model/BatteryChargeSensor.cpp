@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-BatteryChargeSensor::BatteryChargeSensor(int bs) : AbstractSensor(bs, 1, 100) {
+BatteryChargeSensor::BatteryChargeSensor(unsigned int bs) : AbstractSensor(bs, 1, 100) {
     setCharge(randRange(min, max));
 }
 

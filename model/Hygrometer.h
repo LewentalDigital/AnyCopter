@@ -8,7 +8,7 @@ class Hygrometer : public AbstractSensor {
     int time;
 
    public:
-    Hygrometer(int bufferSize = 24);
+    Hygrometer(unsigned int bufferSize = 24);
     virtual ~Hygrometer() = default;
 
     void read() override;
