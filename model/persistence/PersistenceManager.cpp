@@ -67,8 +67,8 @@ void PersistenceManager::save(const std::string &fn) {
 }
 
 void PersistenceManager::load(const std::string &filename) {
-    std::ifstream file(filename, std::ios_base::in);
-    // std::ifstream file(filename, std::ios_base::app);
+    // std::ifstream file(filename, std::ios_base::in);
+    std::ifstream file(filename, std::ios_base::app);
     std::string line;
 
     droneManager.clear();  // clear all drones and sensors to load new ones
@@ -118,6 +118,7 @@ void PersistenceManager::load(const std::string &filename) {
             droneManager.deployDrone(drone);
         }
         file.close();
+        save(PersistenceManager::DEFAUL_SAVE_FILE);
     } else {
         throw std::string("Error managing load file; maybe it's already open in another program?");
     }
