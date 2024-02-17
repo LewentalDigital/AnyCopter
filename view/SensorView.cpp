@@ -4,18 +4,25 @@
 #include <QVBoxLayout>
 
 #include "SensorChartVisitor.h"
+#include "SensorTitleVisitor.h"
 
 namespace View {
 
 SensorView::SensorView(AbstractSensor* sensor, QWidget* parent) : QWidget(parent), sensor(sensor) {
     setMinimumHeight(220);
 
-    SensorChartVisitor visitor;
-    sensor->accept(visitor);
-    content = visitor.getWidget();  // get custom chart from visitor of sensor chart
+    SensorChartVisitor chartVisitor;
+    sensor->accept(chartVisitor);
+    content = chartVisitor.getWidget();  // get custom chart from visitor of sensor chart
+
+    SensorTitleVisitor titleVisitor;
+    sensor->accept(titleVisitor);
 
     main = new QVBoxLayout(this);
     main->setContentsMargins(0, 0, 0, 0);
+
+    QHBoxLayout* titleBar = new QHBoxLayout();
+    titleBar->setContentsMargins(0, 0, 0, 0);
 
     bufferSize = new QLabel("Buffer size: " + QString::number(sensor->getBufferSize()));
     btnEdit = new QPushButton(QIcon(QPixmap(":/assets/icons/edit.svg")), "Edit");
@@ -24,9 +31,7 @@ SensorView::SensorView(AbstractSensor* sensor, QWidget* parent) : QWidget(parent
     connect(btnEdit, &QPushButton::clicked, this, &SensorView::edit);
     connect(btnRemove, &QPushButton::clicked, this, &SensorView::remove);
 
-    QHBoxLayout* titleBar = new QHBoxLayout();
-    titleBar->setContentsMargins(0, 0, 0, 0);
-    titleBar->addWidget(visitor.getTitle());
+    titleBar->addWidget(titleVisitor.getTitle());
     titleBar->addStretch();
     titleBar->addWidget(bufferSize);
     titleBar->addWidget(btnEdit);
@@ -44,11 +49,11 @@ SensorView::~SensorView() {
 
 void SensorView::notify(AbstractSensor& sensor) {
     bufferSize->setText("Buffer size: " + QString::number(sensor.getBufferSize()));
-    SensorChartVisitor visitor;
-    sensor.accept(visitor);
+    SensorChartVisitor chartVisitor;
+    sensor.accept(chartVisitor);
 
     delete content;
-    content = visitor.getWidget();
+    content = chartVisitor.getWidget();
     main->addWidget(content);
 }
 

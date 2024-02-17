@@ -17,5 +17,5 @@ std::string CO2Sensor::getId() const {
 }
 
 void CO2Sensor::accept(SensorVisitorInterface& visitor) {
-    visitor.visitCO2Sensor(*this);
+    visitor.visit(*this);
 }

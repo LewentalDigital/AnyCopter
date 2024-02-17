@@ -34,5 +34,5 @@ std::string BatteryChargeSensor::getId() const {
 }
 
 void BatteryChargeSensor::accept(SensorVisitorInterface& visitor) {
-    visitor.visitBatteryChargeSensor(*this);
+    visitor.visit(*this);
 }

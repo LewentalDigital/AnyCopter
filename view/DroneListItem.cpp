@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 
 #include "../model/AbstractSensor.h"
-#include "SensorChartVisitor.h"
+#include "SensorTitleVisitor.h"
 
 namespace View {
 
@@ -39,7 +39,7 @@ DroneListItem::DroneListItem(Drone* d, QWidget* parent) : QWidget(parent), drone
     infoSensors->addWidget(numSensors);
 
     for (AbstractSensor* sensor : drone->getMountedSensors()) {
-        SensorChartVisitor visitor;
+        SensorTitleVisitor visitor;
         sensor->accept(visitor);
         infoSensors->addWidget(visitor.getTitle());
     }
@@ -81,7 +81,7 @@ void DroneListItem::notify(Drone& d) {
     }
 
     for (AbstractSensor* sensor : drone->getMountedSensors()) {
-        SensorChartVisitor visitor;
+        SensorTitleVisitor visitor;
         sensor->accept(visitor);
         infoSensors->addWidget(visitor.getTitle());
     }

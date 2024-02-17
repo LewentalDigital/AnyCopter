@@ -1,26 +1,23 @@
-#ifndef VIEW_SENSORCHARTVISITOR_H
-#define VIEW_SENSORCHARTVISITOR_H
+#ifndef VIEW_SENSORTITLEVISITOR_H
+#define VIEW_SENSORTITLEVISITOR_H
 
-#include <QVBoxLayout>
 #include <QWidget>
-#include <QtCharts>
-#include <QLineSeries>
+#include <QHBoxLayout>
 
 #include "../model/SensorVisitorInterface.h"
 
 namespace View {
 
-class SensorChartVisitor : public SensorVisitorInterface {
+class SensorTitleVisitor : public SensorVisitorInterface {
    private:
     QWidget* widget;
 
-    QLineSeries* series;
-    QChart* chart;
-    QChartView* chartView;
+    QWidget* title;
+    QHBoxLayout* titleContent;
 
    public:
-    QWidget* getWidget();
-    void setupChart();
+    QWidget* getTitle();
+    void setupTitle();
     void visit(BatteryChargeSensor&) override;
     void visit(CO2Sensor&) override;
     void visit(Hygrometer&) override;

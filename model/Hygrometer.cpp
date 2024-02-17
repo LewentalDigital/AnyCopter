@@ -17,5 +17,5 @@ std::string Hygrometer::getId() const {
 }
 
 void Hygrometer::accept(SensorVisitorInterface& visitor) {
-    visitor.visitHygrometer(*this);
+    visitor.visit(*this);
 }

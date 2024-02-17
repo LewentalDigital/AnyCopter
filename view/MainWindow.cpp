@@ -8,9 +8,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
-#include <QScrollArea>
 #include <QUrl>
-#include <QVBoxLayout>
 #include <QWidget>
 
 #include "../model/Drone.h"
@@ -63,6 +61,8 @@ MainWindow::MainWindow(DroneManager& dm) : droneManager(dm), persistenceManager(
     connect(actionSearch, &QAction::triggered, this, &MainWindow::openSearch);
     connect(actionRefresh, &QAction::triggered, this, &MainWindow::refresh);
     connect(actionGithub, &QAction::triggered, this, &MainWindow::visitGithub);
+
+
 
     stackedWidget = new QStackedWidget(this);
     setCentralWidget(stackedWidget);

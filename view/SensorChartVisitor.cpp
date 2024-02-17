@@ -18,31 +18,11 @@ void SensorChartVisitor::setupChart() {
     chartView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 }
 
-void SensorChartVisitor::setupTitle() {
-    title = new QWidget();
-    title->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    titleContent = new QHBoxLayout();
-    titleContent->setAlignment(Qt::AlignLeft);
-    titleContent->setContentsMargins(10, 0, 10, 0);
-    title->setLayout(titleContent);
-}
-
 QWidget* SensorChartVisitor::getWidget() {
     return widget;
 }
 
-QWidget* SensorChartVisitor::getTitle() {
-    return title;
-}
-
-void SensorChartVisitor::visitBatteryChargeSensor(BatteryChargeSensor& bcs) {
-    setupTitle();
-
-    QLabel* icon = new QLabel();
-    icon->setPixmap(QPixmap(":assets/icons/battery-half.svg").scaledToHeight(28, Qt::SmoothTransformation));
-    titleContent->addWidget(icon);
-    titleContent->addWidget(new QLabel("<strong>Battery charge sensor</strong>"));
-
+void SensorChartVisitor::visit(BatteryChargeSensor& bcs) {
     widget = new QWidget();
     QHBoxLayout* content = new QHBoxLayout();
     content->setContentsMargins(0, 0, 0, 0);
@@ -80,13 +60,7 @@ void SensorChartVisitor::visitBatteryChargeSensor(BatteryChargeSensor& bcs) {
     content->addWidget(pbBattery);
 }
 
-void SensorChartVisitor::visitCO2Sensor(CO2Sensor& co2s) {
-    setupTitle();
-    QLabel* icon = new QLabel();
-    icon->setPixmap(QPixmap(":assets/icons/leaf.svg").scaledToHeight(28, Qt::SmoothTransformation));
-    titleContent->addWidget(icon);
-    titleContent->addWidget(new QLabel("<strong>CO2 Sensor</strong>"));
-
+void SensorChartVisitor::visit(CO2Sensor& co2s) {
     QLineSeries* series = new QLineSeries();
     const std::list<double>& data = co2s.getReadings();
     QColor color("#f7ac44");
@@ -104,13 +78,7 @@ void SensorChartVisitor::visitCO2Sensor(CO2Sensor& co2s) {
     widget = chartView;
 }
 
-void SensorChartVisitor::visitHygrometer(Hygrometer& h) {
-    setupTitle();
-    QLabel* icon = new QLabel();
-    icon->setPixmap(QPixmap(":assets/icons/water.svg").scaledToHeight(28, Qt::SmoothTransformation));
-    titleContent->addWidget(icon);
-    titleContent->addWidget(new QLabel("<strong>Hygrometer</strong>"));
-
+void SensorChartVisitor::visit(Hygrometer& h) {
     QLineSeries* series = new QLineSeries();
     const std::list<double>& data = h.getReadings();
     int i = 0;
@@ -133,13 +101,7 @@ void SensorChartVisitor::visitHygrometer(Hygrometer& h) {
     widget = chartView;
 }
 
-void SensorChartVisitor::visitThermometer(Thermometer& t) {
-    setupTitle();
-    QLabel* icon = new QLabel();
-    icon->setPixmap(QPixmap(":assets/icons/thermometer.svg").scaledToHeight(28, Qt::SmoothTransformation));
-    titleContent->addWidget(icon);
-    titleContent->addWidget(new QLabel("<strong>Thermometer</strong>"));
-
+void SensorChartVisitor::visit(Thermometer& t) {
     QSplineSeries* series = new QSplineSeries();
     QColor color("#ff6961");
     QPen pen(color);

@@ -17,5 +17,5 @@ std::string Thermometer::getId() const {
 }
 
 void Thermometer::accept(SensorVisitorInterface& visitor) {
-    visitor.visitThermometer(*this);
+    visitor.visit(*this);
 }

@@ -34,6 +34,7 @@ HEADERS += model/persistence/PersistenceManager.h \
            view/EmptySensorSocket.h \
            view/MainWindow.h \
            view/SensorChartVisitor.h \
+           view/SensorTitleVisitor.h \
            view/SensorView.h
 SOURCES += main.cpp \
            model/persistence/PersistenceManager.cpp \
@@ -51,5 +52,6 @@ SOURCES += main.cpp \
            view/EmptySensorSocket.cpp \
            view/MainWindow.cpp \
            view/SensorChartVisitor.cpp \
+           view/SensorTitleVisitor.cpp \
            view/SensorView.cpp
 RESOURCES += resources.qrc

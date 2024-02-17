@@ -20,9 +20,6 @@ class DroneManager {
     unsigned int getNumDrones() const;
     const std::vector<Drone*>& getDrones() const;
     std::list<double> getAllReadings() const;
-    std::list<double> getThermometerReadings() const;
-    std::list<double> getHygrometerReadings() const;
-    std::list<double> getCO2SensorReadings() const;
 
 };
 #endif

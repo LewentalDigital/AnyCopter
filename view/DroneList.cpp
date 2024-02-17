@@ -117,12 +117,12 @@ void DroneList::search() {
     for (DroneListItem* item : droneItems) {
         bool matchSensor = false;
         for (AbstractSensor* sensor : item->getDrone().getMountedSensors()) {
-            if (QString::fromStdString(sensor->getId()).contains(query, Qt::CaseInsensitive)) {
+            if (QString::fromStdString(sensor->getId()).simplified().replace(" ", "").contains(query, Qt::CaseInsensitive)) {
                 matchSensor = true;
                 break;
             }
         }
-        if (QString::fromStdString((item->getDrone()).getName()).contains(query, Qt::CaseInsensitive) || matchSensor)
+        if (QString::fromStdString((item->getDrone()).getName()).simplified().replace(" ", "").contains(query, Qt::CaseInsensitive) || matchSensor)
             item->show();
         else
             item->hide();
