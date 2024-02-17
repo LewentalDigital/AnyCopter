@@ -20,23 +20,6 @@
 namespace View {
 
 MainWindow::MainWindow(DroneManager& dm) : droneManager(dm), persistenceManager(dm) {
-    
-    stackedWidget = new QStackedWidget(this);
-    setCentralWidget(stackedWidget);
-
-    dashboard = new Dashboard(droneManager, this);
-    
-    droneList = new DroneList(dm.getDrones(), this);
-    connect(droneList, &DroneList::manageDrone, this, &MainWindow::manageDrone);
-    
-
-    loadConfig(QString::fromStdString(PersistenceManager::DEFAUL_SAVE_FILE));
-    
-    
-    stackedWidget->addWidget(droneList);
-    // stackedWidget->addWidget(dashboard);
-
-
     QAction* actionOpen = new QAction("Load Config");
     actionOpen->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_O));
 
@@ -55,9 +38,6 @@ MainWindow::MainWindow(DroneManager& dm) : droneManager(dm), persistenceManager(
     QAction* actionDeploy = new QAction("New drone");
     actionDeploy->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_N));
 
-    QAction* actionDroneList = new QAction("List of drones");
-    actionDroneList->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_L));
-
     QAction* actionGithub = new QAction("Visit LewentalDigital GitHub page");
 
     // Set menu bar
@@ -69,7 +49,6 @@ MainWindow::MainWindow(DroneManager& dm) : droneManager(dm), persistenceManager(
     menuFile->addAction(actionQuit);
 
     QMenu* menuView = menuBar()->addMenu("&View");
-    menuView->addAction(actionDroneList);
     menuView->addAction(actionSearch);
     menuView->addSeparator();
     menuView->addAction(actionRefresh);
@@ -81,12 +60,19 @@ MainWindow::MainWindow(DroneManager& dm) : droneManager(dm), persistenceManager(
     connect(actionOpen, &QAction::triggered, this, &MainWindow::open);
     connect(actionSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
     connect(actionQuit, &QAction::triggered, this, &MainWindow::quit);
-    connect(actionDroneList, &QAction::triggered, this, &MainWindow::openDroneList);
     connect(actionSearch, &QAction::triggered, this, &MainWindow::openSearch);
     connect(actionRefresh, &QAction::triggered, this, &MainWindow::refresh);
     connect(actionGithub, &QAction::triggered, this, &MainWindow::visitGithub);
 
+    stackedWidget = new QStackedWidget(this);
+    setCentralWidget(stackedWidget);
 
+    droneList = new DroneList(dm.getDrones(), this);
+    connect(droneList, &DroneList::manageDrone, this, &MainWindow::manageDrone);
+
+    loadConfig(QString::fromStdString(PersistenceManager::DEFAUL_SAVE_FILE));
+
+    stackedWidget->addWidget(droneList);
 }
 
 void MainWindow::loadConfig(const QString& configFile) {
@@ -141,16 +127,6 @@ void MainWindow::visitGithub() {
     QDesktopServices::openUrl(QUrl("https://github.com/LewentalDigital/AnyCopter"));
 }
 
-void MainWindow::openDroneList() {
-    if (stackedWidget->currentIndex() > 0) {
-        QWidget* prevWidget = stackedWidget->currentWidget();
-        stackedWidget->removeWidget(prevWidget);
-        delete prevWidget;
-    }
-    stackedWidget->addWidget(droneList);
-    stackedWidget->setCurrentIndex(1);
-}
-
 void MainWindow::openSearch() {
     droneList->searchFocus();
 }
@@ -171,12 +147,12 @@ void MainWindow::manageDrone(Drone* drone) {
 }
 
 void MainWindow::openDeployDroneView() {
-    DroneDeployView* ddv = new DroneDeployView();
     if (stackedWidget->currentIndex() > 0) {
         QWidget* prevWidget = stackedWidget->currentWidget();
         stackedWidget->removeWidget(prevWidget);
         delete prevWidget;
     }
+    DroneDeployView* ddv = new DroneDeployView();
     stackedWidget->addWidget(ddv);
     connect(ddv, &DroneDeployView::deploy, this, &MainWindow::deployNewDrone);
     stackedWidget->setCurrentIndex(1);

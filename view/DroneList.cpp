@@ -17,13 +17,9 @@ DroneList::DroneList(const std::vector<Drone*>& drones, QWidget* parent) : QWidg
     // Title bar
     QHBoxLayout* titleBar = new QHBoxLayout();
     titleBar->setContentsMargins(0, 0, 0, 0);
-
-    QPushButton* back = new QPushButton(QIcon(QPixmap(":/assets/icons/arrow-back.svg")), "Back");
-    back->setShortcut(QKeySequence::Back);
     QLabel* title = new QLabel("Drones");
     title->setObjectName("title");
 
-    titleBar->addWidget(back);
     titleBar->addStretch();
     titleBar->addWidget(title);
     titleBar->addStretch();
@@ -36,7 +32,7 @@ DroneList::DroneList(const std::vector<Drone*>& drones, QWidget* parent) : QWidg
     // Search bar
     QHBoxLayout* searchBar = new QHBoxLayout();
     searchBar->setContentsMargins(0, 0, 0, 0);
-    
+
     searchInput = new QLineEdit();
     searchInput->setCompleter(completer);
     searchInput->setPlaceholderText("Search for drones or sensors");
@@ -116,7 +112,7 @@ void DroneList::searchFocus() {
 }
 
 void DroneList::search() {
-    QString query = searchInput->text().simplified().replace( " ", "" );
+    QString query = searchInput->text().simplified().replace(" ", "");
 
     for (DroneListItem* item : droneItems) {
         bool matchSensor = false;

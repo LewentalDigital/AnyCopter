@@ -21,9 +21,9 @@ class DroneList : public QWidget {
     DroneManager* droneManager;
     QVector<DroneListItem*> droneItems;
 
+    QVBoxLayout* content;
     QCompleter* completer;
     QLineEdit* searchInput;
-    QVBoxLayout* content;
 
     void loadDroneItems(const std::vector<Drone*>&);
 
