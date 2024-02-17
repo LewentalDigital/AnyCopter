@@ -27,6 +27,7 @@ SensorView::SensorView(AbstractSensor* sensor, QWidget* parent) : QWidget(parent
     bufferSize = new QLabel("Buffer size: " + QString::number(sensor->getBufferSize()));
     btnEdit = new QPushButton(QIcon(QPixmap(":/assets/icons/edit.svg")), "Edit");
     btnRemove = new QPushButton(QIcon(QPixmap(":/assets/icons/remove.svg")), "Remove");
+    btnRemove->setObjectName("btnDel");
 
     connect(btnEdit, &QPushButton::clicked, this, &SensorView::edit);
     connect(btnRemove, &QPushButton::clicked, this, &SensorView::remove);

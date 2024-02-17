@@ -23,19 +23,19 @@ QWidget* SensorTitleVisitor::getTitle() {
 }
 
 void SensorTitleVisitor::visit(BatteryChargeSensor& bcs) {
+    bcs.getCurrentReading(); // to avoid waring
     setupTitle();
 
     QLabel* icon = new QLabel();
     icon->setPixmap(QPixmap(":assets/icons/battery-half.svg").scaledToHeight(28, Qt::SmoothTransformation));
     titleContent->addWidget(icon);
-    QLabel* labelTitle = new QLabel("Battery charge sensor");
-    labelTitle->setObjectName("title");
-    // titleContent->addWidget(new QLabel("<strong>Battery charge sensor</strong>"));
-    titleContent->addWidget(labelTitle);
+    titleContent->addWidget(new QLabel("<strong>Battery charge sensor</strong>"));
 
 }
 
 void SensorTitleVisitor::visit(CO2Sensor& co2s) {
+    co2s.getCurrentReading(); // to avoid waring
+
     setupTitle();
     QLabel* icon = new QLabel();
     icon->setPixmap(QPixmap(":assets/icons/leaf.svg").scaledToHeight(28, Qt::SmoothTransformation));
@@ -45,6 +45,8 @@ void SensorTitleVisitor::visit(CO2Sensor& co2s) {
 }
 
 void SensorTitleVisitor::visit(Hygrometer& h) {
+    h.getCurrentReading(); // to avoid waring
+
     setupTitle();
     QLabel* icon = new QLabel();
     icon->setPixmap(QPixmap(":assets/icons/water.svg").scaledToHeight(28, Qt::SmoothTransformation));
@@ -54,6 +56,8 @@ void SensorTitleVisitor::visit(Hygrometer& h) {
 }
 
 void SensorTitleVisitor::visit(Thermometer& t) {
+    t.getCurrentReading(); // to avoid waring
+
     setupTitle();
     QLabel* icon = new QLabel();
     icon->setPixmap(QPixmap(":assets/icons/thermometer.svg").scaledToHeight(28, Qt::SmoothTransformation));

@@ -18,6 +18,8 @@ class PersistenceManager : public SensorObserverInterface, public DroneObserverI
     
     void save(const std::string &);
     void load(const std::string &);
+    void registerToDrone(Drone &);
+    void registerToSensor(AbstractSensor &);
 
     void notify(Drone &) override;
     void notify(AbstractSensor &) override;

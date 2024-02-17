@@ -122,3 +122,11 @@ void PersistenceManager::load(const std::string &filename) {
         throw std::string("Error managing load file; maybe it's already open in another program?");
     }
 }
+
+void PersistenceManager::registerToDrone(Drone& drone) {
+    drone.registerObserver(this);
+}
+
+void PersistenceManager::registerToSensor(AbstractSensor& sensor) {
+    sensor.registerObserver(this);
+}

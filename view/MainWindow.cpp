@@ -162,6 +162,7 @@ void MainWindow::deployNewDrone(Drone* drone) {
     try {
         droneManager.deployDrone(drone);
         droneList->addDrone(drone);
+        persistenceManager.registerToDrone(*drone);
         save();
         droneList->loadSearchList(droneManager.getDrones());
         droneList->resetSearch();

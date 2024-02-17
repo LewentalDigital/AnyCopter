@@ -29,6 +29,7 @@ DroneView::DroneView(Drone* d, QWidget* parent) : QWidget(parent), drone(d) {
     btnBack->setShortcut(QKeySequence::Back);
     QPushButton* btnEdit = new QPushButton(QIcon(QPixmap(":/assets/icons/edit.svg")), "Edit drone name");
     QPushButton* btnDel = new QPushButton(QIcon(QPixmap(":/assets/icons/remove.svg")), "Delete drone");
+    btnDel->setObjectName("btnDel");
 
     connect(btnBack, &QPushButton::clicked, this, &DroneView::back);
     connect(btnEdit, &QPushButton::clicked, this, &DroneView::editDrone);
