@@ -37,7 +37,7 @@ DroneDeployView::DroneDeployView(QWidget* parent) : QWidget(parent) {
     
     image = new QLabel();
     image->setPixmap(QPixmap(":assets/images/agriDrone.png").scaledToHeight(200, Qt::SmoothTransformation));
-    // Input testuali del drone disposte verticalmente
+    
     QVBoxLayout* droneInsertText = new QVBoxLayout();
     droneInsert->addWidget(image);
     droneInsert->addLayout(droneInsertText);

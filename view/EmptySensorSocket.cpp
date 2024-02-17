@@ -39,7 +39,7 @@ EmptySensorSocket::EmptySensorSocket(QWidget* parent) : QWidget(parent) {
     sensorType->insertItem(3, QIcon(":assets/icons/battery-half.svg"), "Battery Charge Sensor");
     btnMountSensor = new QPushButton("Mount");
     bufferSizeInput = new QLineEdit();
-    QValidator* validator = new QIntValidator(1, 256);  // to prevent huge buffer sizes
+    QValidator* validator = new QIntValidator(0, 512);  // to prevent huge buffer sizes
     bufferSizeInput->setValidator(validator);
     bufferSizeInput->setPlaceholderText("Buffer size");
     formLayout->addRow(mountLabel);
@@ -74,6 +74,7 @@ void EmptySensorSocket::handleMount() {
     }
     if (!bufferSizeInput->text().isEmpty()) {
         int bufferSize = bufferSizeInput->text().toInt();
+        if (bufferSize == 0) bufferSize = 1;
         mountedSensor->setBufferSize(bufferSize);
     }
     emit mountSensor(mountedSensor);
