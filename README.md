@@ -1,3 +1,5 @@
-Each drone can be equipped with sensors for reading and analyzing data, based on the user's needs
+University project for Object Oriented Programming course
 
-The drones have two free sockets that can host all types of sensors
+AnyCopter is a fleet management system tailored for agricultural operations, with emphasis on sensor integration and modularity which allows easy implementation of specific solutions. Sensors, equipped on each drone grant real time data gathering on site, which is displayed graphically with charts; different sensors can be mounted, removed, and modified seamlessly from the software, currently available sensors are: thermometer, hygrometer, CO2 sensor and battery level sensor (for drone health monitoring).
+AnyCopter is developed with extensibility in mind, custom sensors and drones can be implemented and used in the software.
+The choice of the name “AnyCopter” reflects its ability to manage any number of drones, and secondly symbolizes its connection to nature and agriculture, because of the close resemblance to “Anisoptera”, the scientific classification for dragonflies, which is also the icon of the application. Evoking the image of agility and adaptability.
