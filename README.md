@@ -1,7 +1,7 @@
 <h1><img src="assets/icons/icon.svg" alt="AnyCopter logo" width="32"/>  AnyCopter</h1>
 
 University project for Object Oriented Programming course @ University of Padua.
-A c++ program developed using the Qt Framework simulating the management of drones and sensors with great emphasis on best practices of OOP.
+A C++ program developed using the Qt Framework simulating the management of drones and sensors with great emphasis on best practices of OOP.
 
 ---
 
